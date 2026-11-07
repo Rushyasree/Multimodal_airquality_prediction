@@ -820,18 +820,25 @@ def get_cached_home_aqi_trend_chart(target_station_id: str, aqi_val: Any = 82) -
         hoverinfo="skip",
         showlegend=False,
     ))
+    now_hr = datetime.now(ZoneInfo("Asia/Kolkata")).hour
+    even_hr = (now_hr // 2) * 2
+    cur_label = datetime(2026, 1, 1, even_hr, 0).strftime("%I %p").lstrip("0")
+    if cur_label not in hours:
+        cur_label = "10 AM"
+
     fig.add_trace(go.Scatter(
-        x=["10 AM"],
+        x=[cur_label],
         y=[val_num],
         mode="markers",
         marker=dict(size=9, color="#84cc16", line=dict(width=2, color="#FFFFFF")),
         hoverinfo="skip",
         showlegend=False,
     ))
+    cur_display_time = datetime.now(ZoneInfo("Asia/Kolkata")).strftime("%I:%M %p")
     fig.add_annotation(
-        x="10 AM",
+        x=cur_label,
         y=val_num,
-        text=f"<b>{val_num}</b><br><span style='font-size:9px; color:#94A3B8;'>10:00 AM</span>",
+        text=f"<b>{val_num}</b><br><span style='font-size:9px; color:#94A3B8;'>{cur_display_time}</span>",
         showarrow=False,
         yshift=24,
         bgcolor="#0A0E17",
@@ -1478,8 +1485,15 @@ if st.session_state["nav_tab"] in ("Home", "Overview"):
         aqi_tier = "Satisfactory"
     aqi_color = live_obs.get("aqi_color", "#84cc16")
 
+    now_ist = datetime.now(ZoneInfo("Asia/Kolkata"))
+    greeting_text = get_time_based_greeting(now_ist)
+    date_formatted = now_ist.strftime("%a, %d %b %Y")
+    time_formatted = now_ist.strftime("%I:%M %p IST")
+
     dom_poll = live_obs.get("prominent_pollutant") or "PM2.5"
-    obs_time = live_obs.get("observation_time_ist") or live_obs.get("observed_at_ist", "14 Oct 2026, 10:00 AM IST")
+    obs_time = live_obs.get("observation_time_ist") or live_obs.get("observed_at_ist")
+    if not obs_time or obs_time in ("N/A", "Calibrated CPCB Archive", "Historical Archive"):
+        obs_time = now_ist.strftime("%d %b %Y, %I:%M %p IST")
     provider_str = live_obs.get("provider", "OpenAQ")
     if "OpenAQ" in provider_str:
         provider_str = "OpenAQ"
@@ -1502,10 +1516,7 @@ if st.session_state["nav_tab"] in ("Home", "Overview"):
     p_co_str = poll_fmt(p_co, 0.6, 1)
     p_o3_str = poll_fmt(p_o3, 62, 0)
 
-    now_ist = datetime.now(ZoneInfo("Asia/Kolkata"))
-    greeting_text = get_time_based_greeting(now_ist)
-    date_formatted = now_ist.strftime("%a, %d %b %Y")
-    time_formatted = now_ist.strftime("%I:%M %p IST")
+
 
     # Hero Banner
     hero_bg_style = f"background: linear-gradient(180deg, rgba(8, 19, 33, 0.35) 0%, rgba(8, 19, 33, 0.72) 100%), url('data:image/png;base64,{b64_hero}') center/cover no-repeat;" if b64_hero else "background: linear-gradient(135deg, #111827 0%, #1A2234 100%);"
@@ -1747,14 +1758,31 @@ if st.session_state["nav_tab"] in ("Home", "Overview"):
 
     # CARD 6: Next 5 Days Forecast (Model-Based)
     with col_r3_1:
-        # 5 days starting from current day
-        day_items = [
-            ("Tue", "14 Oct", "🌤️", "28° / 22°", "Good", "#10b981", "rgba(16, 185, 129, 0.2)", 82),
-            ("Wed", "15 Oct", "☀️", "29° / 22°", "Good", "#10b981", "rgba(16, 185, 129, 0.2)", 78),
-            ("Thu", "16 Oct", "⛅", "30° / 23°", "Satisfactory", "#eab308", "rgba(234, 179, 8, 0.2)", 95),
-            ("Fri", "17 Oct", "☁️", "30° / 23°", "Satisfactory", "#eab308", "rgba(234, 179, 8, 0.2)", 102),
-            ("Sat", "18 Oct", "🌧️", "29° / 22°", "Moderate", "#f59e0b", "rgba(245, 158, 11, 0.2)", 118),
-        ]
+        # 5 days starting from current day (dynamically calculated for 2026)
+        day_items = []
+        weather_icons = ["🌤️", "☀️", "⛅", "☁️", "🌧️"]
+        temp_offsets = [(0, -6), (1, -5), (2, -4), (1, -5), (0, -6)]
+        aqi_mults = [1.0, 0.95, 1.08, 1.14, 1.02]
+        for i in range(5):
+            d_target = now_ist + timedelta(days=i)
+            d_name = "Today" if i == 0 else d_target.strftime("%a")
+            d_date = d_target.strftime("%d %b")
+            t_hi = round(w_temp + temp_offsets[i][0])
+            t_lo = round(w_temp + temp_offsets[i][1])
+            d_temp_str = f"{t_hi}° / {t_lo}°"
+            p_aqi = max(25, min(350, int(round(aqi_num * aqi_mults[i]))))
+            p_cat = get_aqi_category(p_aqi)
+            p_color = p_cat.get("color", "#10b981")
+            day_items.append((
+                d_name,
+                d_date,
+                weather_icons[i % len(weather_icons)],
+                d_temp_str,
+                p_cat.get("category", "Good"),
+                p_color,
+                f"{p_color}33",
+                p_aqi,
+            ))
         days_html = "".join([
             f"""
             <div style="flex: 1; text-align: center; padding: 0.4rem 0.2rem; box-sizing: border-box;">

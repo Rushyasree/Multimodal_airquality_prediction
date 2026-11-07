@@ -14,3 +14,6 @@ timestamp_utc,event_type,status,station_id,parameter,duration_ms,message
 2026-11-06T12:17:38.140794+00:00,collection_cycle,HALTED_KILL_SWITCH,ALL,ALL,0.0,Collection halted: kill-switch is ACTIVE or collector is DISABLED in configuration.
 2026-11-06T15:13:39.356184+00:00,collection_cycle,HALTED_KILL_SWITCH,ALL,ALL,0.0,Collection halted: kill-switch is ACTIVE or collector is DISABLED in configuration.
 2026-11-06T15:40:04.139368+00:00,collection_cycle,HALTED_KILL_SWITCH,ALL,ALL,0.0,Collection halted: kill-switch is ACTIVE or collector is DISABLED in configuration.
+2026-11-07T15:31:26.704910+00:00,collection_cycle,HALTED_KILL_SWITCH,ALL,ALL,0.0,Collection halted: kill-switch is ACTIVE or collector is DISABLED in configuration.
+2026-11-07T15:56:20.707721+00:00,collection_cycle,HALTED_KILL_SWITCH,ALL,ALL,0.0,Collection halted: kill-switch is ACTIVE or collector is DISABLED in configuration.
+2026-11-07T16:01:47.387566+00:00,collection_cycle,HALTED_KILL_SWITCH,ALL,ALL,0.0,Collection halted: kill-switch is ACTIVE or collector is DISABLED in configuration.

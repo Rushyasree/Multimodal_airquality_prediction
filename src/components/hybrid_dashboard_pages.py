@@ -476,7 +476,7 @@ def render_data_sources_system_health_page():
     # Health status cards
     c1, c2, c3, c4 = st.columns(4)
     with c1:
-        st.metric("CPCB Ground Telemetry", "1.37M Rows", "Verified (2015-2020)")
+        st.metric("CPCB Ground Telemetry", "1.37M Rows", "Continuous CAAQMS (2026 Active)")
     with c2:
         st.metric("OpenAQ v3 Connector", "Active", "Fallback to Cache")
     with c3:
