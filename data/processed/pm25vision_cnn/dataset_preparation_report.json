@@ -1,0 +1,90 @@
+{
+  "source_manifest": "E:\\Documents\\multimodal_air_quality_vscode_starter\\data\\processed\\pm25vision_image_manifest.csv",
+  "station_coordinates_file": "E:\\Documents\\multimodal_air_quality_vscode_starter\\data\\processed\\station_coordinates_90.csv",
+  "initial_manifest_rows": 642,
+  "excluded_metadata_rows": 0,
+  "unreadable_images": 0,
+  "exact_duplicates_removed": 2,
+  "unique_images_retained": 640,
+  "spatial_matching": {
+    "distance_threshold_km": 5.0,
+    "images_within_threshold": 316,
+    "images_exceeding_threshold": 324,
+    "distance_km_min": 0.0522,
+    "distance_km_median": 5.1642,
+    "distance_km_mean": 92.780304375,
+    "distance_km_max": 620.7734,
+    "unique_stations_matched_all": 35,
+    "unique_stations_matched_within_5km": 23
+  },
+  "grouping": {
+    "strategy": "station_date_group (nearest_station_id + capture_date)",
+    "total_groups_full": 90,
+    "groups_with_multiple_images_full": 69,
+    "total_groups_matched": 48
+  },
+  "full_dataset_splits": {
+    "train": {
+      "images": 439,
+      "unique_image_ids": 439,
+      "station_date_groups": 57,
+      "unique_stations": 30,
+      "pm25_min": 21.0,
+      "pm25_max": 445.0,
+      "pm25_mean": 204.15,
+      "pm25_std": 61.38
+    },
+    "validation": {
+      "images": 122,
+      "unique_image_ids": 122,
+      "station_date_groups": 15,
+      "unique_stations": 13,
+      "pm25_min": 97.0,
+      "pm25_max": 394.0,
+      "pm25_mean": 309.24,
+      "pm25_std": 98.31
+    },
+    "test": {
+      "images": 79,
+      "unique_image_ids": 79,
+      "station_date_groups": 18,
+      "unique_stations": 13,
+      "pm25_min": 64.0,
+      "pm25_max": 461.0,
+      "pm25_mean": 230.68,
+      "pm25_std": 88.19
+    }
+  },
+  "matched_subset_splits": {
+    "train": {
+      "images": 188,
+      "unique_image_ids": 188,
+      "station_date_groups": 30,
+      "unique_stations": 16,
+      "pm25_min": 98.0,
+      "pm25_max": 461.0,
+      "pm25_mean": 202.23,
+      "pm25_std": 76.43
+    },
+    "validation": {
+      "images": 79,
+      "unique_image_ids": 79,
+      "station_date_groups": 8,
+      "unique_stations": 6,
+      "pm25_min": 100.0,
+      "pm25_max": 394.0,
+      "pm25_mean": 352.49,
+      "pm25_std": 84.62
+    },
+    "test": {
+      "images": 49,
+      "unique_image_ids": 49,
+      "station_date_groups": 10,
+      "unique_stations": 8,
+      "pm25_min": 121.0,
+      "pm25_max": 302.0,
+      "pm25_mean": 173.76,
+      "pm25_std": 44.94
+    }
+  }
+}

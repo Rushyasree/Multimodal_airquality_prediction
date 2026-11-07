@@ -1,0 +1,21 @@
+% Seasonal Evaluation Table across 4 IMD Defined Seasons
+\begin{table*}[t]
+\caption{Seasonal Forecasting Evaluation of Adapted Models Against Persistence Across IMD Seasons (506,848 Sequences)}
+\label{tab:seasonal_metrics}
+\centering
+\small
+\begin{tabular}{lrrrrrrrr}
+\toprule
+\textbf{IMD Meteorological Season} & \textbf{Samples ($N$)} & \textbf{Share (\%)} & \multicolumn{3}{c}{\textbf{$\text{PM}_{2.5}$ Metrics ($\mu\text{g/m}^3$)}} & \multicolumn{3}{c}{\textbf{$\text{PM}_{10}$ Metrics ($\mu\text{g/m}^3$)}} \\
+\cmidrule(lr){4-6} \cmidrule(lr){7-9}
+& & & \textbf{Persist MAE} & \textbf{Model MAE} & \textbf{$R^2$} & \textbf{Persist MAE} & \textbf{Model MAE} & \textbf{$R^2$} \\
+\midrule
+Winter (Jan--Feb) & 88,677 & 17.50\% & 12.63 & 14.29 & 0.9136 & 23.33 & 24.26 & 0.9047 \\
+Summer / Pre-Monsoon (Mar--May) & 135,788 & 26.79\% & 10.39 & 10.96 & 0.8212 & 23.85 & 23.01 & 0.8384 \\
+Monsoon (Jun--Sep) & 151,417 & 29.87\% & 5.96 & 6.92 & 0.7864 & 14.33 & 14.83 & 0.8316 \\
+Post-Monsoon (Oct--Dec) & 130,966 & 25.84\% & 12.82 & 12.91 & 0.9390 & 24.48 & 23.45 & 0.9170 \\
+\midrule
+\textbf{Full Longitudinal Portfolio} & \textbf{506,848} & \textbf{100.00\%} & \textbf{9.97} & \textbf{10.74} & \textbf{0.8651} & \textbf{20.84} & \textbf{20.89} & \textbf{0.8729} \\
+\bottomrule
+\end{tabular}
+\end{table*}

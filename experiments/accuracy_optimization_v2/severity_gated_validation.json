@@ -1,0 +1,225 @@
+{
+  "test_n": 404431,
+  "global_metrics_pm25": {
+    "1-Hour Persistence": {
+      "MAE": 10.6783,
+      "RMSE": 19.8072,
+      "R2": 0.9423,
+      "Bias": -0.09
+    },
+    "Pretrained LSTM": {
+      "MAE": 10.5719,
+      "RMSE": 18.5789,
+      "R2": 0.9492,
+      "Bias": 1.452
+    },
+    "Static Ensemble (0.90)": {
+      "MAE": 10.395,
+      "RMSE": 18.5498,
+      "R2": 0.9494,
+      "Bias": 1.0387
+    },
+    "Severity-Gated Ensemble": {
+      "MAE": 10.3508,
+      "RMSE": 18.3792,
+      "R2": 0.9503,
+      "Bias": 1.2907
+    }
+  },
+  "global_metrics_pm10": {
+    "1-Hour Persistence": {
+      "MAE": 19.7384,
+      "RMSE": 36.2374,
+      "R2": 0.9115,
+      "Bias": -0.1156
+    },
+    "Pretrained LSTM": {
+      "MAE": 18.8643,
+      "RMSE": 32.2027,
+      "R2": 0.9301,
+      "Bias": 3.2843
+    },
+    "Static Ensemble (0.80)": {
+      "MAE": 18.2809,
+      "RMSE": 31.9708,
+      "R2": 0.9311,
+      "Bias": 1.6778
+    },
+    "Severity-Gated Ensemble": {
+      "MAE": 18.1369,
+      "RMSE": 31.6385,
+      "R2": 0.9325,
+      "Bias": 2.366
+    }
+  },
+  "paired_block_bootstrap": {
+    "pm25": {
+      "static_vs_lstm_mae": {
+        "mean": 0.1769,
+        "ci95": [
+          0.1596,
+          0.1929
+        ],
+        "pval": 0.0
+      },
+      "static_vs_lstm_rmse": {
+        "mean": 0.0297,
+        "ci95": [
+          -0.0375,
+          0.0957
+        ],
+        "pval": 0.193
+      },
+      "gated_vs_lstm_mae": {
+        "mean": 0.221,
+        "ci95": [
+          0.2112,
+          0.2298
+        ],
+        "pval": 0.0
+      },
+      "gated_vs_lstm_rmse": {
+        "mean": 0.1999,
+        "ci95": [
+          0.1849,
+          0.2149
+        ],
+        "pval": 0.0
+      },
+      "gated_vs_static_mae": {
+        "mean": 0.0441,
+        "ci95": [
+          0.0321,
+          0.0572
+        ],
+        "pval": 0.0
+      },
+      "gated_vs_static_rmse": {
+        "mean": 0.1702,
+        "ci95": [
+          0.1092,
+          0.2317
+        ],
+        "pval": 0.0
+      }
+    },
+    "pm10": {
+      "static_vs_lstm_mae": {
+        "mean": 0.5835,
+        "ci95": [
+          0.5326,
+          0.6321
+        ],
+        "pval": 0.0
+      },
+      "static_vs_lstm_rmse": {
+        "mean": 0.2344,
+        "ci95": [
+          0.1204,
+          0.3469
+        ],
+        "pval": 0.0005
+      },
+      "gated_vs_lstm_mae": {
+        "mean": 0.7269,
+        "ci95": [
+          0.6936,
+          0.7592
+        ],
+        "pval": 0.0
+      },
+      "gated_vs_lstm_rmse": {
+        "mean": 0.5636,
+        "ci95": [
+          0.5161,
+          0.6112
+        ],
+        "pval": 0.0
+      },
+      "gated_vs_static_mae": {
+        "mean": 0.1434,
+        "ci95": [
+          0.1131,
+          0.1768
+        ],
+        "pval": 0.0
+      },
+      "gated_vs_static_rmse": {
+        "mean": 0.3292,
+        "ci95": [
+          0.2239,
+          0.4282
+        ],
+        "pval": 0.0
+      }
+    }
+  },
+  "severe_pm25_comparison": [
+    {
+      "Model": "1-Hour Persistence",
+      "Severe_Count": 18938,
+      "MAE": 38.3183,
+      "RMSE": 56.7316,
+      "Mean_Bias": -9.6737,
+      "Underpred_Pct": 57.71
+    },
+    {
+      "Model": "Pretrained LSTM",
+      "Severe_Count": 18938,
+      "MAE": 37.0812,
+      "RMSE": 56.2559,
+      "Mean_Bias": -16.4757,
+      "Underpred_Pct": 61.0
+    },
+    {
+      "Model": "Static Ensemble (0.90)",
+      "Severe_Count": 18938,
+      "MAE": 38.1299,
+      "RMSE": 57.6679,
+      "Mean_Bias": -21.9699,
+      "Underpred_Pct": 66.88
+    },
+    {
+      "Model": "Severity-Gated Ensemble",
+      "Severe_Count": 18938,
+      "MAE": 37.0928,
+      "RMSE": 56.241,
+      "Mean_Bias": -16.5944,
+      "Underpred_Pct": 61.1
+    }
+  ],
+  "severe_pm10_comparison": [
+    {
+      "Model": "1-Hour Persistence",
+      "Severe_Count": 15561,
+      "MAE": 66.7507,
+      "RMSE": 98.6215,
+      "Mean_Bias": -24.8795,
+      "Underpred_Pct": 59.8
+    },
+    {
+      "Model": "Pretrained LSTM",
+      "Severe_Count": 15561,
+      "MAE": 61.8232,
+      "RMSE": 94.6917,
+      "Mean_Bias": -35.2287,
+      "Underpred_Pct": 66.16
+    },
+    {
+      "Model": "Static Ensemble (0.80)",
+      "Severe_Count": 15561,
+      "MAE": 67.0962,
+      "RMSE": 98.5569,
+      "Mean_Bias": -52.2757,
+      "Underpred_Pct": 77.76
+    },
+    {
+      "Model": "Severity-Gated Ensemble",
+      "Severe_Count": 15561,
+      "MAE": 62.3524,
+      "RMSE": 95.0548,
+      "Mean_Bias": -36.2249,
+      "Underpred_Pct": 66.96
+    }
+  ]
+}

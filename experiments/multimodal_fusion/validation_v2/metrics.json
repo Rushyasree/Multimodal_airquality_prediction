@@ -1,0 +1,90 @@
+{
+  "evaluation_cohort": {
+    "total_test_samples": 97,
+    "test_groups_count": 9,
+    "test_stations_count": 8,
+    "target_mean": 110.80072021484375,
+    "target_std": 80.43861389160156,
+    "target_min": 22.649999618530273,
+    "target_max": 500.25
+  },
+  "validation_cohort": {
+    "total_val_samples": 21,
+    "val_groups_count": 6,
+    "val_stations_count": 6,
+    "target_mean": 78.0680923461914,
+    "target_std": 37.09721755981445,
+    "target_min": 44.959999084472656,
+    "target_max": 148.05999755859375
+  },
+  "training_cohort": {
+    "total_train_samples": 81,
+    "train_groups_count": 18,
+    "train_stations_count": 12,
+    "target_mean": 175.07952880859375,
+    "target_std": 193.90045166015625,
+    "target_min": 30.0,
+    "target_max": 473.0
+  },
+  "test_metrics": {
+    "sensor_only_lstm": {
+      "MAE": 40.94197082519531,
+      "RMSE": 64.81013488769531,
+      "R2": 0.35083264112472534,
+      "unit": "ug/m3"
+    },
+    "image_only_resnet50": {
+      "MAE": 64.98703002929688,
+      "RMSE": 94.59017944335938,
+      "R2": -0.38281142711639404,
+      "unit": "ug/m3"
+    },
+    "multimodal_fusion": {
+      "MAE": 58.9355583190918,
+      "RMSE": 85.92422485351562,
+      "R2": -0.1410430669784546,
+      "unit": "ug/m3"
+    }
+  },
+  "validation_metrics": {
+    "sensor_only_lstm": {
+      "MAE": 25.412792205810547,
+      "RMSE": 28.003719329833984,
+      "R2": 0.43016552925109863,
+      "unit": "ug/m3"
+    },
+    "image_only_resnet50": {
+      "MAE": 31.96975326538086,
+      "RMSE": 43.76711654663086,
+      "R2": -0.39191651344299316,
+      "unit": "ug/m3"
+    },
+    "multimodal_fusion": {
+      "MAE": 32.19966125488281,
+      "RMSE": 44.609371185302734,
+      "R2": -0.44600415229797363,
+      "unit": "ug/m3"
+    }
+  },
+  "training_metrics": {
+    "sensor_only_lstm": {
+      "MAE": 119.46671295166016,
+      "RMSE": 182.27049255371094,
+      "R2": 0.11636042594909668,
+      "unit": "ug/m3"
+    },
+    "image_only_resnet50": {
+      "MAE": 107.00383758544922,
+      "RMSE": 185.32151794433594,
+      "R2": 0.08653056621551514,
+      "unit": "ug/m3"
+    },
+    "multimodal_fusion": {
+      "MAE": 41.13835906982422,
+      "RMSE": 71.39866638183594,
+      "R2": 0.8644115924835205,
+      "unit": "ug/m3"
+    }
+  },
+  "scientific_conclusion": "Under strict validation-based model selection (zero test-loss monitoring), the empirical hierarchy remains identical: Sensor-Only LSTM outperforms Multimodal Fusion, which in turn outperforms Image-Only ResNet-50. Because public outdoor camera images lack sub-daily EXIF timestamps, pairing static midday photographs with dynamic telemetry introduces phase noise that degrades forecasting performance relative to pure telemetry."
+}

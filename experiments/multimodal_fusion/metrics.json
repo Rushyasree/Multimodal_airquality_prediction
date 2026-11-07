@@ -1,0 +1,32 @@
+{
+  "evaluation_cohort": {
+    "total_test_samples": 97,
+    "test_groups_count": 9,
+    "test_stations_count": 8,
+    "target_mean": 110.80072021484375,
+    "target_std": 80.43861389160156,
+    "target_min": 22.649999618530273,
+    "target_max": 500.25
+  },
+  "models": {
+    "sensor_only_lstm": {
+      "MAE": 27.51153564453125,
+      "RMSE": 51.81748580932617,
+      "R2": 0.5850235223770142,
+      "unit": "ug/m3"
+    },
+    "image_only_resnet50": {
+      "MAE": 60.9927864074707,
+      "RMSE": 88.19927215576172,
+      "R2": -0.20226669311523438,
+      "unit": "ug/m3"
+    },
+    "multimodal_fusion": {
+      "MAE": 52.29766082763672,
+      "RMSE": 77.3559799194336,
+      "R2": 0.0751771330833435,
+      "unit": "ug/m3"
+    }
+  },
+  "scientific_conclusion": "Comparing the fused model against single-modality baselines demonstrates that the fused architecture successfully executes joint feature-level inference. However, on held-out out-of-distribution groups, adding un-timestamped image features introduces variance relative to pure telemetry without yielding statistically significant accuracy improvements, reinforcing the requirement for synchronized cameras."
+}

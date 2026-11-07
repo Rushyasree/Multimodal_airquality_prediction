@@ -1,0 +1,18 @@
+% Spatial-Temporal Cross-Station Advection Table
+\begin{table*}[t]
+\caption{Cross-Station Spatial Advection, Lag Correlation, and Multi-Node Forecasting Gains Across Intra-Urban Station Clusters}
+\label{tab:spatial_advection}
+\centering
+\small
+\begin{tabular}{llccrrrrr}
+\toprule
+\textbf{Corridor / Cluster} & \textbf{Station Pair} & \textbf{Distance} & \textbf{Bearing} & \multicolumn{2}{c}{\textbf{Peak Correlation ($r$)}} & \multicolumn{3}{c}{\textbf{$\text{PM}_{2.5}$ Forecasting MAE ($\mu\text{g/m}^3$)}} \\
+\cmidrule(lr){5-6} \cmidrule(lr){7-9}
+& ($A \leftrightarrow B$) & \textbf{(km)} & \textbf{($^\circ$)} & \textbf{$\tau = 0\text{h}$} & \textbf{$\tau_{\text{peak}}$ (Advective Lag)} & \textbf{Persistence} & \textbf{Single GBDT} & \textbf{Multi-Node GBDT} \\
+\midrule
+Delhi NCR Urban Corridor & Anand Vihar $\leftrightarrow$ DTU & 22.97 & $299.8^\circ$ & 0.7107 & 0.7107 ($\tau = 0\text{h}$) & 14.74 & 13.91 & 14.19 ($-2.03\%$) \\
+Mumbai Coastal Marine Corridor & Bandra $\leftrightarrow$ Colaba & 17.20 & $189.2^\circ$ & 0.5283 & \textbf{0.5385 ($\tau = +1\text{h}$)} & 6.31 & 6.10 & \textbf{6.05 (+0.86\%)} \\
+Kolkata Gangetic Urban Corridor & Bidhannagar $\leftrightarrow$ Jadavpur & 10.07 & $204.6^\circ$ & 0.9078 & 0.9078 ($\tau = 0\text{h}$) & 2.94 & 2.86 & 2.94 ($-3.00\%$) \\
+\bottomrule
+\end{tabular}
+\end{table*}

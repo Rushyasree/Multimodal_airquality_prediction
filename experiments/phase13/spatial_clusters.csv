@@ -1,0 +1,4 @@
+cluster_name,city,station_a,station_a_name,station_b,station_b_name,distance_km,bearing_a_to_b,bearing_b_to_a
+Delhi NCR Urban Corridor,Delhi,DL002,"Anand Vihar, Delhi - DPCC",DL008,"DTU, Delhi - CPCB",22.97,299.8,119.7
+Mumbai Coastal Marine Corridor,Mumbai,MH005,"Bandra, Mumbai - MPCB",MH008,"Colaba, Mumbai - MPCB",17.2,189.2,9.2
+Kolkata Gangetic Urban Corridor,Kolkata,WB008,"Bidhannagar, Kolkata - WBPCB",WB010,"Jadavpur, Kolkata - WBPCB",10.07,204.6,24.6

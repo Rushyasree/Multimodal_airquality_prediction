@@ -1,0 +1,40 @@
+PM25VISION MATCH VALIDATION
+=============================================
+Rows in alignment audit: 642
+Usable diagnostic pairs: 265
+Unique image IDs in audit: 640
+
+DUPLICATE CHECKS
+Rows with repeated image IDs: 4
+Rows belonging to repeated station-date pairs: 259
+Unique station-date pairs: 36
+
+PM2.5 COMPARISON
+Image PM2.5 mean: 236.83
+Station daily mean PM2.5 mean: 166.09
+Mean signed difference (image - station): 70.74
+Median absolute difference: 64.15
+Mean absolute difference: 70.74
+Correlation: 0.983
+
+DISTANCE GROUPS
+Within 1 km: 208 pairs; MAE = 64.83
+Within 2 km: 259 pairs; MAE = 70.54
+Within 5 km: 265 pairs; MAE = 70.74
+
+BY SOURCE SPLIT
+test: 151 pairs; unique station-dates = 7; MAE = 61.33
+train: 114 pairs; unique station-dates = 30; MAE = 83.21
+
+FIRST 10 MATCHED PAIRS
+split         image_id image_date nearest_station  distance_km  image_pm25  station_daily_pm25
+train  483160026239455 2019-06-17           DL019        1.419        98.0           64.843750
+train 4494481647246918 2019-08-03           DL024        0.321       100.0           34.604167
+train  952881338871877 2017-12-22           PB001        0.152       129.0           56.461250
+train  371947440793121 2018-12-18           RJ004        0.992       102.0           36.791667
+train 2930003930580950 2018-12-18           RJ004        1.103       102.0           36.791667
+train  801075937499760 2019-02-24           AP005        0.997       112.0           41.708333
+train  472048164030182 2017-12-22           PB001        0.393       129.0           56.461250
+train  280459853736877 2018-12-22           RJ004        1.411       131.0           49.272917
+train  516769283066783 2018-12-18           RJ004        0.624       102.0           36.791667
+train  520517065616307 2019-11-03           WB013        1.223       143.0           61.403750

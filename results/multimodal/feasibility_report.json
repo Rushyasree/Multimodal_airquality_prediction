@@ -1,0 +1,127 @@
+{
+  "project": "Multimodal Spatio-Temporal Air Quality Prediction for Indian Urban Environments",
+  "feasibility_assessment": {
+    "is_hourly_multimodal_fusion_defensible": false,
+    "is_exploratory_matched_analysis_defensible": true,
+    "primary_reasons": [
+      "Lack of sub-daily timestamps: PM25Vision records dates only (YYYY-MM-DD), with no hour/minute data, making alignment with 24-hour sequence forecasting impossible without arbitrary hour assignment.",
+      "Extreme intraday variance: Station PM2.5 fluctuates by an average of 166.72 ug/m3 (min 85.21 to max 251.93 ug/m3) within a single day at matched sites.",
+      "Severe effective sample size bottleneck: Only 265 image-station pairs share a date within 5 km, representing only 36 independent station-date groups across 19 stations over 5.5 years.",
+      "Heavy spatial and temporal clustering: 40% of all matched images originate from just two bursts (63 images at DL002 on 2016-01-30 and 42 images at DL026 on 2018-10-24).",
+      "Target discrepancy and bias: PM25Vision image labels have an average positive bias of +70.74 ug/m3 relative to CPCB ground monitors (236.83 vs 166.09 ug/m3), reflecting distinct underlying data generation processes."
+    ]
+  },
+  "phase_2_audit_answers": {
+    "q1_sample_sizes": {
+      "clean_manifest_rows": 640,
+      "unique_image_ids": 640,
+      "unique_sha256_contents": 640,
+      "unique_nearest_stations_all": 35,
+      "unique_station_date_groups_all": 90,
+      "temporal_coverage": "2015-09-06 to 2020-02-29"
+    },
+    "q2_spatial_and_temporal_matching": {
+      "cpcb_stations_evaluated": 90,
+      "threshold_km": 5.0,
+      "images_within_5km": 316,
+      "images_exceeding_5km": 324,
+      "distance_min_km": 0.0522,
+      "distance_median_km": 5.1642,
+      "distance_mean_km": 92.7803,
+      "distance_max_km": 620.7734,
+      "images_within_1km": 215,
+      "images_within_2km": 302
+    },
+    "q3_independent_matched_groups": {
+      "matched_images_count": 265,
+      "unique_station_date_groups": 36,
+      "unique_stations_matched": 19,
+      "group_size_mean": 7.36,
+      "group_size_median": 2.5,
+      "group_size_max": 63,
+      "top_group": "DL002__2016-01-30 (63 images)",
+      "second_group": "DL026__2018-10-24 (42 images)"
+    },
+    "q4_repeated_images_analysis": {
+      "finding": "Repeated images in a station-date group represent distinct camera captures (distinct SHA-256 hashes) taken in rapid succession at nearly identical GPS coordinates, all sharing the same static PM2.5 label.",
+      "example_dl002": {
+        "group": "DL002__2016-01-30",
+        "images_count": 63,
+        "unique_pm25_labels": [
+          394.0
+        ],
+        "lat_range": [
+          28.6411,
+          28.6514
+        ],
+        "lon_range": [
+          77.3159,
+          77.3203
+        ],
+        "distance_range_km": [
+          0.309,
+          0.787
+        ],
+        "unique_sha256": 63
+      }
+    },
+    "q5_task_support_assessment": {
+      "next_hour_forecasting_supported": false,
+      "same_day_estimation_supported": "Exploratory only (small N)",
+      "exploratory_image_only_supported": true,
+      "intraday_station_pm25_min_mean": 85.21,
+      "intraday_station_pm25_max_mean": 251.93,
+      "intraday_pm25_range_mean": 166.72
+    },
+    "q6_statistical_power_and_splits": {
+      "total_independent_groups": 36,
+      "train_groups_count": 27,
+      "test_groups_count": 9,
+      "train_samples_count": 205,
+      "test_samples_count": 60,
+      "test_pm25_mean": 131.71,
+      "test_pm25_std": 86.82
+    }
+  },
+  "controlled_matched_experiment_metrics": {
+    "PM2.5": {
+      "Numerical_Only": {
+        "MAE": 193.1787,
+        "RMSE": 219.8654,
+        "R2": -5.4129
+      },
+      "Image_Only": {
+        "MAE": 73.6699,
+        "RMSE": 95.3836,
+        "R2": -0.207
+      },
+      "Multimodal_Fusion": {
+        "MAE": 85.8619,
+        "RMSE": 106.5622,
+        "R2": -0.5064
+      }
+    },
+    "PM10": {
+      "Numerical_Only": {
+        "MAE": 297.1218,
+        "RMSE": 349.2314,
+        "R2": -3.2755
+      },
+      "Image_Only": {
+        "MAE": 137.6515,
+        "RMSE": 172.1311,
+        "R2": -0.0387
+      },
+      "Multimodal_Fusion": {
+        "MAE": 150.4686,
+        "RMSE": 186.1649,
+        "R2": -0.215
+      }
+    }
+  },
+  "recommended_paper_strategy": {
+    "main_forecasting_model": "Numerical LSTM (404,431 test sequences, PM2.5 MAE=10.57, R2=0.949)",
+    "vision_model_role": "Image-only exploratory baseline (ResNet-50 transfer learning, 640 images, Test MAE=66.21, R2=0.152)",
+    "fusion_conclusion": "Rigorous negative result / boundary condition: Opportunistic ground imagery lacking precise sub-daily timestamps cannot defensibly enhance continuous hourly forecasting systems. Future multimodal architectures require synchronized sensor-camera capture networks."
+  }
+}

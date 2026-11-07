@@ -1,0 +1,25 @@
+test_file,status,passed,failed,skipped,errors,duration_sec,notes
+test_accuracy_optimization_v2.py,PASSED,5,0,0,0,20.88,Clean execution
+test_current_air_quality.py,PASSED,22,0,0,0,50.99,Clean execution
+test_dashboard_navigation.py,PASSED,1,0,0,0,67.77,Clean execution
+test_eight_sections_smoke.py,PASSED,8,0,0,0,48.33,Clean execution
+test_environmental_vision.py,PASSED,13,0,0,0,45.35,Clean execution
+test_forecast_table.py,PASSED,4,0,0,0,29.76,Clean execution
+test_freshness_and_stale_data.py,PASSED,9,0,0,0,12.95,Clean execution
+test_geolocation_and_live_stations.py,PASSED,14,0,0,0,16.22,Clean execution
+test_greeting_and_aqi_card.py,PASSED,14,0,0,0,66.32,Clean execution
+test_live_openaq_connectivity.py,PASSED,2,0,2,0,32.1,Clean execution
+test_live_rolling_buffer.py,PASSED,12,0,0,0,40.58,Clean execution
+test_optimized_hybrid.py,PASSED,7,0,0,0,45.7,Clean execution
+test_phase10_monitoring.py,PASSED,6,0,0,0,35.05,Clean execution
+test_phase11_robustness.py,PASSED,6,0,0,0,11.79,Clean execution
+test_phase12_autonomous_monitoring.py,PASSED,9,0,0,0,29.35,Clean execution
+test_phase13_spatial_advection.py,PASSED,6,0,0,0,12.83,Clean execution
+test_phase5b_e2e_verification.py,PASSED,7,0,0,0,38.64,Clean execution
+test_phase8_live_trial.py,PASSED,8,0,0,0,29.64,Clean execution
+test_phase9_audit.py,PASSED,7,0,0,0,18.89,Clean execution
+test_pipeline.py,PASSED,20,0,0,0,59.72,Clean execution
+test_shadow_mode_integration.py,PASSED,8,0,0,0,23.4,Clean execution
+test_shadow_observation_runner.py,PASSED,6,0,0,0,17.42,Clean execution
+test_standalone_gbdt_inference.py,PASSED,13,0,0,0,35.86,Clean execution
+test_unified_services.py,PASSED,6,0,0,0,56.24,Clean execution

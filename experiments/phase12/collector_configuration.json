@@ -1,0 +1,66 @@
+{
+  "collector_version": "v2.0-autonomous",
+  "phase": "Phase 12: Autonomous Live Monitoring, Multi-Station Expansion & Research Validation",
+  "operational_mode": "autonomous_hourly_shadow",
+  "collector_enabled": true,
+  "kill_switch_active": false,
+  "prevent_model_retraining": true,
+  "collection_interval_minutes": 60,
+  "cron_schedule": "15 * * * *",
+  "default_lookback_hours": 6,
+  "request_timeout_seconds": 10,
+  "max_retries": 3,
+  "backoff_factor_seconds": 2.0,
+  "data_providers": [
+    {
+      "name": "OpenAQ API v3",
+      "endpoint": "https://api.openaq.org/v3",
+      "auth_header": "X-API-Key (read from .env)"
+    },
+    {
+      "name": "Open-Meteo Weather API",
+      "endpoint": "https://api.open-meteo.com/v1/forecast",
+      "auth": "None / Public Domain"
+    },
+    {
+      "name": "CPCB CAAQMS Historical Baseline",
+      "source": "data/processed/recent_air_quality_cleaned.csv",
+      "auth": "Internal"
+    }
+  ],
+  "storage_paths": {
+    "observations_csv": "experiments/phase12/live_observations.csv",
+    "predictions_csv": "experiments/phase12/live_predictions.csv",
+    "evaluation_csv": "experiments/phase12/live_evaluation.csv",
+    "health_log_csv": "experiments/phase12/collection_health.csv",
+    "state_json": "experiments/phase12/collector_state.json",
+    "station_registry_csv": "experiments/phase12/station_registry.csv"
+  },
+  "monitored_stations_count": 15,
+  "cohorts": {
+    "Phase8-4Stations": [
+      "AP001",
+      "AP005",
+      "DL002",
+      "DL008"
+    ],
+    "Expanded-MultiStation": [
+      "MH005",
+      "MH008",
+      "GJ001",
+      "WB008",
+      "WB010",
+      "BR008",
+      "KA004",
+      "TG001",
+      "TN002",
+      "CH001",
+      "AS001"
+    ]
+  },
+  "provenance_security": {
+    "credentials_redacted": true,
+    "env_file_path": ".env",
+    "allow_cli_api_keys": false
+  }
+}

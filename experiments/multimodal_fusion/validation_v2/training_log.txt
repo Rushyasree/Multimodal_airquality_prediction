@@ -1,0 +1,79 @@
+================================================================================
+VAYUDRISHTI MULTIMODAL FUSION TRAINING (VALIDATION V2 - STRICT VALIDATION SELECTION)
+Timestamp: 2026-10-24 20:20:23
+Seed: 42 | Batch Size: 8 | Epochs: 15
+LR: 0.0005 | Weight Decay: 0.0001
+================================================================================
+Loaded paired manifest: 199 instances across 33 groups.
+Train split: 81 samples, 18 groups, 12 stations.
+Val split:   21 samples, 6 groups, 6 stations.
+Test split:  97 samples, 9 groups, 8 stations.
+Zero group overlap confirmed between all three splits.
+
+----------------------------------------------------------------------
+TRAINING MODEL A: Sensor-Only LSTM Baseline
+----------------------------------------------------------------------
+[SensorOnly] LSTM recurrent backbone frozen; training projection & regression head.
+Epoch 01/15 | Train Loss: 144.8340 | Val Loss: 40.0076
+Epoch 02/15 | Train Loss: 144.5827 | Val Loss: 39.9794
+Epoch 03/15 | Train Loss: 144.6284 | Val Loss: 39.9454
+Epoch 04/15 | Train Loss: 144.4547 | Val Loss: 39.9054
+Epoch 05/15 | Train Loss: 140.5783 | Val Loss: 39.8419
+Epoch 06/15 | Train Loss: 144.1803 | Val Loss: 39.7285
+Epoch 07/15 | Train Loss: 140.0976 | Val Loss: 39.5333
+Epoch 08/15 | Train Loss: 144.0174 | Val Loss: 39.2082
+Epoch 09/15 | Train Loss: 138.8790 | Val Loss: 38.6900
+Epoch 10/15 | Train Loss: 141.8426 | Val Loss: 37.8919
+Epoch 11/15 | Train Loss: 139.5716 | Val Loss: 36.6944
+Epoch 12/15 | Train Loss: 133.5139 | Val Loss: 34.9469
+Epoch 13/15 | Train Loss: 129.9316 | Val Loss: 32.4264
+Epoch 14/15 | Train Loss: 124.9908 | Val Loss: 29.0370
+Epoch 15/15 | Train Loss: 118.3195 | Val Loss: 24.9128
+Selected Sensor-Only Checkpoint at Epoch 15 with Val Loss: 24.9128
+
+----------------------------------------------------------------------
+TRAINING MODEL B: Image-Only ResNet-50 Baseline
+----------------------------------------------------------------------
+[ImageOnly] ResNet-50 backbone frozen; training projection & regression head.
+Epoch 01/15 | Train Loss: 140.7984 | Val Loss: 40.0015
+Epoch 02/15 | Train Loss: 144.8732 | Val Loss: 39.9686
+Epoch 03/15 | Train Loss: 144.5024 | Val Loss: 39.8979
+Epoch 04/15 | Train Loss: 143.5086 | Val Loss: 39.5832
+Epoch 05/15 | Train Loss: 141.0287 | Val Loss: 38.9032
+Epoch 06/15 | Train Loss: 136.5164 | Val Loss: 38.0344
+Epoch 07/15 | Train Loss: 129.3572 | Val Loss: 37.8502
+Epoch 08/15 | Train Loss: 118.8208 | Val Loss: 38.0977
+Epoch 09/15 | Train Loss: 115.9386 | Val Loss: 35.1492
+Epoch 10/15 | Train Loss: 112.3864 | Val Loss: 31.4698
+Epoch 11/15 | Train Loss: 104.6832 | Val Loss: 32.1738
+Epoch 12/15 | Train Loss: 101.9224 | Val Loss: 32.8064
+Epoch 13/15 | Train Loss: 89.8554 | Val Loss: 32.5388
+Epoch 14/15 | Train Loss: 80.6121 | Val Loss: 36.2954
+Epoch 15/15 | Train Loss: 58.8928 | Val Loss: 36.2826
+Selected Image-Only Checkpoint at Epoch 10 with Val Loss: 31.4698
+
+----------------------------------------------------------------------
+TRAINING MODEL C: Multimodal Fusion Model (LSTM + ResNet-50)
+----------------------------------------------------------------------
+[Fusion] LSTM encoder frozen; training joint projection layers and regression head.
+Epoch 01/15 | Train Loss: 144.6137 | Val Loss: 40.0201
+Epoch 02/15 | Train Loss: 144.7136 | Val Loss: 39.9885
+Epoch 03/15 | Train Loss: 140.6218 | Val Loss: 39.9421
+Epoch 04/15 | Train Loss: 140.2822 | Val Loss: 39.8440
+Epoch 05/15 | Train Loss: 143.2593 | Val Loss: 39.5890
+Epoch 06/15 | Train Loss: 141.5413 | Val Loss: 39.1472
+Epoch 07/15 | Train Loss: 137.0821 | Val Loss: 38.3466
+Epoch 08/15 | Train Loss: 129.3897 | Val Loss: 36.4763
+Epoch 09/15 | Train Loss: 114.8814 | Val Loss: 39.3541
+Epoch 10/15 | Train Loss: 103.2971 | Val Loss: 36.0735
+Epoch 11/15 | Train Loss: 85.0526 | Val Loss: 32.2824
+Epoch 12/15 | Train Loss: 63.6079 | Val Loss: 31.6997
+Epoch 13/15 | Train Loss: 39.6783 | Val Loss: 33.0786
+Epoch 14/15 | Train Loss: 47.0881 | Val Loss: 37.9224
+Epoch 15/15 | Train Loss: 51.4142 | Val Loss: 42.2513
+Selected Fusion Checkpoint at Epoch 12 with Val Loss: 31.6997
+
+================================================================================
+TRAINING COMPLETE: All checkpoints saved based exclusively on VALIDATION loss.
+Checkpoints directory: E:\Documents\multimodal_air_quality_vscode_starter\experiments\multimodal_fusion\validation_v2\checkpoints
+================================================================================

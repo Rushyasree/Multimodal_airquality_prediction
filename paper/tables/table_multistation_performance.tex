@@ -1,0 +1,32 @@
+% Multi-Station Evaluation Table across 15 CAAQMS Stations in 11 States/UTs
+\begin{table*}[t]
+\caption{Station-Wise Evaluation of Standalone Adapted GBDT Against 1-Hour Persistence Across 15 CAAQMS Stations in 11 Indian States/UTs}
+\label{tab:multistation_performance}
+\centering
+\scriptsize
+\begin{tabular}{lllrrrrrrrr}
+\toprule
+\textbf{Station ID} & \textbf{City, State} & \textbf{Station Name} & \textbf{Samples ($N$)} & \multicolumn{3}{c}{\textbf{$\text{PM}_{2.5}$ Metrics ($\mu\text{g/m}^3$)}} & \multicolumn{3}{c}{\textbf{$\text{PM}_{10}$ Metrics ($\mu\text{g/m}^3$)}} & \textbf{Gain (\%)} \\
+\cmidrule(lr){5-7} \cmidrule(lr){8-10}
+& & & & \textbf{Persist} & \textbf{GBDT} & \textbf{$R^2$} & \textbf{Persist} & \textbf{GBDT} & \textbf{$R^2$} & \textbf{$\text{PM}_{2.5}$ / $\text{PM}_{10}$} \\
+\midrule
+\texttt{AP001} & Amaravati, AP & Secretariat, Amaravati - APPCB & 149 & 1.45 & 2.09 & 0.8364 & 6.41 & 7.62 & 0.8201 & -44.3\% / -18.9\% \\
+\texttt{AP005} & Visakhapatnam, AP & GVM Corporation - APPCB & 3,550 & 5.35 & 5.10 & 0.7148 & 17.69 & 16.40 & 0.7183 & +4.59\% / +7.29\% \\
+\texttt{DL002} & Delhi, DL & Anand Vihar - DPCC & 3,357 & 15.07 & 14.25 & 0.6927 & 34.40 & 32.30 & 0.7900 & +5.41\% / +6.11\% \\
+\texttt{DL008} & Delhi, DL & DTU, Delhi - CPCB & 2,674 & 11.07 & 10.63 & 0.6500 & 35.78 & 34.10 & 0.6486 & +3.94\% / +4.71\% \\
+\texttt{MH005} & Mumbai, MH & Bandra, Mumbai - MPCB & 2,828 & 5.42 & 5.54 & 0.7093 & 9.98 & 9.31 & 0.8962 & -2.08\% / +6.72\% \\
+\texttt{MH008} & Mumbai, MH & Colaba, Mumbai - MPCB & 2,226 & 5.80 & 6.48 & -0.6867 & 15.83 & 15.79 & -0.3115 & -11.82\% / +0.25\% \\
+\texttt{GJ001} & Ahmedabad, GJ & Maninagar - GPCB & 3,059 & 5.47 & 5.13 & 0.7886 & 14.12 & 13.20 & 0.7318 & +6.35\% / +6.46\% \\
+\texttt{WB008} & Kolkata, WB & Bidhannagar - WBPCB & 3,455 & 2.52 & 2.64 & 0.8445 & 2.73 & 3.16 & 0.9006 & -4.79\% / -15.79\% \\
+\texttt{WB010} & Kolkata, WB & Jadavpur - WBPCB & 3,562 & 2.29 & 2.33 & 0.9120 & 4.47 & 4.50 & 0.9151 & -1.79\% / -0.68\% \\
+\texttt{BR008} & Patna, BR & Muradpur, Patna - BSPCB & 3,379 & 4.68 & 4.54 & 0.9064 & 19.28 & 17.57 & 0.8361 & +2.98\% / +8.86\% \\
+\texttt{KA004} & Bengaluru, KA & Bapuji Nagar - KSPCB & 3,548 & 3.87 & 3.80 & 0.7578 & 9.67 & 9.34 & 0.7661 & +1.67\% / +3.36\% \\
+\texttt{TG001} & Hyderabad, TG & Bollaram Ind. - TSPCB & 3,089 & 3.35 & 3.49 & 0.7839 & 10.26 & 10.05 & 0.8276 & -4.02\% / +2.03\% \\
+\texttt{TN002} & Chennai, TN & Manali Village - TNPCB & 3,180 & 5.49 & 5.20 & 0.7350 & 5.47 & 4.91 & 0.8352 & +5.19\% / +10.22\% \\
+\texttt{CH001} & Chandigarh, CH & Sector-25 - CPCC & 3,037 & 3.66 & 3.63 & 0.9522 & 6.61 & 6.44 & 0.9218 & +0.77\% / +2.52\% \\
+\texttt{AS001} & Guwahati, AS & Railway Colony - APCB & 2,456 & 6.46 & 6.03 & 0.8754 & 14.74 & 14.40 & 0.6664 & +6.56\% / +2.30\% \\
+\midrule
+\textbf{Pooled} & \textbf{All 15 Stations} & \textbf{Nationwide Portfolio} & \textbf{236,289} & \textbf{6.95} & \textbf{6.67} & \textbf{0.8219} & \textbf{17.16} & \textbf{16.29} & \textbf{0.8415} & \textbf{+3.97\% / +5.06\%} \\
+\bottomrule
+\end{tabular}
+\end{table*}

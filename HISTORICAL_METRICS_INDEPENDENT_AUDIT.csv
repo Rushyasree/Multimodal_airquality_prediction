@@ -1,0 +1,39 @@
+cohort,tier,model,pollutant,count,mae,rmse,r2,mbe,medae
+10k_heldout_sensor,Overall,Persistence Baseline,PM2.5,10000,10.7401,20.7344,0.9411,-0.4068,5.5
+10k_heldout_sensor,Overall,Persistence Baseline,PM10,10000,19.9721,36.8381,0.9119,-0.5409,10.0
+10k_heldout_sensor,Overall,2-Layer LSTM Forecaster,PM2.5,10000,10.863,19.8396,0.9461,1.3149,6.6401
+10k_heldout_sensor,Overall,2-Layer LSTM Forecaster,PM10,10000,19.1588,32.3566,0.9321,3.1829,11.6347
+10k_heldout_sensor,Overall,Residual GBDT Model,PM2.5,10000,13.0127,32.3146,0.857,-3.0873,5.4434
+10k_heldout_sensor,Overall,Residual GBDT Model,PM10,10000,20.5595,42.3082,0.8838,-5.5126,9.3666
+10k_heldout_sensor,Overall,Validated Static Ensemble,PM2.5,10000,10.6797,19.9174,0.9457,0.8747,6.4559
+10k_heldout_sensor,Overall,Validated Static Ensemble,PM10,10000,18.6082,32.2009,0.9327,1.4438,10.9279
+10k_heldout_sensor,Good (0-30),Persistence Baseline,PM2.5,2958,4.3931,7.5152,-0.0968,1.6572,2.88
+10k_heldout_sensor,Good (0-30),2-Layer LSTM Forecaster,PM2.5,2958,6.5302,9.0875,-0.6038,5.708,5.0978
+10k_heldout_sensor,Good (0-30),Residual GBDT Model,PM2.5,2958,4.679,7.411,-0.0666,3.138,3.1922
+10k_heldout_sensor,Good (0-30),Validated Static Ensemble,PM2.5,2958,6.2929,8.8302,-0.5143,5.451,4.8774
+10k_heldout_sensor,Moderate (30-60),Persistence Baseline,PM2.5,2769,6.9131,10.1051,-0.3829,0.5252,5.0
+10k_heldout_sensor,Moderate (30-60),2-Layer LSTM Forecaster,PM2.5,2769,7.0294,9.7049,-0.2756,3.428,5.2426
+10k_heldout_sensor,Moderate (30-60),Residual GBDT Model,PM2.5,2769,6.1709,8.7288,-0.0319,1.1076,4.4245
+10k_heldout_sensor,Moderate (30-60),Validated Static Ensemble,PM2.5,2769,6.8405,9.4455,-0.2083,3.1959,5.0824
+10k_heldout_sensor,Poor (60-90),Persistence Baseline,PM2.5,1618,10.2363,15.7425,-2.5152,-0.0072,6.93
+10k_heldout_sensor,Poor (60-90),2-Layer LSTM Forecaster,PM2.5,1618,9.3943,13.3213,-1.5171,0.8243,6.9079
+10k_heldout_sensor,Poor (60-90),Residual GBDT Model,PM2.5,1618,8.9357,13.254,-1.4917,-0.5696,6.3974
+10k_heldout_sensor,Poor (60-90),Validated Static Ensemble,PM2.5,1618,9.1562,13.0514,-1.4161,0.6849,6.7227
+10k_heldout_sensor,Very Poor (90-120),Persistence Baseline,PM2.5,864,14.1531,21.1736,-5.1561,-0.3532,9.905
+10k_heldout_sensor,Very Poor (90-120),2-Layer LSTM Forecaster,PM2.5,864,13.8581,18.9582,-3.9353,-1.3105,10.7882
+10k_heldout_sensor,Very Poor (90-120),Residual GBDT Model,PM2.5,864,12.8946,18.4878,-3.6934,-0.9477,9.7302
+10k_heldout_sensor,Very Poor (90-120),Validated Static Ensemble,PM2.5,864,13.4217,18.4888,-3.6939,-1.2742,10.2477
+10k_heldout_sensor,Severe (>120),Persistence Baseline,PM2.5,1791,25.9481,41.3413,0.8586,-5.6437,17.0
+10k_heldout_sensor,Severe (>120),2-Layer LSTM Forecaster,PM2.5,1791,23.828,39.7744,0.8691,-7.4981,15.3759
+10k_heldout_sensor,Severe (>120),Residual GBDT Model,PM2.5,1791,41.0946,72.7898,0.5617,-23.1614,21.4876
+10k_heldout_sensor,Severe (>120),Validated Static Ensemble,PM2.5,1791,23.914,40.3668,0.8652,-9.0644,14.8426
+97_multimodal_matched,Overall,Persistence Baseline,PM2.5,97,9.0351,14.6496,0.9668,6.9577,1.45
+97_multimodal_matched,Overall,Persistence Baseline,PM10,97,9.392,21.889,0.9818,6.2029,1.0
+97_multimodal_matched,Overall,Sensor LSTM Only,PM2.5,97,9.0434,15.5682,0.9625,1.6635,5.1387
+97_multimodal_matched,Overall,Sensor LSTM Only,PM10,97,15.8173,21.9772,0.9817,10.6017,9.2513
+97_multimodal_matched,Overall,Improved Sensor (LSTM+GBDT),PM2.5,97,9.0421,15.1105,0.9647,2.4576,5.5367
+97_multimodal_matched,Overall,Improved Sensor (LSTM+GBDT),PM10,97,14.6061,21.5508,0.9824,9.9418,8.0136
+97_multimodal_matched,Overall,Optical ResNet-50,PM2.5,97,80.5704,84.7309,-0.1096,78.9519,79.35
+97_multimodal_matched,Overall,Concat Early Fusion,PM2.5,97,58.9356,85.9242,-0.141,-38.8563,51.2591
+97_multimodal_matched,Overall,Optimized Gated Hybrid,PM2.5,97,8.9798,15.5225,0.9628,1.7324,5.1815
+97_multimodal_matched,Overall,Optimized Gated Hybrid,PM10,97,15.8821,21.9961,0.9817,10.6846,9.425

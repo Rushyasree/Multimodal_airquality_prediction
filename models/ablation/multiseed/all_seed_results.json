@@ -1,0 +1,128 @@
+[
+  {
+    "experiment": "pollution_only",
+    "seed": 21,
+    "input_features": 20,
+    "best_epoch": 12,
+    "best_validation_mse_scaled": 0.07651074213540965,
+    "test_metrics": {
+      "PM2.5": {
+        "MAE": 10.401432037353516,
+        "RMSE": 18.100059509277344,
+        "R2": 0.9517762064933777
+      },
+      "PM10": {
+        "MAE": 18.217180252075195,
+        "RMSE": 31.694189071655273,
+        "R2": 0.9323084950447083
+      }
+    },
+    "checkpoint": "models\\ablation\\multiseed\\seed_21\\pollution_only\\best_model.pt",
+    "predictions": "models\\ablation\\multiseed\\seed_21\\pollution_only\\test_predictions.npy"
+  },
+  {
+    "experiment": "pollution_weather",
+    "seed": 21,
+    "input_features": 27,
+    "best_epoch": 9,
+    "best_validation_mse_scaled": 0.07757288729943088,
+    "test_metrics": {
+      "PM2.5": {
+        "MAE": 10.201845169067383,
+        "RMSE": 18.299943923950195,
+        "R2": 0.9507052302360535
+      },
+      "PM10": {
+        "MAE": 18.274921417236328,
+        "RMSE": 32.10519790649414,
+        "R2": 0.930541455745697
+      }
+    },
+    "checkpoint": "models\\ablation\\multiseed\\seed_21\\pollution_weather\\best_model.pt",
+    "predictions": "models\\ablation\\multiseed\\seed_21\\pollution_weather\\test_predictions.npy"
+  },
+  {
+    "experiment": "pollution_only",
+    "seed": 42,
+    "input_features": 20,
+    "best_epoch": 16,
+    "best_validation_mse_scaled": 0.07747471419268931,
+    "test_metrics": {
+      "PM2.5": {
+        "MAE": 10.113571166992188,
+        "RMSE": 18.27475929260254,
+        "R2": 0.9508407711982727
+      },
+      "PM10": {
+        "MAE": 18.23026466369629,
+        "RMSE": 31.88844871520996,
+        "R2": 0.9314761161804199
+      }
+    },
+    "checkpoint": "models\\ablation\\multiseed\\seed_42\\pollution_only\\best_model.pt",
+    "predictions": "models\\ablation\\multiseed\\seed_42\\pollution_only\\test_predictions.npy"
+  },
+  {
+    "experiment": "pollution_weather",
+    "seed": 42,
+    "input_features": 27,
+    "best_epoch": 4,
+    "best_validation_mse_scaled": 0.07844592599378417,
+    "test_metrics": {
+      "PM2.5": {
+        "MAE": 10.22206974029541,
+        "RMSE": 18.123342514038086,
+        "R2": 0.9516520500183105
+      },
+      "PM10": {
+        "MAE": 18.75066566467285,
+        "RMSE": 32.34917068481445,
+        "R2": 0.9294818043708801
+      }
+    },
+    "checkpoint": "models\\ablation\\multiseed\\seed_42\\pollution_weather\\best_model.pt",
+    "predictions": "models\\ablation\\multiseed\\seed_42\\pollution_weather\\test_predictions.npy"
+  },
+  {
+    "experiment": "pollution_only",
+    "seed": 123,
+    "input_features": 20,
+    "best_epoch": 12,
+    "best_validation_mse_scaled": 0.07754314022704528,
+    "test_metrics": {
+      "PM2.5": {
+        "MAE": 10.127098083496094,
+        "RMSE": 18.156490325927734,
+        "R2": 0.9514750242233276
+      },
+      "PM10": {
+        "MAE": 17.813623428344727,
+        "RMSE": 31.5783748626709,
+        "R2": 0.9328022599220276
+      }
+    },
+    "checkpoint": "models\\ablation\\multiseed\\seed_123\\pollution_only\\best_model.pt",
+    "predictions": "models\\ablation\\multiseed\\seed_123\\pollution_only\\test_predictions.npy"
+  },
+  {
+    "experiment": "pollution_weather",
+    "seed": 123,
+    "input_features": 27,
+    "best_epoch": 7,
+    "best_validation_mse_scaled": 0.08051425084790786,
+    "test_metrics": {
+      "PM2.5": {
+        "MAE": 10.5396089553833,
+        "RMSE": 18.893024444580078,
+        "R2": 0.9474582672119141
+      },
+      "PM10": {
+        "MAE": 18.625171661376953,
+        "RMSE": 32.23518753051758,
+        "R2": 0.9299778342247009
+      }
+    },
+    "checkpoint": "models\\ablation\\multiseed\\seed_123\\pollution_weather\\best_model.pt",
+    "predictions": "models\\ablation\\multiseed\\seed_123\\pollution_weather\\test_predictions.npy"
+  }
+]

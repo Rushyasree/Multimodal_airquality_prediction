@@ -1,0 +1,370 @@
+{
+  "audit_metadata": {
+    "timestamp": "2026-10-25T12:31:04Z",
+    "test_sequences": 404431,
+    "stations_evaluated": 90,
+    "date_range": [
+      "2019-09-04 20:00:00",
+      "2020-07-01 00:00:00"
+    ],
+    "bootstrap_iterations": 2000,
+    "blend_weights": {
+      "pm25": {
+        "lstm": 0.9,
+        "gbdt": 0.1
+      },
+      "pm10": {
+        "lstm": 0.8,
+        "gbdt": 0.2
+      }
+    },
+    "blend_provenance": "Fitted strictly on 50,000 validation sequences (data/processed/model_sequences/y_validation.npy) without test set exposure."
+  },
+  "global_metrics": {
+    "pm25": {
+      "persistence": {
+        "MAE": 10.6783,
+        "RMSE": 19.8072,
+        "R2": 0.9423
+      },
+      "lstm": {
+        "MAE": 10.5719,
+        "RMSE": 18.5789,
+        "R2": 0.9492
+      },
+      "gbdt": {
+        "MAE": 12.7564,
+        "RMSE": 30.4354,
+        "R2": 0.8636
+      },
+      "ensemble": {
+        "MAE": 10.395,
+        "RMSE": 18.5498,
+        "R2": 0.9494
+      },
+      "mae_improvement": 0.1769,
+      "rmse_improvement": 0.0291,
+      "r2_improvement": 0.0002,
+      "percentage_samples_improved": 64.74
+    },
+    "pm10": {
+      "persistence": {
+        "MAE": 19.7384,
+        "RMSE": 36.2374,
+        "R2": 0.9115
+      },
+      "lstm": {
+        "MAE": 18.8643,
+        "RMSE": 32.2027,
+        "R2": 0.9301
+      },
+      "gbdt": {
+        "MAE": 20.2144,
+        "RMSE": 40.9162,
+        "R2": 0.8872
+      },
+      "ensemble": {
+        "MAE": 18.2809,
+        "RMSE": 31.9708,
+        "R2": 0.9311
+      },
+      "mae_improvement": 0.5834,
+      "rmse_improvement": 0.2319,
+      "r2_improvement": 0.001,
+      "percentage_samples_improved": 64.18
+    }
+  },
+  "station_block_bootstrap": {
+    "block_type": "7-day station-week calendar blocks",
+    "n_blocks": 3504,
+    "iterations": 2000,
+    "pm25": {
+      "mae_improvement_mean": 0.1771,
+      "mae_improvement_95ci": [
+        0.1592,
+        0.1939
+      ],
+      "mae_improvement_pval": 0.0,
+      "rmse_improvement_mean": 0.0305,
+      "rmse_improvement_95ci": [
+        -0.041,
+        0.1022
+      ],
+      "rmse_improvement_pval": 0.2005
+    },
+    "pm10": {
+      "mae_improvement_mean": 0.5842,
+      "mae_improvement_95ci": [
+        0.5366,
+        0.6317
+      ],
+      "mae_improvement_pval": 0.0,
+      "rmse_improvement_mean": 0.2337,
+      "rmse_improvement_95ci": [
+        0.1161,
+        0.3525
+      ],
+      "rmse_improvement_pval": 0.0
+    }
+  },
+  "station_cluster_bootstrap": {
+    "cluster_type": "Entire station clustering (90 stations)",
+    "iterations": 2000,
+    "pm25": {
+      "mae_improvement_95ci": [
+        0.1325,
+        0.2242
+      ],
+      "rmse_improvement_95ci": [
+        -0.0774,
+        0.1473
+      ],
+      "mae_improvement_pval": 0.0
+    },
+    "pm10": {
+      "mae_improvement_95ci": [
+        0.4233,
+        0.7544
+      ],
+      "rmse_improvement_95ci": [
+        -0.0359,
+        0.5257
+      ],
+      "mae_improvement_pval": 0.0
+    }
+  },
+  "station_distribution": {
+    "total_stations": 90,
+    "stations_improved_pm25": 76,
+    "stations_improved_pm25_pct": 84.44,
+    "stations_improved_pm10": 79,
+    "stations_improved_pm10_pct": 87.78,
+    "median_mae_improvement_pm25": 0.1236,
+    "median_mae_improvement_pm10": 0.4448
+  },
+  "monthly_breakdown": [
+    {
+      "Month": "2019-09",
+      "n_samples": 31299,
+      "mean_actual_pm25": 29.9,
+      "mae_lstm_pm25": 6.0522,
+      "mae_ens_pm25": 5.9472,
+      "diff_mae_pm25": 0.105,
+      "mean_actual_pm10": 72.85,
+      "mae_lstm_pm10": 12.0759,
+      "mae_ens_pm10": 11.7771,
+      "diff_mae_pm10": 0.2988
+    },
+    {
+      "Month": "2019-10",
+      "n_samples": 39006,
+      "mean_actual_pm25": 86.89,
+      "mae_lstm_pm25": 11.4919,
+      "mae_ens_pm25": 11.3223,
+      "diff_mae_pm25": 0.1696,
+      "mean_actual_pm10": 167.83,
+      "mae_lstm_pm10": 20.7445,
+      "mae_ens_pm10": 20.5401,
+      "diff_mae_pm10": 0.2044
+    },
+    {
+      "Month": "2019-11",
+      "n_samples": 41585,
+      "mean_actual_pm25": 134.03,
+      "mae_lstm_pm25": 15.0236,
+      "mae_ens_pm25": 15.2279,
+      "diff_mae_pm25": -0.2043,
+      "mean_actual_pm10": 219.67,
+      "mae_lstm_pm10": 23.5865,
+      "mae_ens_pm10": 23.8135,
+      "diff_mae_pm10": -0.227
+    },
+    {
+      "Month": "2019-12",
+      "n_samples": 45572,
+      "mean_actual_pm25": 138.4,
+      "mae_lstm_pm25": 14.2238,
+      "mae_ens_pm25": 14.0053,
+      "diff_mae_pm25": 0.2184,
+      "mean_actual_pm10": 222.34,
+      "mae_lstm_pm10": 22.5925,
+      "mae_ens_pm10": 22.2303,
+      "diff_mae_pm10": 0.3622
+    },
+    {
+      "Month": "2020-01",
+      "n_samples": 45702,
+      "mean_actual_pm25": 107.01,
+      "mae_lstm_pm25": 13.5185,
+      "mae_ens_pm25": 13.2163,
+      "diff_mae_pm25": 0.3021,
+      "mean_actual_pm10": 177.61,
+      "mae_lstm_pm10": 21.7576,
+      "mae_ens_pm10": 20.9475,
+      "diff_mae_pm10": 0.8101
+    },
+    {
+      "Month": "2020-02",
+      "n_samples": 43456,
+      "mean_actual_pm25": 89.04,
+      "mae_lstm_pm25": 11.9101,
+      "mae_ens_pm25": 11.6133,
+      "diff_mae_pm25": 0.2968,
+      "mean_actual_pm10": 170.85,
+      "mae_lstm_pm10": 21.5891,
+      "mae_ens_pm10": 20.6745,
+      "diff_mae_pm10": 0.9147
+    },
+    {
+      "Month": "2020-03",
+      "n_samples": 43911,
+      "mean_actual_pm25": 48.04,
+      "mae_lstm_pm25": 8.9423,
+      "mae_ens_pm25": 8.6846,
+      "diff_mae_pm25": 0.2577,
+      "mean_actual_pm10": 108.13,
+      "mae_lstm_pm10": 17.5928,
+      "mae_ens_pm10": 16.5172,
+      "diff_mae_pm10": 1.0757
+    },
+    {
+      "Month": "2020-04",
+      "n_samples": 37613,
+      "mean_actual_pm25": 36.45,
+      "mae_lstm_pm25": 8.1874,
+      "mae_ens_pm25": 7.9377,
+      "diff_mae_pm25": 0.2498,
+      "mean_actual_pm10": 83.6,
+      "mae_lstm_pm10": 15.4078,
+      "mae_ens_pm10": 14.3211,
+      "diff_mae_pm10": 1.0866
+    },
+    {
+      "Month": "2020-05",
+      "n_samples": 38619,
+      "mean_actual_pm25": 38.47,
+      "mae_lstm_pm25": 7.3711,
+      "mae_ens_pm25": 7.1868,
+      "diff_mae_pm25": 0.1842,
+      "mean_actual_pm10": 101.21,
+      "mae_lstm_pm10": 15.7032,
+      "mae_ens_pm10": 14.9856,
+      "diff_mae_pm10": 0.7175
+    },
+    {
+      "Month": "2020-06",
+      "n_samples": 37616,
+      "mean_actual_pm25": 33.23,
+      "mae_lstm_pm25": 6.4862,
+      "mae_ens_pm25": 6.3364,
+      "diff_mae_pm25": 0.1498,
+      "mean_actual_pm10": 88.38,
+      "mae_lstm_pm10": 14.3619,
+      "mae_ens_pm10": 13.8566,
+      "diff_mae_pm10": 0.5053
+    },
+    {
+      "Month": "2020-07",
+      "n_samples": 52,
+      "mean_actual_pm25": 39.41,
+      "mae_lstm_pm25": 5.849,
+      "mae_ens_pm25": 5.8317,
+      "diff_mae_pm25": 0.0173,
+      "mean_actual_pm10": 94.06,
+      "mae_lstm_pm10": 9.7087,
+      "mae_ens_pm10": 9.916,
+      "diff_mae_pm10": -0.2072
+    }
+  ],
+  "tier_audit": [
+    {
+      "Tier": "Good (0-30)",
+      "Count": 117962,
+      "Percentage_of_Test": 29.17,
+      "Mean_Actual": 18.36,
+      "Persist_MAE": 4.3235,
+      "LSTM_MAE": 6.3959,
+      "Ensemble_MAE": 6.165,
+      "LSTM_Mean_Bias": 5.52,
+      "Ensemble_Mean_Bias": 5.26,
+      "Persist_Mean_Bias": 1.4
+    },
+    {
+      "Tier": "Satisfactory (30-60)",
+      "Count": 112980,
+      "Percentage_of_Test": 27.94,
+      "Mean_Actual": 43.35,
+      "Persist_MAE": 7.0943,
+      "LSTM_MAE": 7.1521,
+      "Ensemble_MAE": 6.9705,
+      "LSTM_Mean_Bias": 3.49,
+      "Ensemble_Mean_Bias": 3.27,
+      "Persist_Mean_Bias": 0.61
+    },
+    {
+      "Tier": "Moderate (60-90)",
+      "Count": 66032,
+      "Percentage_of_Test": 16.33,
+      "Mean_Actual": 73.69,
+      "Persist_MAE": 10.0576,
+      "LSTM_MAE": 9.0793,
+      "Ensemble_MAE": 8.8681,
+      "LSTM_Mean_Bias": 0.67,
+      "Ensemble_Mean_Bias": 0.56,
+      "Persist_Mean_Bias": 0.18
+    },
+    {
+      "Tier": "Poor (90-120)",
+      "Count": 35551,
+      "Percentage_of_Test": 8.79,
+      "Mean_Actual": 103.56,
+      "Persist_MAE": 14.0612,
+      "LSTM_MAE": 13.1811,
+      "Ensemble_MAE": 12.8565,
+      "LSTM_Mean_Bias": -1.3,
+      "Ensemble_Mean_Bias": -1.25,
+      "Persist_Mean_Bias": -0.15
+    },
+    {
+      "Tier": "Very Poor (120-250)",
+      "Count": 52968,
+      "Percentage_of_Test": 13.1,
+      "Mean_Actual": 167.06,
+      "Persist_MAE": 21.0964,
+      "LSTM_MAE": 17.798,
+      "Ensemble_MAE": 17.4552,
+      "LSTM_Mean_Bias": -2.72,
+      "Ensemble_Mean_Bias": -2.76,
+      "Persist_Mean_Bias": -1.77
+    },
+    {
+      "Tier": "Severe (>250)",
+      "Count": 18938,
+      "Percentage_of_Test": 4.68,
+      "Mean_Actual": 355.11,
+      "Persist_MAE": 38.3183,
+      "LSTM_MAE": 37.0812,
+      "Ensemble_MAE": 38.1299,
+      "LSTM_Mean_Bias": -16.48,
+      "Ensemble_Mean_Bias": -21.97,
+      "Persist_Mean_Bias": -9.67
+    }
+  ],
+  "severe_tier_investigation": {
+    "count": 18938,
+    "percentage_of_test": 4.683,
+    "actual_min": 250.0,
+    "actual_max": 960.0,
+    "actual_mean": 355.11,
+    "actual_p50": 324.0,
+    "actual_p90": 488.03,
+    "lstm_pred_mean": 338.63,
+    "ensemble_pred_mean": 333.14,
+    "persist_pred_mean": 345.44,
+    "lstm_bias": -16.48,
+    "ensemble_bias": -21.97,
+    "persist_bias": -9.67,
+    "fraction_underpredicted_lstm": 0.61,
+    "fraction_underpredicted_ensemble": 0.6688
+  }
+}

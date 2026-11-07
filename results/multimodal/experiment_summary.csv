@@ -1,0 +1,12 @@
+Experiment_Type,Model,Modality,Target_Task,Target_Pollutant,Test_Samples,Independent_Test_Groups,MAE,RMSE,R2,Evaluation_Notes
+Primary Forecasting Baseline,LSTM Forecaster (2-layer),Numerical (Pollution + Weather + Time),Next-hour (t+1) Forecasting,PM2.5,404431,Held-out temporal split,10.5719,18.5789,0.9492,Primary research baseline on 1.37M hourly CPCB/ERA5 records.
+Primary Forecasting Baseline,LSTM Forecaster (2-layer),Numerical (Pollution + Weather + Time),Next-hour (t+1) Forecasting,PM10,404431,Held-out temporal split,18.8643,32.2027,0.9301,Primary research baseline on 1.37M hourly CPCB/ERA5 records.
+Reference Baseline,Persistence Baseline,Numerical (Lagged PM t),Next-hour (t+1) Forecasting,PM2.5,404431,Held-out temporal split,10.6783,19.8072,0.9423,Standard persistence benchmark.
+Reference Baseline,Persistence Baseline,Numerical (Lagged PM t),Next-hour (t+1) Forecasting,PM10,404431,Held-out temporal split,19.7384,36.2374,0.9115,Standard persistence benchmark.
+Image-Only Baseline,ResNet-50 Transfer Learning,Image-only (PM25Vision),Single-image PM2.5 Estimation,PM2.5,79,18 station-date groups,66.2148,80.6779,0.1524,"Trained on 439 images, evaluated on 79 held-out group images."
+Exploratory Matched Analysis,Numerical Ridge Regressor,Numerical (Daily ERA5-Land Weather),Daily Station PM2.5 Estimation,PM2.5,60,9 station-date groups,193.1787,219.8654,-5.4129,Evaluated on matched station-date test split (N=60).
+Exploratory Matched Analysis,Image Ridge Regressor,Image-only (ResNet-50 Features),Daily Station PM2.5 Estimation,PM2.5,60,9 station-date groups,73.6699,95.3836,-0.207,Evaluated on matched station-date test split (N=60).
+Exploratory Matched Analysis,Multimodal Early Fusion (Ridge),Multimodal (ResNet-50 + Weather),Daily Station PM2.5 Estimation,PM2.5,60,9 station-date groups,85.8619,106.5622,-0.5064,Evaluated on matched station-date test split (N=60).
+Exploratory Matched Analysis,Numerical Ridge Regressor,Numerical (Daily ERA5-Land Weather),Daily Station PM10 Estimation,PM10,60,9 station-date groups,297.1218,349.2314,-3.2755,Evaluated on matched station-date test split (N=60).
+Exploratory Matched Analysis,Image Ridge Regressor,Image-only (ResNet-50 Features),Daily Station PM10 Estimation,PM10,60,9 station-date groups,137.6515,172.1311,-0.0387,Evaluated on matched station-date test split (N=60).
+Exploratory Matched Analysis,Multimodal Early Fusion (Ridge),Multimodal (ResNet-50 + Weather),Daily Station PM10 Estimation,PM10,60,9 station-date groups,150.4686,186.1649,-0.215,Evaluated on matched station-date test split (N=60).

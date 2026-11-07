@@ -1,0 +1,26 @@
+{
+  "model_architecture": "OptimizedResidualHybridModel",
+  "lstm_checkpoint": "models/lstm_baseline/best_lstm_model.pt",
+  "freeze_sensor": true,
+  "visual_dim": 32,
+  "max_delta_pm25": 25.0,
+  "max_delta_pm10": 40.0,
+  "modality_dropout": 0.3,
+  "epochs": 25,
+  "best_epoch": 4,
+  "best_val_loss": 0.0085,
+  "val_metrics": {
+    "pm25": {
+      "MAE": 6.252,
+      "RMSE": 7.9706,
+      "R2": 0.9538,
+      "unit": "ug/m3"
+    },
+    "pm10": {
+      "MAE": 8.5944,
+      "RMSE": 10.9498,
+      "R2": 0.9737,
+      "unit": "ug/m3"
+    }
+  }
+}

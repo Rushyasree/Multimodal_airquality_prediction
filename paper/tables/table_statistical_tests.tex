@@ -1,0 +1,25 @@
+% Statistical Robustness Hypothesis Testing Table
+\begin{table*}[t]
+\caption{Rigorous Statistical Validation of Adapted GBDT Superiority Against Persistence Baselines (Stationary Block Bootstrap $B=5,000$, Paired Wilcoxon, Bonferroni FWER, and Benjamini-Hochberg FDR Corrections)}
+\label{tab:statistical_tests}
+\centering
+\scriptsize
+\begin{tabular}{llrcccccccl}
+\toprule
+\textbf{Test ID} & \textbf{Evaluation Cohort / Hypothesis} & \textbf{Samples ($N$)} & \textbf{GBDT MAE} & \textbf{Persist MAE} & \textbf{Mean Diff ($\Delta$)} & \textbf{95\% Bootstrap CI} & \textbf{Wilcoxon $p$} & \textbf{FWER $p_{\text{Bonf}}$} & \textbf{FDR $q$} & \textbf{Statistical Verdict} \\
+\midrule
+\texttt{T01} & Pooled $\text{PM}_{2.5}$ Nationwide & 236,289 & 6.67 & 6.95 & -0.28 & $[-0.30, -0.25]$ & $4.98 \times 10^{-12}$ & $<0.005$ & $0.00036$ & \textbf{Passes Bonferroni \& FDR} \\
+\texttt{T02} & Pooled $\text{PM}_{10}$ Nationwide & 236,289 & 16.29 & 17.16 & -0.87 & $[-0.94, -0.79]$ & $7.57 \times 10^{-24}$ & $<0.005$ & $0.00036$ & \textbf{Passes Bonferroni \& FDR} \\
+\texttt{T03} & Delhi Anand Vihar (\texttt{DL002}) $\text{PM}_{2.5}$ & 3,357 & 14.25 & 15.07 & -0.82 & $[-1.13, -0.54]$ & $1.54 \times 10^{-11}$ & $<0.005$ & $0.00036$ & \textbf{Passes Bonferroni \& FDR} \\
+\texttt{T04} & Delhi DTU (\texttt{DL008}) $\text{PM}_{2.5}$ & 2,674 & 10.63 & 11.07 & -0.44 & $[-0.69, -0.16]$ & $5.50 \times 10^{-11}$ & $0.0072$ & $0.00065$ & \textbf{Passes Bonferroni \& FDR} \\
+\texttt{T10} & Visakhapatnam (\texttt{AP005}) $\text{PM}_{2.5}$ & 3,550 & 5.10 & 5.35 & -0.25 & $[-0.33, -0.15]$ & $1.94 \times 10^{-12}$ & $<0.005$ & $0.00036$ & \textbf{Passes Bonferroni \& FDR} \\
+\texttt{T12} & Ahmedabad (\texttt{GJ001}) $\text{PM}_{2.5}$ & 3,059 & 5.13 & 5.47 & -0.35 & $[-0.52, -0.15]$ & $3.67 \times 10^{-19}$ & $0.0144$ & $0.00120$ & \textbf{Passes Bonferroni \& FDR} \\
+\texttt{T13} & NAQI Satisfactory Regime $\text{PM}_{2.5}$ & 77,794 & 6.52 & 7.08 & -0.56 & $[-0.59, -0.53]$ & $1.82 \times 10^{-290}$ & $<0.005$ & $0.00036$ & \textbf{Passes Bonferroni \& FDR} \\
+\texttt{T14} & NAQI Moderate Regime $\text{PM}_{2.5}$ & 25,630 & 10.49 & 11.29 & -0.80 & $[-0.90, -0.70]$ & $2.53 \times 10^{-38}$ & $<0.005$ & $0.00036$ & \textbf{Passes Bonferroni \& FDR} \\
+\texttt{T15} & NAQI Poor Regime $\text{PM}_{2.5}$ & 7,548 & 16.14 & 17.68 & -1.54 & $[-1.79, -1.30]$ & $6.71 \times 10^{-16}$ & $<0.005$ & $0.00036$ & \textbf{Passes Bonferroni \& FDR} \\
+\texttt{T16} & NAQI Very Poor Regime $\text{PM}_{2.5}$ & 4,847 & 29.14 & 31.62 & -2.48 & $[-2.91, -2.06]$ & $3.71 \times 10^{-25}$ & $<0.005$ & $0.00036$ & \textbf{Passes Bonferroni \& FDR} \\
+\texttt{T17} & Summer Season $\text{PM}_{2.5}$ & 93,997 & 8.17 & 8.72 & -0.55 & $[-0.61, -0.50]$ & $8.93 \times 10^{-34}$ & $<0.005$ & $0.00036$ & \textbf{Passes Bonferroni \& FDR} \\
+\texttt{T18} & Monsoon Season $\text{PM}_{2.5}$ & 142,292 & 5.68 & 5.78 & -0.09 & $[-0.12, -0.07]$ & $1.23 \times 10^{-3}$ & $<0.005$ & $0.00036$ & \textbf{Passes Bonferroni \& FDR} \\
+\bottomrule
+\end{tabular}
+\end{table*}

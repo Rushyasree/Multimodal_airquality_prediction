@@ -1,0 +1,26 @@
+PM25VISION IMAGE QUALITY CHECK
+=============================================
+Manifest rows: 642
+Unique image IDs: 640
+
+Manifest status counts:
+status
+downloaded    642
+
+ACTUAL FILE VALIDATION
+Missing files: 0
+Unreadable images: 0
+
+Image dimensions:
+1024x768: 458
+1024x576: 126
+1023x614: 37
+1024x759: 11
+1024x1024: 7
+563x759: 2
+1023x574: 1
+
+Image formats:
+JPEG: 642
+
+Exact duplicate files beyond first copies: 2

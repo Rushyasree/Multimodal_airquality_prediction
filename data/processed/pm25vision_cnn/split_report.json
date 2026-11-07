@@ -1,0 +1,32 @@
+{
+  "train": {
+    "images": 439,
+    "unique_image_ids": 439,
+    "station_date_groups": 57,
+    "unique_stations": 30,
+    "pm25_min": 21.0,
+    "pm25_max": 445.0,
+    "pm25_mean": 204.15,
+    "pm25_std": 61.38
+  },
+  "validation": {
+    "images": 122,
+    "unique_image_ids": 122,
+    "station_date_groups": 15,
+    "unique_stations": 13,
+    "pm25_min": 97.0,
+    "pm25_max": 394.0,
+    "pm25_mean": 309.24,
+    "pm25_std": 98.31
+  },
+  "test": {
+    "images": 79,
+    "unique_image_ids": 79,
+    "station_date_groups": 18,
+    "unique_stations": 13,
+    "pm25_min": 64.0,
+    "pm25_max": 461.0,
+    "pm25_mean": 230.68,
+    "pm25_std": 88.19
+  }
+}

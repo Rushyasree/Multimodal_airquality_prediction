@@ -1,0 +1,83 @@
+{
+  "feature_names_tabular": 67,
+  "best_params_pm25": {
+    "max_iter": 100,
+    "max_leaf_nodes": 31,
+    "learning_rate": 0.1,
+    "l2_regularization": 1.0,
+    "min_samples_leaf": 20
+  },
+  "best_params_pm10": {
+    "max_iter": 100,
+    "max_leaf_nodes": 63,
+    "learning_rate": 0.05,
+    "l2_regularization": 5.0,
+    "min_samples_leaf": 50
+  },
+  "best_ensemble_weights": {
+    "pm25": {
+      "weight_lstm": 0.9,
+      "weight_gbdt": 0.1
+    },
+    "pm10": {
+      "weight_lstm": 0.8,
+      "weight_gbdt": 0.2
+    }
+  },
+  "validation_performance": {
+    "pretrained_lstm": {
+      "pm25": {
+        "MAE": 14.5759,
+        "RMSE": 27.5709,
+        "R2": 0.9209
+      },
+      "pm10": {
+        "MAE": 27.9455,
+        "RMSE": 49.36,
+        "R2": 0.9003
+      }
+    },
+    "best_gbdt": {
+      "pm25": {
+        "MAE": 18.8556,
+        "RMSE": 39.6381,
+        "R2": 0.8365
+      },
+      "pm10": {
+        "MAE": 32.6182,
+        "RMSE": 61.2026,
+        "R2": 0.8467
+      }
+    },
+    "residual_gbdt": {
+      "pm25": {
+        "MAE": 14.5431,
+        "RMSE": 27.7237,
+        "R2": 0.92
+      },
+      "pm10": {
+        "MAE": 28.0068,
+        "RMSE": 50.1805,
+        "R2": 0.897
+      }
+    },
+    "ensemble": {
+      "pm25": {
+        "MAE": 14.4631,
+        "RMSE": 27.4873,
+        "R2": 0.9214
+      },
+      "pm10": {
+        "MAE": 27.5239,
+        "RMSE": 49.1376,
+        "R2": 0.9012
+      }
+    },
+    "no_weather_ablation_pm25": {
+      "MAE": 18.8735,
+      "RMSE": 39.6645,
+      "R2": 0.8363
+    }
+  },
+  "winning_model": "Validated Ensemble (LSTM + GBDT)"
+}

@@ -1,0 +1,32 @@
+AIR QUALITY + ERA5-LAND MERGE REPORT
+=======================================================
+Air-quality source: data\processed\air_quality_hourly_clean.csv
+Weather directory: data\raw\era5_land\station_weather
+Output file: data\processed\air_quality_weather_merged.csv
+Weather files: 90
+Air-quality rows: 1369779
+Weather rows: 4339440
+Output rows: 1369779
+Air-quality stations: 90
+Weather stations: 90
+Stations in both: 90
+Matched rows: 1369779
+Unmatched rows: 0
+Match rate (%): 100.0000
+
+Missing weather values after merge:
+temperature_C        0
+dewpoint_C           0
+relative_humidity    0
+wind_speed           0
+wind_direction       0
+precipitation_mm     0
+
+Missing target values:
+PM2.5    0
+PM10     0
+
+Unmatched rows by station:
+None
+
+NOTE: Rows were preserved; no unmatched rows were silently removed.

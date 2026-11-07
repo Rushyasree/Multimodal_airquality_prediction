@@ -1,0 +1,93 @@
+{
+  "model_version": "VayuDrishti Unified Hybrid v1.0",
+  "checkpoint_path": "experiments\\unified_hybrid\\checkpoints\\best_unified_hybrid_model.pt",
+  "test_cohort": {
+    "total_samples": 97,
+    "groups_count": 9,
+    "stations_count": 8,
+    "pm25_ground_truth": {
+      "mean": 110.80072021484375,
+      "std": 80.43861389160156
+    },
+    "pm10_ground_truth": {
+      "mean": 245.83114624023438,
+      "std": 162.41485595703125
+    }
+  },
+  "validation_cohort": {
+    "total_samples": 21,
+    "groups_count": 6,
+    "stations_count": 6
+  },
+  "training_cohort": {
+    "total_samples": 81,
+    "groups_count": 18,
+    "stations_count": 12
+  },
+  "full_multimodal_metrics": {
+    "pm25": {
+      "MAE": 56.58613204956055,
+      "RMSE": 82.7219467163086,
+      "R2": -0.05757772922515869,
+      "unit": "ug/m3"
+    },
+    "pm10": {
+      "MAE": 140.90573120117188,
+      "RMSE": 163.33457946777344,
+      "R2": -0.011357665061950684,
+      "unit": "ug/m3"
+    },
+    "mean_gating_alpha": 0.9999889135360718
+  },
+  "fallback_sensor_only_metrics": {
+    "pm25": {
+      "MAE": 54.058929443359375,
+      "RMSE": 72.55907440185547,
+      "R2": 0.1863187551498413,
+      "unit": "ug/m3"
+    },
+    "pm10": {
+      "MAE": 147.4314422607422,
+      "RMSE": 154.00270080566406,
+      "R2": 0.1009058952331543,
+      "unit": "ug/m3"
+    },
+    "mean_gating_alpha": 0.0
+  },
+  "validation_metrics": {
+    "full_multimodal": {
+      "pm25": {
+        "MAE": 33.30663299560547,
+        "RMSE": 45.39892578125,
+        "R2": -0.4976435899734497,
+        "unit": "ug/m3"
+      },
+      "pm10": {
+        "MAE": 69.32405853271484,
+        "RMSE": 77.28501892089844,
+        "R2": -0.30830538272857666,
+        "unit": "ug/m3"
+      }
+    },
+    "fallback": {
+      "pm25": {
+        "MAE": 41.53757858276367,
+        "RMSE": 43.83140182495117,
+        "R2": -0.3960082530975342,
+        "unit": "ug/m3"
+      },
+      "pm10": {
+        "MAE": 80.32624053955078,
+        "RMSE": 93.21890258789062,
+        "R2": -0.9033842086791992,
+        "unit": "ug/m3"
+      }
+    }
+  },
+  "provenance": {
+    "sensor_encoder": "2-Layer LSTM (frozen weights from best_lstm_model.pt)",
+    "image_encoder": "ResNet-50 (frozen weights from best_model.pt)",
+    "gating_module": "ModalityQualityGating with explicit zero-mask fallback",
+    "prediction_head": "Multi-Layer Perceptron (129 -> 64 -> 32 -> 2) with Softplus activation"
+  }
+}

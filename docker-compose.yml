@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vayudrishti-dashboard
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - STREAMLIT_SERVER_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      - STREAMLIT_SERVER_HEADLESS=true
+    volumes:
+      - ./experiments:/app/experiments
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  collector-daemon:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vayudrishti-collector
+    restart: unless-stopped
+    command: >
+      python -c "
+      import time, subprocess, sys
+      print('Starting VayuDrishti Autonomous Hourly Collector Daemon...')
+      while True:
+          print('[Daemon] Triggering hourly collection cycle...')
+          subprocess.run([sys.executable, '-m', 'src.services.longitudinal_collector_service'])
+          print('[Daemon] Sleeping for 3600 seconds until next cycle...')
+          time.sleep(3600)
+      "
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./experiments:/app/experiments
+      - ./logs:/app/logs

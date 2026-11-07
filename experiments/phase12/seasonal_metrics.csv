@@ -1,0 +1,5 @@
+imd_season,sample_count,cohort_share_pct,pm25_persistence_mae,pm25_model_mae,pm25_model_rmse,pm25_model_r2,pm25_model_bias,pm25_pct_improvement,pm10_persistence_mae,pm10_model_mae,pm10_model_rmse,pm10_model_r2,pm10_model_bias,pm10_pct_improvement
+Winter (Jan-Feb),88677,17.5,12.6297,14.2906,24.8127,0.9136,0.0498,-13.15,23.3251,24.2551,40.8012,0.9047,-2.9659,-3.99
+Summer / Pre-Monsoon (Mar-May),135788,26.79,10.3912,10.9592,19.8935,0.8212,0.5537,-5.47,23.8501,23.0104,42.1796,0.8384,-2.5152,3.52
+Monsoon (Jun-Sep),151417,29.87,5.9575,6.9175,11.6287,0.7864,2.527,-16.11,14.3257,14.8262,30.0488,0.8316,2.2208,-3.49
+Post-Monsoon (Oct-Dec),130966,25.84,12.8246,12.9101,24.1921,0.939,-0.9562,-0.67,24.4778,23.4542,42.1059,0.917,-4.6132,4.18

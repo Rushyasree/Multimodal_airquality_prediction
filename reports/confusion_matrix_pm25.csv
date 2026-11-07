@@ -1,0 +1,7 @@
+,Pred_Good,Pred_Satisfactory,Pred_Moderate,Pred_Poor,Pred_Very Poor,Pred_Severe
+Actual_Good,91499,27227,360,23,10,2
+Actual_Satisfactory,6319,90402,15068,384,76,3
+Actual_Moderate,75,8838,48584,7893,517,8
+Actual_Poor,9,298,8932,20400,5744,12
+Actual_Very Poor,9,80,724,5783,44386,1883
+Actual_Severe,2,8,13,23,2546,16291

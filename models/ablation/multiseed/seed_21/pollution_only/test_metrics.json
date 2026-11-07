@@ -1,0 +1,21 @@
+{
+  "experiment": "pollution_only",
+  "seed": 21,
+  "input_features": 20,
+  "best_epoch": 12,
+  "best_validation_mse_scaled": 0.07651074213540965,
+  "test_metrics": {
+    "PM2.5": {
+      "MAE": 10.401432037353516,
+      "RMSE": 18.100059509277344,
+      "R2": 0.9517762064933777
+    },
+    "PM10": {
+      "MAE": 18.217180252075195,
+      "RMSE": 31.694189071655273,
+      "R2": 0.9323084950447083
+    }
+  },
+  "checkpoint": "models\\ablation\\multiseed\\seed_21\\pollution_only\\best_model.pt",
+  "predictions": "models\\ablation\\multiseed\\seed_21\\pollution_only\\test_predictions.npy"
+}

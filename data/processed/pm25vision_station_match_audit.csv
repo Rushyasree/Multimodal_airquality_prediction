@@ -1,0 +1,6 @@
+image_id,image_date,image_pm25,nearest_station,station_name,city,distance_km,within_5km,within_10km,date_in_existing_period
+397187539212742,2022-05-28,33.0,KL008,"Plammoodu, Thiruvananthapuram - Kerala PCB",Thiruvananthapuram,0.32,True,True,False
+307502124225110,2019-04-10,21.0,MH011,"Sion, Mumbai - MPCB",Mumbai,114.85,False,False,True
+536961668138782,2021-09-13,23.0,TN002,"Manali Village, Chennai - TNPCB",Chennai,8.84,False,True,False
+985483759826552,2024-06-20,79.0,TG003,"ICRISAT Patancheru, Hyderabad - TSPCB",Hyderabad,1.53,True,True,False
+584915283211425,2022-07-22,84.0,TN002,"Manali Village, Chennai - TNPCB",Chennai,9.95,False,True,False

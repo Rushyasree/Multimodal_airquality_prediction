@@ -1,0 +1,34 @@
+{
+  "PM2.5": {
+    "MAE": {
+      "pollution_only": 5971.51846481933,
+      "pollution_weather": 5971.070088084099,
+      "weather_error_reduction_percent": 0.007508588274034844
+    },
+    "RMSE": {
+      "pollution_only": 8682.812974420996,
+      "pollution_weather": 8683.475260761586,
+      "weather_error_reduction_percent": -0.007627555062410352
+    },
+    "R2": {
+      "pollution_only": -0.8515904240399159,
+      "pollution_weather": -0.8518728969706417
+    }
+  },
+  "PM10": {
+    "MAE": {
+      "pollution_only": 19997.44969257735,
+      "pollution_weather": 19998.3492956186,
+      "weather_error_reduction_percent": -0.00449858884547153
+    },
+    "RMSE": {
+      "pollution_only": 26010.68878993647,
+      "pollution_weather": 26011.087173279546,
+      "weather_error_reduction_percent": -0.0015316139695225124
+    },
+    "R2": {
+      "pollution_only": -1.4124587255946803,
+      "pollution_weather": -1.412532625270305
+    }
+  }
+}

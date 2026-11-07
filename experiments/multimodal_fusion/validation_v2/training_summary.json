@@ -1,0 +1,14 @@
+{
+  "sensor_only": {
+    "best_epoch": 15,
+    "best_val_loss": 24.912791025070916
+  },
+  "image_only": {
+    "best_epoch": 10,
+    "best_val_loss": 31.469790504092263
+  },
+  "fusion": {
+    "best_epoch": 12,
+    "best_val_loss": 31.69966034662156
+  }
+}

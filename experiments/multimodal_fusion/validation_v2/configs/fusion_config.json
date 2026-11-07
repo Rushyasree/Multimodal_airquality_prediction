@@ -1,0 +1,21 @@
+{
+  "seed": 42,
+  "split_seed": 14,
+  "batch_size": 8,
+  "epochs": 15,
+  "learning_rate": 0.0005,
+  "weight_decay": 0.0001,
+  "projection_dim": 64,
+  "lstm_hidden": 64,
+  "lstm_layers": 2,
+  "dropout": 0.2,
+  "freeze_backbones": true,
+  "target_column": "station_target_pm25",
+  "target_unit": "ug/m3",
+  "dataset_path": "experiments/multimodal_fusion/validation_v2/paired_dataset_v2.csv",
+  "cached_sequences_path": "experiments/multimodal_fusion/cached_sequences.npz",
+  "cached_image_features_path": "experiments/multimodal_fusion/cached_image_features.npz",
+  "lstm_checkpoint": "models/lstm_baseline/best_lstm_model.pt",
+  "resnet_checkpoint": "models/pm25vision_cnn/best_model.pt",
+  "output_dir": "experiments/multimodal_fusion/validation_v2"
+}

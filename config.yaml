@@ -1,0 +1,42 @@
+seed: 42
+
+data:
+  image_size: 224
+  sequence_length: 24
+  prediction_horizon: 1
+
+features:
+  air_quality:
+    - PM2.5
+    - PM10
+    - NO2
+    - SO2
+    - CO
+    - O3
+  weather:
+    - temperature_2m
+    - wind_u
+    - wind_v
+    - surface_pressure
+    - precipitation
+  spatial_temporal:
+    - latitude
+    - longitude
+    - hour_sin
+    - hour_cos
+    - day_of_week
+
+model:
+  visual_dim: 256
+  numerical_dim: 128
+  fusion_dim: 256
+  lstm_hidden: 256
+  lstm_layers: 1
+  dropout: 0.2
+  freeze_resnet: true
+
+training:
+  batch_size: 4
+  epochs: 20
+  learning_rate: 0.0001
+  weight_decay: 0.00001

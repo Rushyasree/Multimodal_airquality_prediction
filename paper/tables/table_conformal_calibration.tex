@@ -1,0 +1,23 @@
+% Split-Conformal Distribution-Free Uncertainty Calibration Table
+\begin{table}[t]
+\caption{Distribution-Free Split-Conformal Prediction Interval Calibration Across 118,145 Independent Test Instances}
+\label{tab:conformal_calibration}
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+\textbf{Target} & \textbf{Nominal} & \textbf{Empirical} & \textbf{Coverage} & \textbf{Mean Width} & \textbf{Winkler} \\
+\textbf{Pollutant} & \textbf{Level ($1-\alpha$)} & \textbf{Coverage} & \textbf{Slack ($\Delta$)} & \textbf{($\mu\text{g/m}^3$)} & \textbf{Score} \\
+\midrule
+\multirow{3}{*}{$\text{PM}_{2.5}$} 
+& 80.0\% & 92.87\% & +12.87\% & 24.12 & 33.46 \\
+& 90.0\% & 96.76\% & +6.76\% & 35.84 & 47.99 \\
+& 95.0\% & 98.38\% & +3.38\% & 48.31 & 65.05 \\
+\midrule
+\multirow{3}{*}{$\text{PM}_{10}$} 
+& 80.0\% & 93.66\% & +13.66\% & 60.25 & 82.60 \\
+& 90.0\% & 97.23\% & +7.23\% & 94.27 & 122.51 \\
+& 95.0\% & 98.71\% & +3.71\% & 131.50 & 168.59 \\
+\bottomrule
+\end{tabular}
+\end{table}

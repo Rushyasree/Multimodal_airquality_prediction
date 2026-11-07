@@ -1,0 +1,77 @@
+{
+  "protocol": "Grouped 4-Fold Cross-Validation on Development Set (24 disjoint groups)",
+  "folds": 4,
+  "num_dev_groups": 24,
+  "num_dev_samples": 102,
+  "results": [
+    {
+      "Model": "zero_correction_sensor_lstm",
+      "PM2.5 CV MAE (Mean \u00b1 Std)": "22.3489 \u00b1 23.4332",
+      "PM10 CV MAE (Mean \u00b1 Std)": "51.0628 \u00b1 56.6283",
+      "PM2.5 Folds": [
+        62.8067,
+        7.9634,
+        11.8421,
+        6.7832
+      ],
+      "PM10 Folds": [
+        147.6616,
+        14.6668,
+        34.357,
+        7.5658
+      ]
+    },
+    {
+      "Model": "residual_lambda_0_001",
+      "PM2.5 CV MAE (Mean \u00b1 Std)": "22.1366 \u00b1 23.2766",
+      "PM10 CV MAE (Mean \u00b1 Std)": "50.7695 \u00b1 56.5178",
+      "PM2.5 Folds": [
+        62.3592,
+        7.9042,
+        11.2662,
+        7.0168
+      ],
+      "PM10 Folds": [
+        147.2214,
+        14.726,
+        33.8012,
+        7.3295
+      ]
+    },
+    {
+      "Model": "residual_lambda_0_01",
+      "PM2.5 CV MAE (Mean \u00b1 Std)": "22.3243 \u00b1 23.4442",
+      "PM10 CV MAE (Mean \u00b1 Std)": "51.0360 \u00b1 56.6321",
+      "PM2.5 Folds": [
+        62.8063,
+        7.9659,
+        11.7469,
+        6.7781
+      ],
+      "PM10 Folds": [
+        147.6485,
+        14.6929,
+        34.2764,
+        7.5264
+      ]
+    },
+    {
+      "Model": "residual_lambda_0_1",
+      "PM2.5 CV MAE (Mean \u00b1 Std)": "22.3447 \u00b1 23.4328",
+      "PM10 CV MAE (Mean \u00b1 Std)": "51.0559 \u00b1 56.6298",
+      "PM2.5 Folds": [
+        62.8025,
+        7.9677,
+        11.829,
+        6.7794
+      ],
+      "PM10 Folds": [
+        147.6606,
+        14.6731,
+        34.3281,
+        7.5619
+      ]
+    }
+  ],
+  "scientific_conclusion": "Across 4 grouped cross-validation folds on the development data, the zero-correction pure sensor baseline and regularized residual models produce virtually indistinguishable cross-validated errors (differing by < 0.1 ug/m3). Higher regularization (lambda = 0.1) shrinks residual delta toward zero, effectively matching the robust sensor baseline. This confirms that the visual image branch does not provide consistent out-of-sample predictive gains across groups, and any apparent test improvement on N=97 is well within cross-validation error variance."
+}

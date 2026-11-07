@@ -1,0 +1,1863 @@
+{
+  "metadata": {
+    "timestamp": "2026-10-25T12:52:27Z",
+    "test_sequences": 404431,
+    "criteria": {
+      "cpcb_pm25_severe_threshold": 250.0,
+      "cpcb_pm10_severe_threshold": 430.0,
+      "cpcb_pm10_elevated_threshold": 250.0
+    }
+  },
+  "cohort_pm25_severe": {
+    "cohort_name": "PM2.5 Severe (>250 ug/m3)",
+    "count": 18938,
+    "percentage_of_total_test": 4.683,
+    "actual_stats": {
+      "mean": 355.11,
+      "std": 103.68,
+      "min": 250.0,
+      "p50": 324.0,
+      "p90": 488.03,
+      "max": 960.0
+    },
+    "persistence": {
+      "MAE": 38.3183,
+      "RMSE": 56.7316,
+      "Mean_Bias": -9.6737,
+      "Underpred_Rate_Pct": 57.71,
+      "Mean_Pred": 345.44,
+      "Pred_P50": 321.31,
+      "Pred_P90": 484.71
+    },
+    "lstm": {
+      "MAE": 37.0812,
+      "RMSE": 56.2559,
+      "Mean_Bias": -16.4757,
+      "Underpred_Rate_Pct": 61.0,
+      "Mean_Pred": 338.63,
+      "Pred_P50": 318.13,
+      "Pred_P90": 465.33
+    },
+    "gbdt": {
+      "MAE": 90.8,
+      "RMSE": 121.9155,
+      "Mean_Bias": -71.4182,
+      "Underpred_Rate_Pct": 85.62,
+      "Mean_Pred": 283.69,
+      "Pred_P50": 265.33,
+      "Pred_P90": 349.42
+    },
+    "ensemble": {
+      "MAE": 38.1299,
+      "RMSE": 57.6679,
+      "Mean_Bias": -21.9699,
+      "Underpred_Rate_Pct": 66.88,
+      "Mean_Pred": 333.14,
+      "Pred_P50": 313.87,
+      "Pred_P90": 452.12
+    }
+  },
+  "cohort_pm10_severe": {
+    "cohort_name": "PM10 Severe (>430 ug/m3)",
+    "count": 15561,
+    "percentage_of_total_test": 3.848,
+    "actual_stats": {
+      "mean": 558.45,
+      "std": 114.87,
+      "min": 430.0,
+      "p50": 525.5,
+      "p90": 721.5,
+      "max": 999.99
+    },
+    "persistence": {
+      "MAE": 66.7507,
+      "RMSE": 98.6215,
+      "Mean_Bias": -24.8795,
+      "Underpred_Rate_Pct": 59.8,
+      "Mean_Pred": 533.57,
+      "Pred_P50": 514.25,
+      "Pred_P90": 714.75
+    },
+    "lstm": {
+      "MAE": 61.8232,
+      "RMSE": 94.6917,
+      "Mean_Bias": -35.2287,
+      "Underpred_Rate_Pct": 66.16,
+      "Mean_Pred": 523.22,
+      "Pred_P50": 506.61,
+      "Pred_P90": 688.47
+    },
+    "gbdt": {
+      "MAE": 128.4489,
+      "RMSE": 159.3479,
+      "Mean_Bias": -120.4641,
+      "Underpred_Rate_Pct": 91.25,
+      "Mean_Pred": 437.98,
+      "Pred_P50": 431.26,
+      "Pred_P90": 537.8
+    },
+    "ensemble": {
+      "MAE": 67.0962,
+      "RMSE": 98.5569,
+      "Mean_Bias": -52.2757,
+      "Underpred_Rate_Pct": 77.76,
+      "Mean_Pred": 506.17,
+      "Pred_P50": 494.77,
+      "Pred_P90": 649.1
+    }
+  },
+  "cohort_pm10_elevated": {
+    "cohort_name": "PM10 Elevated (>250 ug/m3)",
+    "count": 58197,
+    "percentage_of_total_test": 14.39,
+    "actual_stats": {
+      "mean": 383.18,
+      "std": 128.75,
+      "min": 250.0,
+      "p50": 342.73,
+      "p90": 563.0,
+      "max": 999.99
+    },
+    "persistence": {
+      "MAE": 49.0138,
+      "RMSE": 72.5308,
+      "Mean_Bias": -11.1291,
+      "Underpred_Rate_Pct": 56.44,
+      "Mean_Pred": 372.05,
+      "Pred_P50": 339.0,
+      "Pred_P90": 560.25
+    },
+    "lstm": {
+      "MAE": 42.0819,
+      "RMSE": 64.5226,
+      "Mean_Bias": -16.0195,
+      "Underpred_Rate_Pct": 60.48,
+      "Mean_Pred": 367.16,
+      "Pred_P50": 333.75,
+      "Pred_P90": 546.07
+    },
+    "gbdt": {
+      "MAE": 62.5095,
+      "RMSE": 93.8647,
+      "Mean_Bias": -45.976,
+      "Underpred_Rate_Pct": 74.39,
+      "Mean_Pred": 337.21,
+      "Pred_P50": 321.75,
+      "Pred_P90": 462.16
+    },
+    "ensemble": {
+      "MAE": 42.732,
+      "RMSE": 65.3595,
+      "Mean_Bias": -22.0108,
+      "Underpred_Rate_Pct": 65.29,
+      "Mean_Pred": 361.17,
+      "Pred_P50": 331.71,
+      "Pred_P90": 528.42
+    }
+  },
+  "pm25_severe_by_station": [
+    {
+      "StationId": "DL024",
+      "severe_count": 981,
+      "severe_percentage_of_station": 14.87,
+      "actual_mean": 376.11,
+      "persist_mae": 53.41,
+      "lstm_mae": 45.77,
+      "ensemble_mae": 46.85,
+      "lstm_bias": -13.61,
+      "ensemble_bias": -19.22
+    },
+    {
+      "StationId": "DL038",
+      "severe_count": 925,
+      "severe_percentage_of_station": 14.73,
+      "actual_mean": 366.57,
+      "persist_mae": 33.4,
+      "lstm_mae": 28.72,
+      "ensemble_mae": 30.39,
+      "lstm_bias": -8.95,
+      "ensemble_bias": -17.11
+    },
+    {
+      "StationId": "DL032",
+      "severe_count": 874,
+      "severe_percentage_of_station": 14.82,
+      "actual_mean": 362.99,
+      "persist_mae": 43.84,
+      "lstm_mae": 38.88,
+      "ensemble_mae": 40.48,
+      "lstm_bias": -17.74,
+      "ensemble_bias": -23.99
+    },
+    {
+      "StationId": "DL003",
+      "severe_count": 790,
+      "severe_percentage_of_station": 12.71,
+      "actual_mean": 365.59,
+      "persist_mae": 33.68,
+      "lstm_mae": 31.08,
+      "ensemble_mae": 31.84,
+      "lstm_bias": -8.7,
+      "ensemble_bias": -14.21
+    },
+    {
+      "StationId": "DL020",
+      "severe_count": 782,
+      "severe_percentage_of_station": 12.77,
+      "actual_mean": 358.78,
+      "persist_mae": 36.53,
+      "lstm_mae": 29.27,
+      "ensemble_mae": 30.4,
+      "lstm_bias": -8.48,
+      "ensemble_bias": -13.98
+    },
+    {
+      "StationId": "DL015",
+      "severe_count": 775,
+      "severe_percentage_of_station": 12.75,
+      "actual_mean": 348.97,
+      "persist_mae": 40.19,
+      "lstm_mae": 37.56,
+      "ensemble_mae": 37.04,
+      "lstm_bias": -2.5,
+      "ensemble_bias": -9.57
+    },
+    {
+      "StationId": "DL028",
+      "severe_count": 664,
+      "severe_percentage_of_station": 11.04,
+      "actual_mean": 366.78,
+      "persist_mae": 44.21,
+      "lstm_mae": 43.45,
+      "ensemble_mae": 43.55,
+      "lstm_bias": -23.87,
+      "ensemble_bias": -24.33
+    },
+    {
+      "StationId": "DL037",
+      "severe_count": 658,
+      "severe_percentage_of_station": 13.04,
+      "actual_mean": 355.85,
+      "persist_mae": 37.14,
+      "lstm_mae": 34.6,
+      "ensemble_mae": 35.89,
+      "lstm_bias": -17.3,
+      "ensemble_bias": -23.02
+    },
+    {
+      "StationId": "DL008",
+      "severe_count": 644,
+      "severe_percentage_of_station": 12.05,
+      "actual_mean": 352.8,
+      "persist_mae": 45.66,
+      "lstm_mae": 42.09,
+      "ensemble_mae": 43.32,
+      "lstm_bias": -20.44,
+      "ensemble_bias": -25.64
+    },
+    {
+      "StationId": "DL026",
+      "severe_count": 636,
+      "severe_percentage_of_station": 9.77,
+      "actual_mean": 351.66,
+      "persist_mae": 27.48,
+      "lstm_mae": 24.75,
+      "ensemble_mae": 25.78,
+      "lstm_bias": -6.08,
+      "ensemble_bias": -11.85
+    },
+    {
+      "StationId": "DL016",
+      "severe_count": 600,
+      "severe_percentage_of_station": 9.09,
+      "actual_mean": 352.81,
+      "persist_mae": 29.9,
+      "lstm_mae": 27.35,
+      "ensemble_mae": 28.25,
+      "lstm_bias": -6.94,
+      "ensemble_bias": -11.93
+    },
+    {
+      "StationId": "DL002",
+      "severe_count": 583,
+      "severe_percentage_of_station": 14.77,
+      "actual_mean": 362.55,
+      "persist_mae": 32.65,
+      "lstm_mae": 34.98,
+      "ensemble_mae": 35.64,
+      "lstm_bias": -6.01,
+      "ensemble_bias": -13.38
+    },
+    {
+      "StationId": "DL007",
+      "severe_count": 580,
+      "severe_percentage_of_station": 8.46,
+      "actual_mean": 343.0,
+      "persist_mae": 36.51,
+      "lstm_mae": 34.86,
+      "ensemble_mae": 36.03,
+      "lstm_bias": -11.43,
+      "ensemble_bias": -17.29
+    },
+    {
+      "StationId": "DL029",
+      "severe_count": 579,
+      "severe_percentage_of_station": 10.09,
+      "actual_mean": 351.03,
+      "persist_mae": 28.38,
+      "lstm_mae": 25.35,
+      "ensemble_mae": 26.33,
+      "lstm_bias": -7.46,
+      "ensemble_bias": -11.32
+    },
+    {
+      "StationId": "DL009",
+      "severe_count": 566,
+      "severe_percentage_of_station": 10.59,
+      "actual_mean": 363.36,
+      "persist_mae": 35.62,
+      "lstm_mae": 34.5,
+      "ensemble_mae": 36.48,
+      "lstm_bias": -14.41,
+      "ensemble_bias": -19.87
+    },
+    {
+      "StationId": "DL023",
+      "severe_count": 547,
+      "severe_percentage_of_station": 8.82,
+      "actual_mean": 326.88,
+      "persist_mae": 30.03,
+      "lstm_mae": 26.54,
+      "ensemble_mae": 26.72,
+      "lstm_bias": -7.5,
+      "ensemble_bias": -12.4
+    },
+    {
+      "StationId": "DL027",
+      "severe_count": 543,
+      "severe_percentage_of_station": 8.39,
+      "actual_mean": 343.75,
+      "persist_mae": 31.03,
+      "lstm_mae": 27.84,
+      "ensemble_mae": 27.93,
+      "lstm_bias": -11.23,
+      "ensemble_bias": -17.17
+    },
+    {
+      "StationId": "DL005",
+      "severe_count": 542,
+      "severe_percentage_of_station": 11.59,
+      "actual_mean": 344.73,
+      "persist_mae": 39.97,
+      "lstm_mae": 35.13,
+      "ensemble_mae": 36.31,
+      "lstm_bias": -13.93,
+      "ensemble_bias": -19.95
+    },
+    {
+      "StationId": "DL034",
+      "severe_count": 500,
+      "severe_percentage_of_station": 8.71,
+      "actual_mean": 354.5,
+      "persist_mae": 36.09,
+      "lstm_mae": 37.82,
+      "ensemble_mae": 39.24,
+      "lstm_bias": -14.58,
+      "ensemble_bias": -18.98
+    },
+    {
+      "StationId": "DL014",
+      "severe_count": 469,
+      "severe_percentage_of_station": 11.54,
+      "actual_mean": 348.31,
+      "persist_mae": 33.11,
+      "lstm_mae": 33.93,
+      "ensemble_mae": 35.01,
+      "lstm_bias": -19.25,
+      "ensemble_bias": -25.41
+    },
+    {
+      "StationId": "DL001",
+      "severe_count": 464,
+      "severe_percentage_of_station": 8.07,
+      "actual_mean": 337.49,
+      "persist_mae": 29.9,
+      "lstm_mae": 27.6,
+      "ensemble_mae": 28.21,
+      "lstm_bias": -10.19,
+      "ensemble_bias": -16.12
+    },
+    {
+      "StationId": "DL035",
+      "severe_count": 452,
+      "severe_percentage_of_station": 6.99,
+      "actual_mean": 331.51,
+      "persist_mae": 43.63,
+      "lstm_mae": 39.64,
+      "ensemble_mae": 40.94,
+      "lstm_bias": -19.37,
+      "ensemble_bias": -24.85
+    },
+    {
+      "StationId": "DL012",
+      "severe_count": 441,
+      "severe_percentage_of_station": 6.76,
+      "actual_mean": 366.99,
+      "persist_mae": 45.26,
+      "lstm_mae": 49.27,
+      "ensemble_mae": 51.31,
+      "lstm_bias": -27.95,
+      "ensemble_bias": -34.22
+    },
+    {
+      "StationId": "DL018",
+      "severe_count": 415,
+      "severe_percentage_of_station": 6.21,
+      "actual_mean": 351.23,
+      "persist_mae": 27.83,
+      "lstm_mae": 30.14,
+      "ensemble_mae": 30.38,
+      "lstm_bias": -10.09,
+      "ensemble_bias": -15.24
+    },
+    {
+      "StationId": "DL036",
+      "severe_count": 408,
+      "severe_percentage_of_station": 5.96,
+      "actual_mean": 360.46,
+      "persist_mae": 29.98,
+      "lstm_mae": 30.54,
+      "ensemble_mae": 33.51,
+      "lstm_bias": -18.9,
+      "ensemble_bias": -23.79
+    },
+    {
+      "StationId": "DL019",
+      "severe_count": 393,
+      "severe_percentage_of_station": 7.63,
+      "actual_mean": 342.46,
+      "persist_mae": 32.05,
+      "lstm_mae": 31.47,
+      "ensemble_mae": 31.43,
+      "lstm_bias": -13.66,
+      "ensemble_bias": -18.34
+    },
+    {
+      "StationId": "DL025",
+      "severe_count": 385,
+      "severe_percentage_of_station": 7.03,
+      "actual_mean": 345.22,
+      "persist_mae": 40.76,
+      "lstm_mae": 40.48,
+      "ensemble_mae": 42.03,
+      "lstm_bias": -22.91,
+      "ensemble_bias": -29.25
+    },
+    {
+      "StationId": "HR011",
+      "severe_count": 334,
+      "severe_percentage_of_station": 5.51,
+      "actual_mean": 383.0,
+      "persist_mae": 43.95,
+      "lstm_mae": 51.98,
+      "ensemble_mae": 54.4,
+      "lstm_bias": -37.76,
+      "ensemble_bias": -43.97
+    },
+    {
+      "StationId": "DL031",
+      "severe_count": 327,
+      "severe_percentage_of_station": 7.33,
+      "actual_mean": 335.51,
+      "persist_mae": 37.52,
+      "lstm_mae": 33.51,
+      "ensemble_mae": 34.39,
+      "lstm_bias": -12.16,
+      "ensemble_bias": -18.59
+    },
+    {
+      "StationId": "DL010",
+      "severe_count": 326,
+      "severe_percentage_of_station": 5.84,
+      "actual_mean": 354.11,
+      "persist_mae": 32.12,
+      "lstm_mae": 35.65,
+      "ensemble_mae": 37.64,
+      "lstm_bias": -15.54,
+      "ensemble_bias": -21.94
+    },
+    {
+      "StationId": "DL017",
+      "severe_count": 301,
+      "severe_percentage_of_station": 5.98,
+      "actual_mean": 352.45,
+      "persist_mae": 38.28,
+      "lstm_mae": 44.61,
+      "ensemble_mae": 46.15,
+      "lstm_bias": -31.41,
+      "ensemble_bias": -37.09
+    },
+    {
+      "StationId": "DL004",
+      "severe_count": 284,
+      "severe_percentage_of_station": 5.4,
+      "actual_mean": 370.12,
+      "persist_mae": 53.37,
+      "lstm_mae": 59.91,
+      "ensemble_mae": 62.11,
+      "lstm_bias": -46.12,
+      "ensemble_bias": -51.4
+    },
+    {
+      "StationId": "DL022",
+      "severe_count": 283,
+      "severe_percentage_of_station": 6.27,
+      "actual_mean": 378.78,
+      "persist_mae": 36.56,
+      "lstm_mae": 41.93,
+      "ensemble_mae": 45.22,
+      "lstm_bias": -30.78,
+      "ensemble_bias": -36.76
+    },
+    {
+      "StationId": "DL030",
+      "severe_count": 259,
+      "severe_percentage_of_station": 5.21,
+      "actual_mean": 352.92,
+      "persist_mae": 39.06,
+      "lstm_mae": 43.53,
+      "ensemble_mae": 44.97,
+      "lstm_bias": -25.73,
+      "ensemble_bias": -32.22
+    },
+    {
+      "StationId": "DL006",
+      "severe_count": 242,
+      "severe_percentage_of_station": 16.43,
+      "actual_mean": 357.9,
+      "persist_mae": 43.44,
+      "lstm_mae": 48.79,
+      "ensemble_mae": 50.74,
+      "lstm_bias": -28.05,
+      "ensemble_bias": -34.74
+    },
+    {
+      "StationId": "AS001",
+      "severe_count": 173,
+      "severe_percentage_of_station": 2.97,
+      "actual_mean": 335.43,
+      "persist_mae": 76.93,
+      "lstm_mae": 81.08,
+      "ensemble_mae": 80.41,
+      "lstm_bias": -75.64,
+      "ensemble_bias": -74.3
+    },
+    {
+      "StationId": "OD002",
+      "severe_count": 58,
+      "severe_percentage_of_station": 2.57,
+      "actual_mean": 293.01,
+      "persist_mae": 56.7,
+      "lstm_mae": 73.96,
+      "ensemble_mae": 72.27,
+      "lstm_bias": -65.88,
+      "ensemble_bias": -64.47
+    },
+    {
+      "StationId": "BR010",
+      "severe_count": 20,
+      "severe_percentage_of_station": 0.52,
+      "actual_mean": 277.58,
+      "persist_mae": 24.47,
+      "lstm_mae": 30.29,
+      "ensemble_mae": 29.92,
+      "lstm_bias": -26.23,
+      "ensemble_bias": -26.5
+    },
+    {
+      "StationId": "WB009",
+      "severe_count": 19,
+      "severe_percentage_of_station": 0.36,
+      "actual_mean": 344.46,
+      "persist_mae": 80.13,
+      "lstm_mae": 144.41,
+      "ensemble_mae": 134.44,
+      "lstm_bias": -139.48,
+      "ensemble_bias": -129.66
+    },
+    {
+      "StationId": "WB007",
+      "severe_count": 14,
+      "severe_percentage_of_station": 0.32,
+      "actual_mean": 273.25,
+      "persist_mae": 38.52,
+      "lstm_mae": 57.53,
+      "ensemble_mae": 51.83,
+      "lstm_bias": -53.45,
+      "ensemble_bias": -48.9
+    },
+    {
+      "StationId": "MH012",
+      "severe_count": 8,
+      "severe_percentage_of_station": 0.21,
+      "actual_mean": 266.53,
+      "persist_mae": 73.2,
+      "lstm_mae": 76.4,
+      "ensemble_mae": 75.56,
+      "lstm_bias": -45.92,
+      "ensemble_bias": -50.6
+    },
+    {
+      "StationId": "HR012",
+      "severe_count": 7,
+      "severe_percentage_of_station": 0.37,
+      "actual_mean": 335.08,
+      "persist_mae": 156.18,
+      "lstm_mae": 148.88,
+      "ensemble_mae": 142.97,
+      "lstm_bias": -148.88,
+      "ensemble_bias": -142.97
+    },
+    {
+      "StationId": "AP005",
+      "severe_count": 7,
+      "severe_percentage_of_station": 0.17,
+      "actual_mean": 583.39,
+      "persist_mae": 161.14,
+      "lstm_mae": 296.49,
+      "ensemble_mae": 291.33,
+      "lstm_bias": -296.49,
+      "ensemble_bias": -291.33
+    },
+    {
+      "StationId": "WB011",
+      "severe_count": 7,
+      "severe_percentage_of_station": 0.23,
+      "actual_mean": 386.16,
+      "persist_mae": 133.16,
+      "lstm_mae": 170.58,
+      "ensemble_mae": 160.5,
+      "lstm_bias": -170.58,
+      "ensemble_bias": -160.5
+    },
+    {
+      "StationId": "PB001",
+      "severe_count": 7,
+      "severe_percentage_of_station": 0.14,
+      "actual_mean": 415.49,
+      "persist_mae": 100.99,
+      "lstm_mae": 86.62,
+      "ensemble_mae": 84.22,
+      "lstm_bias": -44.44,
+      "ensemble_bias": -55.87
+    },
+    {
+      "StationId": "WB010",
+      "severe_count": 7,
+      "severe_percentage_of_station": 0.14,
+      "actual_mean": 344.26,
+      "persist_mae": 37.42,
+      "lstm_mae": 150.73,
+      "ensemble_mae": 128.57,
+      "lstm_bias": -150.73,
+      "ensemble_bias": -128.57
+    },
+    {
+      "StationId": "MP001",
+      "severe_count": 6,
+      "severe_percentage_of_station": 0.1,
+      "actual_mean": 331.25,
+      "persist_mae": 169.83,
+      "lstm_mae": 156.73,
+      "ensemble_mae": 156.16,
+      "lstm_bias": -78.76,
+      "ensemble_bias": -83.39
+    },
+    {
+      "StationId": "GJ001",
+      "severe_count": 5,
+      "severe_percentage_of_station": 0.1,
+      "actual_mean": 279.95,
+      "persist_mae": 44.74,
+      "lstm_mae": 121.42,
+      "ensemble_mae": 116.02,
+      "lstm_bias": -121.42,
+      "ensemble_bias": -116.02
+    },
+    {
+      "StationId": "CH001",
+      "severe_count": 5,
+      "severe_percentage_of_station": 0.1,
+      "actual_mean": 417.24,
+      "persist_mae": 132.53,
+      "lstm_mae": 148.34,
+      "ensemble_mae": 146.79,
+      "lstm_bias": -148.34,
+      "ensemble_bias": -146.79
+    },
+    {
+      "StationId": "WB013",
+      "severe_count": 5,
+      "severe_percentage_of_station": 0.11,
+      "actual_mean": 391.16,
+      "persist_mae": 130.89,
+      "lstm_mae": 216.44,
+      "ensemble_mae": 203.44,
+      "lstm_bias": -216.44,
+      "ensemble_bias": -203.44
+    },
+    {
+      "StationId": "WB012",
+      "severe_count": 4,
+      "severe_percentage_of_station": 0.1,
+      "actual_mean": 362.35,
+      "persist_mae": 113.95,
+      "lstm_mae": 195.78,
+      "ensemble_mae": 185.93,
+      "lstm_bias": -195.78,
+      "ensemble_bias": -185.93
+    },
+    {
+      "StationId": "WB008",
+      "severe_count": 4,
+      "severe_percentage_of_station": 0.1,
+      "actual_mean": 497.4,
+      "persist_mae": 198.35,
+      "lstm_mae": 357.67,
+      "ensemble_mae": 333.9,
+      "lstm_bias": -357.67,
+      "ensemble_bias": -333.9
+    },
+    {
+      "StationId": "MH013",
+      "severe_count": 3,
+      "severe_percentage_of_station": 0.08,
+      "actual_mean": 335.1,
+      "persist_mae": 267.01,
+      "lstm_mae": 271.12,
+      "ensemble_mae": 270.56,
+      "lstm_bias": -271.12,
+      "ensemble_bias": -270.56
+    },
+    {
+      "StationId": "KL008",
+      "severe_count": 3,
+      "severe_percentage_of_station": 0.15,
+      "actual_mean": 376.75,
+      "persist_mae": 126.0,
+      "lstm_mae": 165.17,
+      "ensemble_mae": 161.38,
+      "lstm_bias": -124.6,
+      "ensemble_bias": -134.69
+    },
+    {
+      "StationId": "OD001",
+      "severe_count": 3,
+      "severe_percentage_of_station": 0.1,
+      "actual_mean": 267.86,
+      "persist_mae": 38.46,
+      "lstm_mae": 73.19,
+      "ensemble_mae": 69.44,
+      "lstm_bias": -73.19,
+      "ensemble_bias": -69.44
+    },
+    {
+      "StationId": "RJ006",
+      "severe_count": 3,
+      "severe_percentage_of_station": 0.07,
+      "actual_mean": 624.5,
+      "persist_mae": 215.34,
+      "lstm_mae": 179.38,
+      "ensemble_mae": 178.04,
+      "lstm_bias": -63.0,
+      "ensemble_bias": -84.19
+    },
+    {
+      "StationId": "RJ005",
+      "severe_count": 3,
+      "severe_percentage_of_station": 0.1,
+      "actual_mean": 523.56,
+      "persist_mae": 255.76,
+      "lstm_mae": 286.12,
+      "ensemble_mae": 277.72,
+      "lstm_bias": -286.12,
+      "ensemble_bias": -277.72
+    },
+    {
+      "StationId": "KL004",
+      "severe_count": 3,
+      "severe_percentage_of_station": 0.11,
+      "actual_mean": 350.38,
+      "persist_mae": 226.81,
+      "lstm_mae": 223.76,
+      "ensemble_mae": 214.27,
+      "lstm_bias": 51.83,
+      "ensemble_bias": 37.94
+    },
+    {
+      "StationId": "KA011",
+      "severe_count": 2,
+      "severe_percentage_of_station": 0.06,
+      "actual_mean": 298.25,
+      "persist_mae": 211.12,
+      "lstm_mae": 186.49,
+      "ensemble_mae": 190.92,
+      "lstm_bias": -186.49,
+      "ensemble_bias": -190.92
+    },
+    {
+      "StationId": "MH009",
+      "severe_count": 2,
+      "severe_percentage_of_station": 0.04,
+      "actual_mean": 294.34,
+      "persist_mae": 113.48,
+      "lstm_mae": 127.13,
+      "ensemble_mae": 127.23,
+      "lstm_bias": -127.13,
+      "ensemble_bias": -127.23
+    },
+    {
+      "StationId": "JH001",
+      "severe_count": 2,
+      "severe_percentage_of_station": 0.06,
+      "actual_mean": 302.8,
+      "persist_mae": 221.58,
+      "lstm_mae": 213.97,
+      "ensemble_mae": 214.99,
+      "lstm_bias": -213.97,
+      "ensemble_bias": -214.99
+    },
+    {
+      "StationId": "BR009",
+      "severe_count": 1,
+      "severe_percentage_of_station": 0.03,
+      "actual_mean": 399.47,
+      "persist_mae": 167.88,
+      "lstm_mae": 136.83,
+      "ensemble_mae": 140.6,
+      "lstm_bias": -136.83,
+      "ensemble_bias": -140.6
+    },
+    {
+      "StationId": "HR013",
+      "severe_count": 1,
+      "severe_percentage_of_station": 0.05,
+      "actual_mean": 327.37,
+      "persist_mae": 259.41,
+      "lstm_mae": 253.79,
+      "ensemble_mae": 253.92,
+      "lstm_bias": -253.79,
+      "ensemble_bias": -253.92
+    },
+    {
+      "StationId": "KL007",
+      "severe_count": 1,
+      "severe_percentage_of_station": 0.04,
+      "actual_mean": 353.37,
+      "persist_mae": 282.67,
+      "lstm_mae": 285.25,
+      "ensemble_mae": 285.26,
+      "lstm_bias": -285.25,
+      "ensemble_bias": -285.26
+    },
+    {
+      "StationId": "KA006",
+      "severe_count": 1,
+      "severe_percentage_of_station": 0.02,
+      "actual_mean": 260.5,
+      "persist_mae": 164.0,
+      "lstm_mae": 133.44,
+      "ensemble_mae": 137.41,
+      "lstm_bias": -133.44,
+      "ensemble_bias": -137.41
+    },
+    {
+      "StationId": "KA004",
+      "severe_count": 1,
+      "severe_percentage_of_station": 0.03,
+      "actual_mean": 269.0,
+      "persist_mae": 51.0,
+      "lstm_mae": 166.99,
+      "ensemble_mae": 151.25,
+      "lstm_bias": 166.99,
+      "ensemble_bias": 151.25
+    },
+    {
+      "StationId": "RJ004",
+      "severe_count": 1,
+      "severe_percentage_of_station": 0.02,
+      "actual_mean": 268.85,
+      "persist_mae": 39.92,
+      "lstm_mae": 83.57,
+      "ensemble_mae": 73.65,
+      "lstm_bias": -83.57,
+      "ensemble_bias": -73.65
+    }
+  ],
+  "pm25_severe_by_month": [
+    {
+      "Month": "2019-09",
+      "severe_count": 4,
+      "severe_percentage_of_month": 0.01,
+      "actual_mean": 324.64,
+      "persist_mae": 268.74,
+      "lstm_mae": 269.77,
+      "ensemble_mae": 269.85,
+      "lstm_bias": -269.77,
+      "ensemble_bias": -269.85
+    },
+    {
+      "Month": "2019-10",
+      "severe_count": 2122,
+      "severe_percentage_of_month": 5.44,
+      "actual_mean": 336.68,
+      "persist_mae": 38.03,
+      "lstm_mae": 46.78,
+      "ensemble_mae": 46.73,
+      "lstm_bias": -28.51,
+      "ensemble_bias": -32.74
+    },
+    {
+      "Month": "2019-11",
+      "severe_count": 5710,
+      "severe_percentage_of_month": 13.73,
+      "actual_mean": 401.84,
+      "persist_mae": 38.37,
+      "lstm_mae": 41.19,
+      "ensemble_mae": 44.11,
+      "lstm_bias": -23.22,
+      "ensemble_bias": -31.02
+    },
+    {
+      "Month": "2019-12",
+      "severe_count": 6906,
+      "severe_percentage_of_month": 15.15,
+      "actual_mean": 336.52,
+      "persist_mae": 33.0,
+      "lstm_mae": 28.65,
+      "ensemble_mae": 29.17,
+      "lstm_bias": -6.53,
+      "ensemble_bias": -12.2
+    },
+    {
+      "Month": "2020-01",
+      "severe_count": 2817,
+      "severe_percentage_of_month": 6.16,
+      "actual_mean": 344.42,
+      "persist_mae": 43.96,
+      "lstm_mae": 37.51,
+      "ensemble_mae": 37.47,
+      "lstm_bias": -12.54,
+      "ensemble_bias": -15.73
+    },
+    {
+      "Month": "2020-02",
+      "severe_count": 1193,
+      "severe_percentage_of_month": 2.75,
+      "actual_mean": 302.09,
+      "persist_mae": 45.17,
+      "lstm_mae": 37.54,
+      "ensemble_mae": 37.63,
+      "lstm_bias": -17.93,
+      "ensemble_bias": -20.12
+    },
+    {
+      "Month": "2020-03",
+      "severe_count": 49,
+      "severe_percentage_of_month": 0.11,
+      "actual_mean": 288.37,
+      "persist_mae": 77.47,
+      "lstm_mae": 70.13,
+      "ensemble_mae": 70.09,
+      "lstm_bias": -65.74,
+      "ensemble_bias": -66.33
+    },
+    {
+      "Month": "2020-04",
+      "severe_count": 29,
+      "severe_percentage_of_month": 0.08,
+      "actual_mean": 361.14,
+      "persist_mae": 151.03,
+      "lstm_mae": 157.84,
+      "ensemble_mae": 154.92,
+      "lstm_bias": -137.93,
+      "ensemble_bias": -136.87
+    },
+    {
+      "Month": "2020-05",
+      "severe_count": 91,
+      "severe_percentage_of_month": 0.24,
+      "actual_mean": 328.95,
+      "persist_mae": 90.59,
+      "lstm_mae": 77.6,
+      "ensemble_mae": 76.16,
+      "lstm_bias": -64.39,
+      "ensemble_bias": -62.16
+    },
+    {
+      "Month": "2020-06",
+      "severe_count": 17,
+      "severe_percentage_of_month": 0.05,
+      "actual_mean": 331.38,
+      "persist_mae": 162.65,
+      "lstm_mae": 194.15,
+      "ensemble_mae": 192.56,
+      "lstm_bias": -174.5,
+      "ensemble_bias": -174.77
+    }
+  ],
+  "pm10_severe_by_station": [
+    {
+      "StationId": "DL038",
+      "severe_count": 796,
+      "actual_mean": 573.23,
+      "persist_mae": 55.67,
+      "lstm_mae": 45.72,
+      "ensemble_mae": 53.78,
+      "lstm_bias": -17.9,
+      "ensemble_bias": -41.15
+    },
+    {
+      "StationId": "DL024",
+      "severe_count": 715,
+      "actual_mean": 565.69,
+      "persist_mae": 63.5,
+      "lstm_mae": 51.17,
+      "ensemble_mae": 58.45,
+      "lstm_bias": -15.79,
+      "ensemble_bias": -36.93
+    },
+    {
+      "StationId": "DL015",
+      "severe_count": 700,
+      "actual_mean": 563.0,
+      "persist_mae": 63.14,
+      "lstm_mae": 53.09,
+      "ensemble_mae": 58.17,
+      "lstm_bias": -19.28,
+      "ensemble_bias": -40.47
+    },
+    {
+      "StationId": "DL032",
+      "severe_count": 696,
+      "actual_mean": 576.34,
+      "persist_mae": 76.79,
+      "lstm_mae": 57.78,
+      "ensemble_mae": 64.7,
+      "lstm_bias": -30.26,
+      "ensemble_bias": -49.43
+    },
+    {
+      "StationId": "DL020",
+      "severe_count": 684,
+      "actual_mean": 568.68,
+      "persist_mae": 73.24,
+      "lstm_mae": 60.6,
+      "ensemble_mae": 65.45,
+      "lstm_bias": -28.68,
+      "ensemble_bias": -47.47
+    },
+    {
+      "StationId": "DL007",
+      "severe_count": 627,
+      "actual_mean": 551.95,
+      "persist_mae": 52.66,
+      "lstm_mae": 50.09,
+      "ensemble_mae": 54.12,
+      "lstm_bias": -21.25,
+      "ensemble_bias": -39.04
+    },
+    {
+      "StationId": "DL010",
+      "severe_count": 608,
+      "actual_mean": 588.98,
+      "persist_mae": 95.46,
+      "lstm_mae": 77.05,
+      "ensemble_mae": 85.33,
+      "lstm_bias": -45.19,
+      "ensemble_bias": -66.28
+    },
+    {
+      "StationId": "DL002",
+      "severe_count": 601,
+      "actual_mean": 578.16,
+      "persist_mae": 61.12,
+      "lstm_mae": 55.28,
+      "ensemble_mae": 58.96,
+      "lstm_bias": -15.46,
+      "ensemble_bias": -38.1
+    },
+    {
+      "StationId": "DL003",
+      "severe_count": 575,
+      "actual_mean": 561.46,
+      "persist_mae": 49.04,
+      "lstm_mae": 40.97,
+      "ensemble_mae": 48.3,
+      "lstm_bias": -16.51,
+      "ensemble_bias": -37.42
+    },
+    {
+      "StationId": "DL034",
+      "severe_count": 560,
+      "actual_mean": 568.44,
+      "persist_mae": 110.2,
+      "lstm_mae": 106.55,
+      "ensemble_mae": 107.96,
+      "lstm_bias": -61.51,
+      "ensemble_bias": -80.21
+    },
+    {
+      "StationId": "DL026",
+      "severe_count": 520,
+      "actual_mean": 551.62,
+      "persist_mae": 48.64,
+      "lstm_mae": 39.34,
+      "ensemble_mae": 46.77,
+      "lstm_bias": -15.24,
+      "ensemble_bias": -34.8
+    },
+    {
+      "StationId": "DL023",
+      "severe_count": 508,
+      "actual_mean": 549.43,
+      "persist_mae": 55.55,
+      "lstm_mae": 47.47,
+      "ensemble_mae": 53.81,
+      "lstm_bias": -22.0,
+      "ensemble_bias": -40.59
+    },
+    {
+      "StationId": "DL008",
+      "severe_count": 491,
+      "actual_mean": 543.03,
+      "persist_mae": 84.82,
+      "lstm_mae": 75.25,
+      "ensemble_mae": 79.02,
+      "lstm_bias": -43.52,
+      "ensemble_bias": -57.03
+    },
+    {
+      "StationId": "DL037",
+      "severe_count": 482,
+      "actual_mean": 551.26,
+      "persist_mae": 53.46,
+      "lstm_mae": 47.5,
+      "ensemble_mae": 53.56,
+      "lstm_bias": -27.39,
+      "ensemble_bias": -42.4
+    },
+    {
+      "StationId": "DL016",
+      "severe_count": 465,
+      "actual_mean": 551.38,
+      "persist_mae": 52.07,
+      "lstm_mae": 44.95,
+      "ensemble_mae": 50.35,
+      "lstm_bias": -15.68,
+      "ensemble_bias": -36.41
+    },
+    {
+      "StationId": "DL035",
+      "severe_count": 429,
+      "actual_mean": 543.15,
+      "persist_mae": 60.29,
+      "lstm_mae": 58.41,
+      "ensemble_mae": 65.71,
+      "lstm_bias": -34.41,
+      "ensemble_bias": -51.19
+    },
+    {
+      "StationId": "DL018",
+      "severe_count": 427,
+      "actual_mean": 535.39,
+      "persist_mae": 36.67,
+      "lstm_mae": 42.23,
+      "ensemble_mae": 44.67,
+      "lstm_bias": -12.86,
+      "ensemble_bias": -30.75
+    },
+    {
+      "StationId": "DL005",
+      "severe_count": 410,
+      "actual_mean": 547.3,
+      "persist_mae": 70.28,
+      "lstm_mae": 58.81,
+      "ensemble_mae": 65.73,
+      "lstm_bias": -35.0,
+      "ensemble_bias": -51.29
+    },
+    {
+      "StationId": "DL031",
+      "severe_count": 391,
+      "actual_mean": 556.56,
+      "persist_mae": 69.09,
+      "lstm_mae": 55.21,
+      "ensemble_mae": 59.72,
+      "lstm_bias": -21.96,
+      "ensemble_bias": -41.85
+    },
+    {
+      "StationId": "DL009",
+      "severe_count": 388,
+      "actual_mean": 557.68,
+      "persist_mae": 52.1,
+      "lstm_mae": 45.16,
+      "ensemble_mae": 53.07,
+      "lstm_bias": -20.55,
+      "ensemble_bias": -39.92
+    },
+    {
+      "StationId": "DL027",
+      "severe_count": 375,
+      "actual_mean": 539.02,
+      "persist_mae": 47.22,
+      "lstm_mae": 39.11,
+      "ensemble_mae": 43.68,
+      "lstm_bias": -17.19,
+      "ensemble_bias": -31.83
+    },
+    {
+      "StationId": "DL029",
+      "severe_count": 374,
+      "actual_mean": 548.72,
+      "persist_mae": 47.73,
+      "lstm_mae": 37.37,
+      "ensemble_mae": 43.41,
+      "lstm_bias": -11.71,
+      "ensemble_bias": -31.84
+    },
+    {
+      "StationId": "DL012",
+      "severe_count": 368,
+      "actual_mean": 586.89,
+      "persist_mae": 64.38,
+      "lstm_mae": 66.09,
+      "ensemble_mae": 74.83,
+      "lstm_bias": -43.88,
+      "ensemble_bias": -62.68
+    },
+    {
+      "StationId": "DL025",
+      "severe_count": 336,
+      "actual_mean": 534.28,
+      "persist_mae": 51.82,
+      "lstm_mae": 54.64,
+      "ensemble_mae": 59.59,
+      "lstm_bias": -35.45,
+      "ensemble_bias": -48.19
+    },
+    {
+      "StationId": "DL001",
+      "severe_count": 329,
+      "actual_mean": 533.78,
+      "persist_mae": 45.64,
+      "lstm_mae": 39.23,
+      "ensemble_mae": 44.83,
+      "lstm_bias": -20.21,
+      "ensemble_bias": -34.41
+    },
+    {
+      "StationId": "DL030",
+      "severe_count": 253,
+      "actual_mean": 583.86,
+      "persist_mae": 67.16,
+      "lstm_mae": 71.52,
+      "ensemble_mae": 79.64,
+      "lstm_bias": -50.99,
+      "ensemble_bias": -66.46
+    },
+    {
+      "StationId": "DL019",
+      "severe_count": 251,
+      "actual_mean": 529.54,
+      "persist_mae": 57.33,
+      "lstm_mae": 57.21,
+      "ensemble_mae": 61.22,
+      "lstm_bias": -35.24,
+      "ensemble_bias": -50.83
+    },
+    {
+      "StationId": "DL004",
+      "severe_count": 212,
+      "actual_mean": 564.33,
+      "persist_mae": 63.06,
+      "lstm_mae": 67.18,
+      "ensemble_mae": 73.51,
+      "lstm_bias": -47.55,
+      "ensemble_bias": -61.12
+    },
+    {
+      "StationId": "HR011",
+      "severe_count": 212,
+      "actual_mean": 571.72,
+      "persist_mae": 61.15,
+      "lstm_mae": 70.8,
+      "ensemble_mae": 77.33,
+      "lstm_bias": -51.78,
+      "ensemble_bias": -66.06
+    },
+    {
+      "StationId": "DL022",
+      "severe_count": 177,
+      "actual_mean": 559.54,
+      "persist_mae": 51.01,
+      "lstm_mae": 58.74,
+      "ensemble_mae": 64.38,
+      "lstm_bias": -47.57,
+      "ensemble_bias": -55.39
+    },
+    {
+      "StationId": "DL014",
+      "severe_count": 174,
+      "actual_mean": 523.29,
+      "persist_mae": 48.43,
+      "lstm_mae": 45.78,
+      "ensemble_mae": 49.3,
+      "lstm_bias": -28.76,
+      "ensemble_bias": -38.91
+    },
+    {
+      "StationId": "DL036",
+      "severe_count": 164,
+      "actual_mean": 553.41,
+      "persist_mae": 51.16,
+      "lstm_mae": 50.63,
+      "ensemble_mae": 57.91,
+      "lstm_bias": -32.78,
+      "ensemble_bias": -50.02
+    },
+    {
+      "StationId": "DL017",
+      "severe_count": 164,
+      "actual_mean": 544.41,
+      "persist_mae": 59.04,
+      "lstm_mae": 67.01,
+      "ensemble_mae": 70.54,
+      "lstm_bias": -48.98,
+      "ensemble_bias": -59.54
+    },
+    {
+      "StationId": "DL028",
+      "severe_count": 159,
+      "actual_mean": 557.2,
+      "persist_mae": 77.25,
+      "lstm_mae": 81.38,
+      "ensemble_mae": 82.73,
+      "lstm_bias": -62.45,
+      "ensemble_bias": -68.83
+    },
+    {
+      "StationId": "DL006",
+      "severe_count": 148,
+      "actual_mean": 549.47,
+      "persist_mae": 68.33,
+      "lstm_mae": 76.07,
+      "ensemble_mae": 79.02,
+      "lstm_bias": -55.08,
+      "ensemble_bias": -61.28
+    },
+    {
+      "StationId": "OD002",
+      "severe_count": 148,
+      "actual_mean": 543.06,
+      "persist_mae": 128.54,
+      "lstm_mae": 132.99,
+      "ensemble_mae": 132.32,
+      "lstm_bias": -121.16,
+      "ensemble_bias": -120.91
+    },
+    {
+      "StationId": "AS001",
+      "severe_count": 134,
+      "actual_mean": 540.99,
+      "persist_mae": 130.86,
+      "lstm_mae": 130.27,
+      "ensemble_mae": 129.27,
+      "lstm_bias": -118.01,
+      "ensemble_bias": -117.1
+    },
+    {
+      "StationId": "MH011",
+      "severe_count": 64,
+      "actual_mean": 493.97,
+      "persist_mae": 74.96,
+      "lstm_mae": 87.38,
+      "ensemble_mae": 87.84,
+      "lstm_bias": -76.77,
+      "ensemble_bias": -78.7
+    },
+    {
+      "StationId": "WB011",
+      "severe_count": 46,
+      "actual_mean": 508.55,
+      "persist_mae": 71.77,
+      "lstm_mae": 87.37,
+      "ensemble_mae": 88.58,
+      "lstm_bias": -79.17,
+      "ensemble_bias": -85.45
+    },
+    {
+      "StationId": "BR006",
+      "severe_count": 45,
+      "actual_mean": 771.7,
+      "persist_mae": 230.12,
+      "lstm_mae": 451.6,
+      "ensemble_mae": 424.1,
+      "lstm_bias": -451.6,
+      "ensemble_bias": -424.1
+    },
+    {
+      "StationId": "MP001",
+      "severe_count": 41,
+      "actual_mean": 501.09,
+      "persist_mae": 100.04,
+      "lstm_mae": 96.11,
+      "ensemble_mae": 94.23,
+      "lstm_bias": -85.23,
+      "ensemble_bias": -86.12
+    },
+    {
+      "StationId": "MH009",
+      "severe_count": 27,
+      "actual_mean": 546.26,
+      "persist_mae": 219.33,
+      "lstm_mae": 236.14,
+      "ensemble_mae": 235.84,
+      "lstm_bias": -231.83,
+      "ensemble_bias": -231.76
+    },
+    {
+      "StationId": "HR012",
+      "severe_count": 25,
+      "actual_mean": 508.51,
+      "persist_mae": 155.3,
+      "lstm_mae": 170.12,
+      "ensemble_mae": 160.34,
+      "lstm_bias": -170.12,
+      "ensemble_bias": -160.34
+    },
+    {
+      "StationId": "BR008",
+      "severe_count": 22,
+      "actual_mean": 501.81,
+      "persist_mae": 190.99,
+      "lstm_mae": 201.04,
+      "ensemble_mae": 197.37,
+      "lstm_bias": -201.04,
+      "ensemble_bias": -197.37
+    },
+    {
+      "StationId": "WB009",
+      "severe_count": 21,
+      "actual_mean": 527.42,
+      "persist_mae": 111.68,
+      "lstm_mae": 130.05,
+      "ensemble_mae": 126.19,
+      "lstm_bias": -114.2,
+      "ensemble_bias": -113.57
+    },
+    {
+      "StationId": "OD001",
+      "severe_count": 20,
+      "actual_mean": 496.34,
+      "persist_mae": 162.45,
+      "lstm_mae": 187.19,
+      "ensemble_mae": 181.53,
+      "lstm_bias": -187.19,
+      "ensemble_bias": -181.53
+    },
+    {
+      "StationId": "RJ006",
+      "severe_count": 19,
+      "actual_mean": 668.23,
+      "persist_mae": 284.92,
+      "lstm_mae": 345.11,
+      "ensemble_mae": 342.59,
+      "lstm_bias": -320.37,
+      "ensemble_bias": -321.6
+    },
+    {
+      "StationId": "AP005",
+      "severe_count": 19,
+      "actual_mean": 610.24,
+      "persist_mae": 132.7,
+      "lstm_mae": 207.59,
+      "ensemble_mae": 204.98,
+      "lstm_bias": -202.01,
+      "ensemble_bias": -202.25
+    },
+    {
+      "StationId": "MH007",
+      "severe_count": 16,
+      "actual_mean": 496.01,
+      "persist_mae": 109.26,
+      "lstm_mae": 114.52,
+      "ensemble_mae": 112.52,
+      "lstm_bias": -108.08,
+      "ensemble_bias": -109.86
+    },
+    {
+      "StationId": "PB001",
+      "severe_count": 16,
+      "actual_mean": 806.04,
+      "persist_mae": 88.35,
+      "lstm_mae": 119.37,
+      "ensemble_mae": 145.48,
+      "lstm_bias": -103.06,
+      "ensemble_bias": -133.12
+    },
+    {
+      "StationId": "BR005",
+      "severe_count": 12,
+      "actual_mean": 504.39,
+      "persist_mae": 63.73,
+      "lstm_mae": 67.78,
+      "ensemble_mae": 67.74,
+      "lstm_bias": -54.75,
+      "ensemble_bias": -58.01
+    },
+    {
+      "StationId": "RJ005",
+      "severe_count": 11,
+      "actual_mean": 560.56,
+      "persist_mae": 138.66,
+      "lstm_mae": 178.5,
+      "ensemble_mae": 171.54,
+      "lstm_bias": -147.06,
+      "ensemble_bias": -151.15
+    },
+    {
+      "StationId": "GJ001",
+      "severe_count": 11,
+      "actual_mean": 586.56,
+      "persist_mae": 218.34,
+      "lstm_mae": 326.97,
+      "ensemble_mae": 306.84,
+      "lstm_bias": -326.97,
+      "ensemble_bias": -306.84
+    },
+    {
+      "StationId": "JH001",
+      "severe_count": 9,
+      "actual_mean": 529.67,
+      "persist_mae": 191.33,
+      "lstm_mae": 198.76,
+      "ensemble_mae": 181.9,
+      "lstm_bias": -198.76,
+      "ensemble_bias": -181.9
+    },
+    {
+      "StationId": "KL004",
+      "severe_count": 8,
+      "actual_mean": 491.94,
+      "persist_mae": 117.36,
+      "lstm_mae": 181.49,
+      "ensemble_mae": 174.62,
+      "lstm_bias": -181.49,
+      "ensemble_bias": -174.62
+    },
+    {
+      "StationId": "RJ004",
+      "severe_count": 8,
+      "actual_mean": 586.24,
+      "persist_mae": 195.3,
+      "lstm_mae": 244.98,
+      "ensemble_mae": 242.5,
+      "lstm_bias": -244.98,
+      "ensemble_bias": -242.5
+    },
+    {
+      "StationId": "WB013",
+      "severe_count": 7,
+      "actual_mean": 494.76,
+      "persist_mae": 91.64,
+      "lstm_mae": 159.87,
+      "ensemble_mae": 143.13,
+      "lstm_bias": -125.86,
+      "ensemble_bias": -124.03
+    },
+    {
+      "StationId": "CH001",
+      "severe_count": 7,
+      "actual_mean": 598.02,
+      "persist_mae": 273.33,
+      "lstm_mae": 294.79,
+      "ensemble_mae": 293.26,
+      "lstm_bias": -294.79,
+      "ensemble_bias": -293.26
+    },
+    {
+      "StationId": "KA008",
+      "severe_count": 6,
+      "actual_mean": 512.12,
+      "persist_mae": 124.33,
+      "lstm_mae": 172.19,
+      "ensemble_mae": 167.68,
+      "lstm_bias": -172.19,
+      "ensemble_bias": -167.68
+    },
+    {
+      "StationId": "WB007",
+      "severe_count": 6,
+      "actual_mean": 497.6,
+      "persist_mae": 172.74,
+      "lstm_mae": 168.63,
+      "ensemble_mae": 168.76,
+      "lstm_bias": -167.12,
+      "ensemble_bias": -168.76
+    },
+    {
+      "StationId": "MH008",
+      "severe_count": 6,
+      "actual_mean": 619.19,
+      "persist_mae": 452.03,
+      "lstm_mae": 457.22,
+      "ensemble_mae": 457.48,
+      "lstm_bias": -457.22,
+      "ensemble_bias": -457.48
+    },
+    {
+      "StationId": "BR010",
+      "severe_count": 5,
+      "actual_mean": 485.3,
+      "persist_mae": 125.42,
+      "lstm_mae": 148.09,
+      "ensemble_mae": 144.21,
+      "lstm_bias": -148.09,
+      "ensemble_bias": -144.21
+    },
+    {
+      "StationId": "WB008",
+      "severe_count": 4,
+      "actual_mean": 591.23,
+      "persist_mae": 160.76,
+      "lstm_mae": 304.91,
+      "ensemble_mae": 264.76,
+      "lstm_bias": -304.91,
+      "ensemble_bias": -264.76
+    },
+    {
+      "StationId": "MH006",
+      "severe_count": 4,
+      "actual_mean": 489.18,
+      "persist_mae": 53.91,
+      "lstm_mae": 175.17,
+      "ensemble_mae": 166.15,
+      "lstm_bias": -175.17,
+      "ensemble_bias": -166.15
+    },
+    {
+      "StationId": "HR013",
+      "severe_count": 4,
+      "actual_mean": 498.68,
+      "persist_mae": 170.57,
+      "lstm_mae": 240.3,
+      "ensemble_mae": 221.96,
+      "lstm_bias": -240.3,
+      "ensemble_bias": -221.96
+    },
+    {
+      "StationId": "MH013",
+      "severe_count": 4,
+      "actual_mean": 644.02,
+      "persist_mae": 465.14,
+      "lstm_mae": 481.87,
+      "ensemble_mae": 476.77,
+      "lstm_bias": -481.87,
+      "ensemble_bias": -476.77
+    },
+    {
+      "StationId": "BR009",
+      "severe_count": 3,
+      "actual_mean": 525.81,
+      "persist_mae": 181.71,
+      "lstm_mae": 171.86,
+      "ensemble_mae": 169.13,
+      "lstm_bias": -171.86,
+      "ensemble_bias": -169.13
+    },
+    {
+      "StationId": "WB012",
+      "severe_count": 3,
+      "actual_mean": 504.57,
+      "persist_mae": 200.51,
+      "lstm_mae": 228.75,
+      "ensemble_mae": 222.65,
+      "lstm_bias": -228.75,
+      "ensemble_bias": -222.65
+    },
+    {
+      "StationId": "MH005",
+      "severe_count": 2,
+      "actual_mean": 516.78,
+      "persist_mae": 215.85,
+      "lstm_mae": 252.74,
+      "ensemble_mae": 241.94,
+      "lstm_bias": -252.74,
+      "ensemble_bias": -241.94
+    },
+    {
+      "StationId": "MH012",
+      "severe_count": 2,
+      "actual_mean": 450.91,
+      "persist_mae": 160.1,
+      "lstm_mae": 183.74,
+      "ensemble_mae": 186.67,
+      "lstm_bias": -183.74,
+      "ensemble_bias": -186.67
+    },
+    {
+      "StationId": "KL008",
+      "severe_count": 2,
+      "actual_mean": 494.0,
+      "persist_mae": 171.0,
+      "lstm_mae": 146.28,
+      "ensemble_mae": 156.06,
+      "lstm_bias": -146.28,
+      "ensemble_bias": -156.06
+    },
+    {
+      "StationId": "WB010",
+      "severe_count": 2,
+      "actual_mean": 450.38,
+      "persist_mae": 34.18,
+      "lstm_mae": 185.63,
+      "ensemble_mae": 157.33,
+      "lstm_bias": -185.63,
+      "ensemble_bias": -157.33
+    },
+    {
+      "StationId": "KL007",
+      "severe_count": 1,
+      "actual_mean": 842.71,
+      "persist_mae": 490.09,
+      "lstm_mae": 557.2,
+      "ensemble_mae": 540.64,
+      "lstm_bias": -557.2,
+      "ensemble_bias": -540.64
+    },
+    {
+      "StationId": "KA011",
+      "severe_count": 1,
+      "actual_mean": 594.5,
+      "persist_mae": 375.75,
+      "lstm_mae": 399.39,
+      "ensemble_mae": 405.86,
+      "lstm_bias": -399.39,
+      "ensemble_bias": -405.86
+    },
+    {
+      "StationId": "MH014",
+      "severe_count": 1,
+      "actual_mean": 606.32,
+      "persist_mae": 534.69,
+      "lstm_mae": 545.02,
+      "ensemble_mae": 544.24,
+      "lstm_bias": -545.02,
+      "ensemble_bias": -544.24
+    }
+  ],
+  "pm10_severe_by_month": [
+    {
+      "Month": "2019-09",
+      "severe_count": 65,
+      "actual_mean": 542.36,
+      "persist_mae": 184.89,
+      "lstm_mae": 188.25,
+      "ensemble_mae": 188.73,
+      "lstm_bias": -180.6,
+      "ensemble_bias": -183.51
+    },
+    {
+      "Month": "2019-10",
+      "severe_count": 2146,
+      "actual_mean": 556.55,
+      "persist_mae": 74.0,
+      "lstm_mae": 74.38,
+      "ensemble_mae": 79.87,
+      "lstm_bias": -51.16,
+      "ensemble_bias": -66.6
+    },
+    {
+      "Month": "2019-11",
+      "severe_count": 4772,
+      "actual_mean": 591.5,
+      "persist_mae": 56.22,
+      "lstm_mae": 55.07,
+      "ensemble_mae": 62.74,
+      "lstm_bias": -29.58,
+      "ensemble_bias": -49.91
+    },
+    {
+      "Month": "2019-12",
+      "severe_count": 4739,
+      "actual_mean": 541.01,
+      "persist_mae": 54.87,
+      "lstm_mae": 45.24,
+      "ensemble_mae": 51.22,
+      "lstm_bias": -17.67,
+      "ensemble_bias": -37.27
+    },
+    {
+      "Month": "2020-01",
+      "severe_count": 2016,
+      "actual_mean": 551.77,
+      "persist_mae": 75.08,
+      "lstm_mae": 64.53,
+      "ensemble_mae": 66.88,
+      "lstm_bias": -29.73,
+      "ensemble_bias": -44.39
+    },
+    {
+      "Month": "2020-02",
+      "severe_count": 1204,
+      "actual_mean": 519.97,
+      "persist_mae": 85.1,
+      "lstm_mae": 69.87,
+      "ensemble_mae": 71.68,
+      "lstm_bias": -41.17,
+      "ensemble_bias": -51.94
+    },
+    {
+      "Month": "2020-03",
+      "severe_count": 171,
+      "actual_mean": 521.3,
+      "persist_mae": 145.2,
+      "lstm_mae": 144.26,
+      "ensemble_mae": 143.58,
+      "lstm_bias": -134.1,
+      "ensemble_bias": -136.21
+    },
+    {
+      "Month": "2020-04",
+      "severe_count": 36,
+      "actual_mean": 528.6,
+      "persist_mae": 207.59,
+      "lstm_mae": 206.9,
+      "ensemble_mae": 205.99,
+      "lstm_bias": -203.27,
+      "ensemble_bias": -203.04
+    },
+    {
+      "Month": "2020-05",
+      "severe_count": 184,
+      "actual_mean": 575.89,
+      "persist_mae": 166.3,
+      "lstm_mae": 215.28,
+      "ensemble_mae": 207.54,
+      "lstm_bias": -202.83,
+      "ensemble_bias": -195.5
+    },
+    {
+      "Month": "2020-06",
+      "severe_count": 228,
+      "actual_mean": 532.34,
+      "persist_mae": 100.18,
+      "lstm_mae": 118.52,
+      "ensemble_mae": 118.41,
+      "lstm_bias": -108.21,
+      "ensemble_bias": -110.57
+    }
+  ]
+}

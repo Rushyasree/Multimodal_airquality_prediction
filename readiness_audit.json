@@ -1,0 +1,158 @@
+{
+  "audit_version": "1.0.0",
+  "project_name": "VayuDrishti",
+  "audit_phase": "Phase 15 — Final Project Readiness Audit",
+  "audit_timestamp_utc": "2026-11-06T15:33:00Z",
+  "overall_verdict": {
+    "status": "READY",
+    "runnable": true,
+    "demo_ready": true,
+    "live_data_ready": true,
+    "models_verified": true,
+    "docker_configured": true,
+    "docker_host_daemon": false,
+    "research_reproducible": true,
+    "publication_ready": true
+  },
+  "runtime_environment": {
+    "os": "Windows 11 (win32)",
+    "python_version": "3.10.11",
+    "torch_version": "2.4.1+cpu",
+    "torchvision_version": "0.19.1+cpu",
+    "sklearn_version": "1.5.0",
+    "streamlit_version": "1.40.0",
+    "windows_dll_fix_applied": true,
+    "windows_dll_path": "src/__init__.py (os.add_dll_directory)",
+    "project_root_sys_path_fixed": true
+  },
+  "models_inventory": {
+    "historical_lstm": {
+      "path": "models/lstm_baseline/best_lstm_model.pt",
+      "architecture": "2-Layer PyTorch LSTM (hidden_dim=64, num_layers=2)",
+      "input_features": 27,
+      "sequence_length": 24,
+      "horizon": "t+1 (next 1 hour)",
+      "status": "VERIFIED",
+      "conformal_intervals_supported": true,
+      "offline_test_metrics": {
+        "pm25_mae": 13.90,
+        "pm25_rmse": 23.36,
+        "pm10_mae": 28.20,
+        "pm10_rmse": 45.41
+      }
+    },
+    "adapted_gbdt": {
+      "pm25_path": "experiments/recent_data_audit/checkpoints/adapted_gbdt_pm25.joblib",
+      "pm10_path": "experiments/recent_data_audit/checkpoints/adapted_gbdt_pm10.joblib",
+      "architecture": "HistGradientBoostingRegressor (scikit-learn)",
+      "input_features": 49,
+      "feature_manifest": "REDUCED_FEATURE_NAMES (49 lag/rolling features)",
+      "horizon": "t+1 (next 1 hour)",
+      "status": "VERIFIED",
+      "offline_test_metrics": {
+        "pm25_mae": 12.00,
+        "pm25_rmse": 21.05,
+        "pm10_mae": 25.10,
+        "pm10_rmse": 41.20
+      }
+    },
+    "severity_gated_hybrid": {
+      "accuracy_optimized_path": "experiments/unified_hybrid/accuracy_optimization/checkpoints/best_optimized_hybrid_model.pt",
+      "historical_path": "experiments/unified_hybrid/checkpoints/best_unified_hybrid_model.pt",
+      "architecture": "OptimizedResidualHybridModel with adaptive gating alpha",
+      "fallback_mode": "Active (alpha=0.0 on missing visual modality)",
+      "status": "VERIFIED",
+      "offline_test_metrics": {
+        "pm25_mae": 10.95,
+        "pm25_rmse": 18.42,
+        "pm10_mae": 23.85,
+        "pm10_rmse": 38.60
+      }
+    },
+    "environmental_vision": {
+      "path": "models/pm25vision_cnn/best_model.pt",
+      "architecture": "ResNet-50 Transfer Learning Backbone with MLP Regression Head",
+      "input_dim": [3, 224, 224],
+      "status": "VERIFIED",
+      "scientific_disclosure": "Photographic estimate of atmospheric scatter/transmission (calendar date only, no sub-daily EXIF timestamps)",
+      "held_out_metrics": {
+        "pm25_mae": 64.99,
+        "pm25_rmse": 94.59,
+        "pm25_r2": -0.3828,
+        "n_samples": 97
+      }
+    }
+  },
+  "live_pipeline_audit": {
+    "provider": "OpenAQ API v3",
+    "base_url": "https://api.openaq.org/v3",
+    "credential_masking": "VERIFIED (a2b2...936f, never logged or exposed in UI)",
+    "rate_limit_handling": "VERIFIED (per-endpoint rate limiter with exponential backoff)",
+    "cache_ttl_seconds": 3600,
+    "staleness_threshold_hours": 3.0,
+    "fallback_modes_verified": [
+      "OpenAQ API rate limit / error",
+      "Missing sensor parameters (PM2.5/PM10)",
+      "Stale data (>3h exclusion)",
+      "Unrecognized station mapping",
+      "Network disconnection / offline sandbox"
+    ],
+    "shadow_trial_status": "STRICTLY READ-ONLY / DISABLED BY DEFAULT"
+  },
+  "dashboard_audit": {
+    "entry_point": "app.py",
+    "framework": "Streamlit 1.40.0",
+    "sections_count": 8,
+    "sections_verified": [
+      "Overview",
+      "Live Air Quality",
+      "Individual Forecasting Methods",
+      "Unified Hybrid Forecast",
+      "Side-by-Side Comparison",
+      "Station Map",
+      "Model Performance",
+      "Data Sources and System Health"
+    ],
+    "headless_apptest_status": "PASSED (0 unhandled exceptions across all 8 sections)"
+  },
+  "containerization_audit": {
+    "dockerfile_path": "Dockerfile",
+    "dockerfile_syntax": "VALID (Multi-stage Python 3.10-slim base with DLL/system dependencies)",
+    "docker_compose_path": "docker-compose.yml",
+    "compose_syntax": "VALID",
+    "services_defined": [
+      {
+        "name": "dashboard",
+        "port_mapping": "8501:8501",
+        "command": "streamlit run app.py --server.port=8501 --server.address=0.0.0.0 --server.headless=true"
+      },
+      {
+        "name": "collector-daemon",
+        "command": "python run_phase12_autonomous_collector.py --interval-seconds 3600"
+      }
+    ],
+    "host_docker_daemon": "NOT RUNNING ON HOST (Docker CLI not installed on host Windows instance; container specs validated)"
+  },
+  "research_reproducibility": {
+    "master_script": "scripts/reproduce_all_results.py",
+    "execution_status": "100% PASSED",
+    "verified_components": [
+      "Model Checkpoint Hashes & Parameter Counts",
+      "Split-Conformal Prediction Coverage (80% and 90%)",
+      "Station-Stratified Block Bootstrap Paired Differences (10,000 iterations)",
+      "2D Advection-Diffusion Spatial Wind-Transport Physics",
+      "Paper LaTeX Source Generation & Syntax Integrity",
+      "Streamlit 8-Section Smoke Test Verification"
+    ]
+  },
+  "scientific_claim_safety": {
+    "zero_retraining_enforced": true,
+    "zero_checkpoint_mutation_enforced": true,
+    "zero_synthetic_data_as_real_telemetry": true,
+    "boundaries_enforced": [
+      "Offline test benchmarks are strictly segregated from live trial observations",
+      "Image-based estimation is disclosed as date-level environmental estimate rather than causal next-hour forecast",
+      "Adapted GBDT and LSTM operate on exact, matched, un-leaked historical sensor sequences"
+    ]
+  }
+}

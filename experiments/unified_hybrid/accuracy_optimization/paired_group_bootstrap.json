@@ -1,0 +1,136 @@
+{
+  "num_test_samples": 97,
+  "num_station_date_groups": 9,
+  "bootstrap_replications": 5000,
+  "pm25": {
+    "sensor_lstm_mae": 9.0434,
+    "hybrid_mae": 8.9798,
+    "mean_mae_difference_pooled": 0.0636,
+    "grouped_bootstrap_ci_95": [
+      -0.0063,
+      0.1178
+    ],
+    "p_value_bootstrap_difference_le_zero": 0.0982,
+    "group_level_mean_difference": 0.0453,
+    "group_level_t_statistic": 1.362,
+    "group_level_t_pvalue": 0.2103,
+    "group_level_wilcoxon_pvalue": 0.25,
+    "interpretation": "Positive point estimate (+0.0636 ug/m3 pooled improvement), but the 95% grouped bootstrap confidence interval spans zero [-0.0063, 0.1178 ug/m3] with p=0.0982. Across 9 independent clusters, the improvement is competitive and directionally positive, but not statistically significant."
+  },
+  "pm10": {
+    "sensor_lstm_mae": 15.8173,
+    "hybrid_mae": 15.8821,
+    "mean_mae_difference_pooled": -0.0648,
+    "grouped_bootstrap_ci_95": [
+      -0.1049,
+      0.0176
+    ],
+    "p_value_bootstrap_difference_ge_zero": 0.0684,
+    "group_level_mean_difference": -0.0002,
+    "group_level_t_statistic": -0.0064,
+    "group_level_t_pvalue": 0.9951,
+    "group_level_wilcoxon_pvalue": 0.5703,
+    "interpretation": "PM10 exhibits a slight negative difference (-0.0648 ug/m3) with 95% grouped CI [-0.1049, 0.0176]. The image branch has no direct PM10 supervisory signal; injecting visual PM2.5 haze features does not improve PM10."
+  },
+  "group_breakdown": [
+    {
+      "station_date_group": "DL024__2019-11-13",
+      "n_samples": 2,
+      "mean_target_pm25": 500.25,
+      "mean_ae_lstm_pm25": 83.30547999999999,
+      "mean_ae_opt_pm25": 83.02838,
+      "mean_ae_lstm_pm10": 89.03545999999994,
+      "mean_ae_opt_pm10": 88.77857,
+      "mae_diff_pm25": 0.27709999999999013,
+      "mae_diff_pm10": 0.25688999999994167
+    },
+    {
+      "station_date_group": "DL026__2018-10-24",
+      "n_samples": 42,
+      "mean_target_pm25": 165.0,
+      "mean_ae_lstm_pm25": 4.225300000000004,
+      "mean_ae_opt_pm25": 4.087117380952382,
+      "mean_ae_lstm_pm10": 9.251340000000027,
+      "mean_ae_opt_pm10": 9.378237619047619,
+      "mae_diff_pm25": 0.13818261904762252,
+      "mae_diff_pm10": -0.12689761904759145
+    },
+    {
+      "station_date_group": "DL031__2019-06-06",
+      "n_samples": 5,
+      "mean_target_pm25": 75.0,
+      "mean_ae_lstm_pm25": 5.1387399999999985,
+      "mean_ae_opt_pm25": 5.178445400000001,
+      "mean_ae_lstm_pm10": 53.831999999999994,
+      "mean_ae_opt_pm10": 53.885284,
+      "mae_diff_pm25": -0.039705400000002555,
+      "mae_diff_pm10": -0.053284000000004994
+    },
+    {
+      "station_date_group": "KA008__2020-02-29",
+      "n_samples": 8,
+      "mean_target_pm25": 40.5,
+      "mean_ae_lstm_pm25": 9.653022999999997,
+      "mean_ae_opt_pm25": 9.660800875,
+      "mean_ae_lstm_pm10": 7.598079999999996,
+      "mean_ae_opt_pm10": 7.558094624999999,
+      "mae_diff_pm25": -0.007777875000002155,
+      "mae_diff_pm10": 0.03998537499999699
+    },
+    {
+      "station_date_group": "PB001__2017-12-21",
+      "n_samples": 2,
+      "mean_target_pm25": 27.05,
+      "mean_ae_lstm_pm25": 49.000910000000005,
+      "mean_ae_opt_pm25": 48.994957500000005,
+      "mean_ae_lstm_pm10": 39.68412000000001,
+      "mean_ae_opt_pm10": 39.726180000000014,
+      "mae_diff_pm25": 0.005952499999999361,
+      "mae_diff_pm10": -0.042060000000006426
+    },
+    {
+      "station_date_group": "PB001__2017-12-29",
+      "n_samples": 1,
+      "mean_target_pm25": 110.77,
+      "mean_ae_lstm_pm25": 1.1037800000000004,
+      "mean_ae_opt_pm25": 1.0941899999999976,
+      "mean_ae_lstm_pm10": 14.103719999999981,
+      "mean_ae_opt_pm10": 14.058029999999974,
+      "mae_diff_pm25": 0.009590000000002874,
+      "mae_diff_pm10": 0.04569000000000756
+    },
+    {
+      "station_date_group": "RJ004__2018-12-18",
+      "n_samples": 12,
+      "mean_target_pm25": 22.649999999999995,
+      "mean_ae_lstm_pm25": 6.257887,
+      "mean_ae_opt_pm25": 6.252200083333335,
+      "mean_ae_lstm_pm10": 22.11229,
+      "mean_ae_opt_pm10": 22.15110658333333,
+      "mae_diff_pm25": 0.005686916666665098,
+      "mae_diff_pm10": -0.038816583333328936
+    },
+    {
+      "station_date_group": "TG003__2018-12-10",
+      "n_samples": 3,
+      "mean_target_pm25": 76.5,
+      "mean_ae_lstm_pm25": 4.617760000000004,
+      "mean_ae_opt_pm25": 4.594908333333332,
+      "mean_ae_lstm_pm10": 5.148510000000002,
+      "mean_ae_opt_pm10": 5.1914733333333345,
+      "mae_diff_pm25": 0.022851666666672266,
+      "mae_diff_pm10": -0.0429633333333328
+    },
+    {
+      "station_date_group": "TG006__2016-01-10",
+      "n_samples": 22,
+      "mean_target_pm25": 66.0,
+      "mean_ae_lstm_pm25": 11.007469999999998,
+      "mean_ae_opt_pm25": 11.011456500000001,
+      "mean_ae_lstm_pm10": 11.974630000000007,
+      "mean_ae_opt_pm10": 12.01525727272727,
+      "mae_diff_pm25": -0.003986500000003446,
+      "mae_diff_pm10": -0.04062727272726363
+    }
+  ]
+}

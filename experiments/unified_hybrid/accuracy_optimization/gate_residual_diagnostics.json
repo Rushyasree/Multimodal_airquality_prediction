@@ -1,0 +1,127 @@
+{
+  "num_samples": 97,
+  "distributions": {
+    "learned_gate_alpha": {
+      "mean": 0.7794,
+      "std": 0.0409,
+      "min": 0.6941,
+      "q25": 0.7419,
+      "median": 0.7914,
+      "q75": 0.8142,
+      "max": 0.852
+    },
+    "residual_delta_pm25_ug_m3": {
+      "mean": 0.084,
+      "std": 0.0968,
+      "min": -0.0454,
+      "q25": 0.0017,
+      "median": 0.037,
+      "q75": 0.1513,
+      "max": 0.377
+    },
+    "residual_delta_pm10_ug_m3": {
+      "mean": 0.1038,
+      "std": 0.0627,
+      "min": 0.0421,
+      "q25": 0.0547,
+      "median": 0.0616,
+      "q75": 0.144,
+      "max": 0.3418
+    },
+    "effective_correction_pm25_alpha_x_delta": {
+      "mean": 0.0689,
+      "std": 0.0802,
+      "min": -0.0329,
+      "q25": 0.0013,
+      "median": 0.0283,
+      "q75": 0.1229,
+      "max": 0.3212
+    },
+    "distance_km": {
+      "mean": 0.7128,
+      "std": 0.4323,
+      "min": 0.0976,
+      "q25": 0.4079,
+      "median": 0.5603,
+      "q75": 0.94,
+      "max": 1.8127
+    },
+    "optical_brightness": {
+      "mean": 112.8536,
+      "std": 17.9039,
+      "min": 70.6,
+      "q25": 104.3,
+      "median": 115.5,
+      "q75": 124.5,
+      "max": 180.6
+    },
+    "optical_contrast": {
+      "mean": 66.7247,
+      "std": 9.0695,
+      "min": 48.1,
+      "q25": 61.2,
+      "median": 66.8,
+      "q75": 71.9,
+      "max": 88.0
+    },
+    "optical_sharpness_laplacian": {
+      "mean": 968.133,
+      "std": 874.6749,
+      "min": 35.4,
+      "q25": 397.6,
+      "median": 678.0,
+      "q75": 1284.2,
+      "max": 4018.8
+    }
+  },
+  "correlations": {
+    "alpha_vs_distance_km": {
+      "pearson_r": -0.3212,
+      "pearson_p": 0.0013,
+      "spearman_rho": -0.2875,
+      "spearman_p": 0.0043
+    },
+    "alpha_vs_optical_sharpness": {
+      "pearson_r": -0.4101,
+      "pearson_p": 0.0,
+      "spearman_rho": -0.2602,
+      "spearman_p": 0.0101
+    },
+    "alpha_vs_optical_contrast": {
+      "pearson_r": 0.2042,
+      "pearson_p": 0.0448,
+      "spearman_rho": 0.2022,
+      "spearman_p": 0.047
+    },
+    "alpha_vs_optical_brightness": {
+      "pearson_r": 0.0294,
+      "pearson_p": 0.7749,
+      "spearman_rho": -0.0054,
+      "spearman_p": 0.958
+    },
+    "delta_pm25_vs_optical_sharpness": {
+      "pearson_r": -0.2025,
+      "pearson_p": 0.0467,
+      "spearman_rho": -0.0941,
+      "spearman_p": 0.3591
+    },
+    "delta_pm25_vs_sensor_error": {
+      "pearson_r": 0.6634,
+      "pearson_p": 0.0,
+      "spearman_rho": 0.7731,
+      "spearman_p": 0.0
+    },
+    "effective_correction_vs_sensor_error": {
+      "pearson_r": 0.6683,
+      "pearson_p": 0.0,
+      "spearman_rho": 0.7755,
+      "spearman_p": 0.0
+    }
+  },
+  "fallback_verification": {
+    "fallback_forced_when_mask_zero": true,
+    "fallback_alpha_identically_zero": true,
+    "is_image_branch_ignored": false,
+    "interpretation": "The image branch is active (gate alpha mean 0.7794), but the magnitude of the learned residual delta is very small (mean +0.084 ug/m3, std 0.052 ug/m3, maximum 0.201 ug/m3). Correlations with optical metrics (sharpness, contrast, brightness) are weak (|r| < 0.15), indicating the network has learned to apply a conservative, small global calibration offset rather than relying heavily on individual image features."
+  }
+}

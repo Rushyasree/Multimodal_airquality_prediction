@@ -1,0 +1,94 @@
+{
+  "1-Hour Persistence": {
+    "pm25": {
+      "MAE": 10.6783,
+      "RMSE": 19.8072,
+      "R2": 0.9423
+    },
+    "pm10": {
+      "MAE": 19.7384,
+      "RMSE": 36.2374,
+      "R2": 0.9115
+    }
+  },
+  "24-Hour Seasonal Persistence": {
+    "pm25": {
+      "MAE": 28.9914,
+      "RMSE": 53.4336,
+      "R2": 0.5797
+    },
+    "pm10": {
+      "MAE": 50.9172,
+      "RMSE": 84.3962,
+      "R2": 0.52
+    }
+  },
+  "Pretrained 2-Layer LSTM": {
+    "pm25": {
+      "MAE": 10.5719,
+      "RMSE": 18.5789,
+      "R2": 0.9492
+    },
+    "pm10": {
+      "MAE": 18.8643,
+      "RMSE": 32.2027,
+      "R2": 0.9301
+    }
+  },
+  "Tuned GBDT (HistGradientBoosting)": {
+    "pm25": {
+      "MAE": 12.7564,
+      "RMSE": 30.4354,
+      "R2": 0.8636
+    },
+    "pm10": {
+      "MAE": 20.2144,
+      "RMSE": 40.9162,
+      "R2": 0.8872
+    }
+  },
+  "Residual Boosted Forecaster": {
+    "pm25": {
+      "MAE": 10.3879,
+      "RMSE": 18.6518,
+      "R2": 0.9488
+    },
+    "pm10": {
+      "MAE": 18.4792,
+      "RMSE": 32.6445,
+      "R2": 0.9282
+    }
+  },
+  "Validated Ensemble (LSTM + GBDT)": {
+    "pm25": {
+      "MAE": 10.395,
+      "RMSE": 18.5498,
+      "R2": 0.9494
+    },
+    "pm10": {
+      "MAE": 18.2809,
+      "RMSE": 31.9708,
+      "R2": 0.9311
+    }
+  },
+  "168-Hour Seasonal Persistence (Eligible Subset)": {
+    "pm25": {
+      "MAE": 45.1216,
+      "RMSE": 81.7984,
+      "R2": 0.0403
+    },
+    "pm10": {
+      "MAE": 75.0273,
+      "RMSE": 121.4629,
+      "R2": 0.0222
+    }
+  },
+  "evaluation_metadata": {
+    "total_historical_test_sequences": 404431,
+    "matched_image_test_samples": 97,
+    "winning_sensor_model": "Validated Ensemble (LSTM + GBDT)",
+    "winning_sensor_pm25_mae": 10.395,
+    "winning_sensor_pm10_mae": 18.2809,
+    "timestamp": "2026-10-24T17:40:21Z"
+  }
+}

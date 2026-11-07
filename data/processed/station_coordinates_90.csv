@@ -1,0 +1,91 @@
+StationId,StationName,City,State,Status,Latitude,Longitude,CoordinateSource,CoordinateConfidence
+AP001,"Secretariat, Amaravati - APPCB",Amaravati,Andhra Pradesh,Active,16.5150833,80.5181667,Zeel/C1 station_data.csv,verified_name_match
+AP005,"GVM Corporation, Visakhapatnam - APPCB",Visakhapatnam,Andhra Pradesh,Active,17.72,83.3,Zeel/C1 station_data.csv,verified_name_match
+AS001,"Railway Colony, Guwahati - APCB",Guwahati,Assam,Active,26.181742,91.78063,"ACP 2025 supplementary station metadata (AS001 Railway Colony, Guwahati)",verified_research_source
+BR005,"DRM Office Danapur, Patna - BSPCB",Patna,Bihar,Active,25.586562,85.043586,Zeel/C1 station_data.csv,verified_name_match
+BR006,"Govt. High School Shikarpur, Patna - BSPCB",Patna,Bihar,Active,25.592539,85.227158,Zeel/C1 station_data.csv,verified_name_match
+BR008,"Muradpur, Patna - BSPCB",Patna,Bihar,Active,25.619651,85.147382,Zeel/C1 station_data.csv,verified_name_match
+BR009,"Rajbansi Nagar, Patna - BSPCB",Patna,Bihar,Active,25.599486,85.113666,Zeel/C1 station_data.csv,verified_name_match
+BR010,"Samanpura, Patna - BSPCB",Patna,Bihar,Active,25.596727,85.085624,Zeel/C1 station_data.csv,verified_name_match
+CH001,"Sector-25, Chandigarh - CPCC",Chandigarh,Chandigarh,Active,30.751462,76.762879,Zeel/C1 station_data.csv,verified_name_match
+DL001,"Alipur, Delhi - DPCC",Delhi,Delhi,Active,28.815329,77.15301,Zeel/C1 station_data.csv,verified_name_match
+DL002,"Anand Vihar, Delhi - DPCC",Delhi,Delhi,Active,28.647622,77.315809,Zeel/C1 station_data.csv,verified_name_match
+DL003,"Ashok Vihar, Delhi - DPCC",Delhi,Delhi,Active,28.695381,77.181665,Zeel/C1 station_data.csv,verified_name_match
+DL004,"Aya Nagar, Delhi - IMD",Delhi,Delhi,Active,28.4706914,77.1099364,Zeel/C1 station_data.csv,verified_name_match
+DL005,"Bawana, Delhi - DPCC",Delhi,Delhi,Active,28.7762,77.051074,Zeel/C1 station_data.csv,verified_name_match
+DL006,"Burari Crossing, Delhi - IMD",Delhi,Delhi,Inactive,28.7256504,77.2011573,Zeel/C1 station_data.csv,verified_name_match
+DL007,"CRRI Mathura Road, Delhi - IMD",Delhi,Delhi,Active,28.5512005,77.2735737,Zeel/C1 station_data.csv,verified_name_match
+DL008,"DTU, Delhi - CPCB",Delhi,Delhi,Active,28.7500499,77.1112615,Zeel/C1 station_data.csv,verified_name_match
+DL009,"Dr. Karni Singh Shooting Range, Delhi - DPCC",Delhi,Delhi,Active,28.498571,77.26484,Zeel/C1 station_data.csv,verified_name_match
+DL010,"Dwarka-Sector 8, Delhi - DPCC",Delhi,Delhi,Active,28.5710274,77.0719006,Zeel/C1 station_data.csv,verified_name_match
+DL012,"IGI Airport (T3), Delhi - IMD",Delhi,Delhi,Active,28.5627763,77.1180053,Zeel/C1 station_data.csv,verified_name_match
+DL014,"ITO, Delhi - CPCB",Delhi,Delhi,Active,28.628624,77.24106,Zeel/C1 station_data.csv,verified_name_match
+DL015,"Jahangirpuri, Delhi - DPCC",Delhi,Delhi,Active,28.73282,77.170633,Zeel/C1 station_data.csv,verified_name_match
+DL016,"Jawaharlal Nehru Stadium, Delhi - DPCC",Delhi,Delhi,Active,28.58028,77.233829,Zeel/C1 station_data.csv,verified_name_match
+DL017,"Lodhi Road, Delhi - IMD",Delhi,Delhi,Active,28.5918245,77.2273074,Zeel/C1 station_data.csv,verified_name_match
+DL018,"Major Dhyan Chand National Stadium, Delhi - DPCC",Delhi,Delhi,Active,28.611281,77.237738,Zeel/C1 station_data.csv,verified_name_match
+DL019,"Mandir Marg, Delhi - DPCC",Delhi,Delhi,Active,28.636429,77.201067,Zeel/C1 station_data.csv,verified_name_match
+DL020,"Mundka, Delhi - DPCC",Delhi,Delhi,Active,28.684678,77.076574,Zeel/C1 station_data.csv,verified_name_match
+DL022,"Najafgarh, Delhi - DPCC",Delhi,Delhi,Active,28.570173,76.933762,Zeel/C1 station_data.csv,verified_name_match
+DL023,"Narela, Delhi - DPCC",Delhi,Delhi,Active,28.822836,77.101981,Zeel/C1 station_data.csv,verified_name_match
+DL024,"Nehru Nagar, Delhi - DPCC",Delhi,Delhi,Active,28.56789,77.250515,Zeel/C1 station_data.csv,verified_name_match
+DL025,"North Campus, DU, Delhi - IMD",Delhi,Delhi,Active,28.6573814,77.1585447,Zeel/C1 station_data.csv,verified_name_match
+DL026,"Okhla Phase-2, Delhi - DPCC",Delhi,Delhi,Active,28.530785,77.271255,Zeel/C1 station_data.csv,verified_name_match
+DL027,"Patparganj, Delhi - DPCC",Delhi,Delhi,Active,28.623763,77.287209,Zeel/C1 station_data.csv,verified_name_match
+DL028,"Punjabi Bagh, Delhi - DPCC",Delhi,Delhi,Active,28.674045,77.131023,Zeel/C1 station_data.csv,verified_name_match
+DL029,"Pusa, Delhi - DPCC",Delhi,Delhi,Active,28.639652,77.146275,Zeel/C1 station_data.csv,verified_name_match
+DL030,"Pusa, Delhi - IMD",Delhi,Delhi,Active,28.63611,77.173332,Zeel/C1 station_data.csv,verified_name_match
+DL031,"R K Puram, Delhi - DPCC",Delhi,Delhi,Active,28.563262,77.186937,Zeel/C1 station_data.csv,verified_name_match
+DL032,"Rohini, Delhi - DPCC",Delhi,Delhi,Active,28.732528,77.11992,Zeel/C1 station_data.csv,verified_name_match
+DL034,"Sirifort, Delhi - CPCB",Delhi,Delhi,Active,28.5504249,77.2159377,Zeel/C1 station_data.csv,verified_name_match
+DL035,"Sonia Vihar, Delhi - DPCC",Delhi,Delhi,Active,28.710508,77.249485,Zeel/C1 station_data.csv,verified_name_match
+DL036,"Sri Aurobindo Marg, Delhi - DPCC",Delhi,Delhi,Active,28.531346,77.190156,Zeel/C1 station_data.csv,verified_name_match
+DL037,"Vivek Vihar, Delhi - DPCC",Delhi,Delhi,Active,28.672342,77.31526,Zeel/C1 station_data.csv,verified_name_match
+DL038,"Wazirpur, Delhi - DPCC",Delhi,Delhi,Active,28.699793,77.165453,Zeel/C1 station_data.csv,verified_name_match
+GJ001,"Maninagar, Ahmedabad - GPCB",Ahmedabad,Gujarat,Active,23.002657,72.591912,Zeel/C1 station_data.csv,verified_name_match
+HR011,"NISE Gwal Pahari, Gurugram - IMD",Gurugram,Haryana,Active,28.422681,77.148944,Zeel/C1 station_data.csv,verified_name_match
+HR012,"Sector-51, Gurugram - HSPCB",Gurugram,Haryana,Active,28.4227,77.0667,Zeel/C1 station_data.csv,verified_name_match
+HR013,"Teri Gram, Gurugram - HSPCB",Gurugram,Haryana,Active,28.4275,77.1465,Zeel/C1 station_data.csv,verified_name_match
+JH001,"Tata Stadium, Jorapokhar - JSPCB",Jorapokhar,Jharkhand,Active,23.707909,86.41467,Zeel/C1 station_data.csv,verified_name_match
+KA004,"Bapuji Nagar, Bengaluru - KSPCB",Bengaluru,Karnataka,Active,12.951913,77.539784,Zeel/C1 station_data.csv,verified_name_match
+KA006,"Hebbal, Bengaluru - KSPCB",Bengaluru,Karnataka,Active,13.029152,77.585901,Zeel/C1 station_data.csv,verified_name_match
+KA007,"Hombegowda Nagar, Bengaluru - KSPCB",Bengaluru,Karnataka,Active,12.938539,77.5901,Zeel/C1 station_data.csv,verified_name_match
+KA008,"Jayanagar 5th Block, Bengaluru - KSPCB",Bengaluru,Karnataka,Active,12.920984,77.584908,Zeel/C1 station_data.csv,verified_name_match
+KA011,"Silk Board, Bengaluru - KSPCB",Bengaluru,Karnataka,Active,12.917348,77.622813,Zeel/C1 station_data.csv,verified_name_match
+KL002,"Kacheripady, Ernakulam - Kerala PCB",Ernakulam,Kerala,,9.985653,76.281342,Zeel/C1 station_data.csv,verified_name_match
+KL004,"Vyttila, Kochi - Kerala PCB",Kochi,Kerala,,9.969447,76.321186,Zeel/C1 station_data.csv,verified_name_match
+KL007,"Kariavattom, Thiruvananthapuram - Kerala PCB",Thiruvananthapuram,Kerala,Active,8.5637,76.8865,Zeel/C1 station_data.csv,verified_name_match
+KL008,"Plammoodu, Thiruvananthapuram - Kerala PCB",Thiruvananthapuram,Kerala,Active,8.5149093,76.9435879,Zeel/C1 station_data.csv,verified_name_match
+MH005,"Bandra, Mumbai - MPCB",Mumbai,Maharashtra,Active,19.0627,72.84614,Zeel/C1 station_data.csv,verified_name_match
+MH006,"Borivali East, Mumbai - MPCB",Mumbai,Maharashtra,Active,19.2243333,72.8658113,Zeel/C1 station_data.csv,verified_name_match
+MH007,"Chhatrapati Shivaji Intl. Airport (T2), Mumbai - MPCB",Mumbai,Maharashtra,Active,19.10078,72.87462,Zeel/C1 station_data.csv,verified_name_match
+MH008,"Colaba, Mumbai - MPCB",Mumbai,Maharashtra,Active,18.91,72.82,Zeel/C1 station_data.csv,verified_name_match
+MH009,"Kurla, Mumbai - MPCB",Mumbai,Maharashtra,Active,19.0863,72.8888,Zeel/C1 station_data.csv,verified_name_match
+MH010,"Powai, Mumbai - MPCB",Mumbai,Maharashtra,Active,19.1375,72.915056,Zeel/C1 station_data.csv,verified_name_match
+MH011,"Sion, Mumbai - MPCB",Mumbai,Maharashtra,Active,19.047,72.8746,Zeel/C1 station_data.csv,verified_name_match
+MH012,"Vasai West, Mumbai - MPCB",Mumbai,Maharashtra,Active,19.3832,72.8204,Zeel/C1 station_data.csv,verified_name_match
+MH013,"Vile Parle West, Mumbai - MPCB",Mumbai,Maharashtra,Active,19.10861,72.83622,Zeel/C1 station_data.csv,verified_name_match
+MH014,"Worli, Mumbai - MPCB",Mumbai,Maharashtra,Active,18.9936162,72.8128113,Zeel/C1 station_data.csv,verified_name_match
+ML001,"Lumpyngngad, Shillong - Meghalaya PCB",Shillong,Meghalaya,Active,25.5586,91.8985,Zeel/C1 station_data.csv,verified_name_match
+MP001,"T T Nagar, Bhopal - MPPCB",Bhopal,Madhya Pradesh,Active,23.233584,77.400574,Zeel/C1 station_data.csv,verified_name_match
+MZ001,"Sikulpuikawn, Aizawl - Mizoram PCB",Aizawl,Mizoram,Active,23.7176342,92.7192841,Zeel/C1 station_data.csv,verified_name_match
+OD001,"GM Office, Brajrajnagar - OSPCB",Brajrajnagar,Odisha,Active,21.8004996,83.8396977,Zeel/C1 station_data.csv,verified_name_match
+OD002,"Talcher Coalfields,Talcher - OSPCB",Talcher,Odisha,Active,20.9360711,85.1707021,Zeel/C1 station_data.csv,verified_name_match
+PB001,"Golden Temple, Amritsar - PPCB",Amritsar,Punjab,Active,31.62,74.876512,Zeel/C1 station_data.csv,verified_name_match
+RJ004,"Adarsh Nagar, Jaipur - RSPCB",Jaipur,Rajasthan,Active,26.902909,75.836858,Zeel/C1 station_data.csv,verified_name_match
+RJ005,"Police Commissionerate, Jaipur - RSPCB",Jaipur,Rajasthan,Active,26.9164092,75.7994901,Zeel/C1 station_data.csv,verified_name_match
+RJ006,"Shastri Nagar, Jaipur - RSPCB",Jaipur,Rajasthan,Active,26.9502929,75.730943,Zeel/C1 station_data.csv,verified_name_match
+TG001,"Bollaram Industrial Area, Hyderabad - TSPCB",Hyderabad,Telangana,Active,17.540891,78.358528,Zeel/C1 station_data.csv,verified_name_match
+TG002,"Central University, Hyderabad - TSPCB",Hyderabad,Telangana,Active,17.460103,78.334361,Zeel/C1 station_data.csv,verified_name_match
+TG003,"ICRISAT Patancheru, Hyderabad - TSPCB",Hyderabad,Telangana,Active,17.5184,78.278777,Zeel/C1 station_data.csv,verified_name_match
+TG004,"IDA Pashamylaram, Hyderabad - TSPCB",Hyderabad,Telangana,Active,17.5316895,78.218939,Zeel/C1 station_data.csv,verified_name_match
+TG006,"Zoo Park, Hyderabad - TSPCB",Hyderabad,Telangana,Active,17.349694,78.451437,Zeel/C1 station_data.csv,verified_name_match
+TN002,"Manali Village, Chennai - TNPCB",Chennai,Tamil Nadu,Active,13.1662,80.2584,Zeel/C1 station_data.csv,verified_name_match
+TN005,"SIDCO Kurichi, Coimbatore - TNPCB",Coimbatore,Tamil Nadu,Active,10.942451,76.978996,Zeel/C1 station_data.csv,verified_name_match
+WB007,"Ballygunge, Kolkata - WBPCB",Kolkata,West Bengal,Active,22.5367507,88.3638022,Zeel/C1 station_data.csv,verified_name_match
+WB008,"Bidhannagar, Kolkata - WBPCB",Kolkata,West Bengal,Active,22.58157048,88.41002457,Zeel/C1 station_data.csv,verified_name_match
+WB009,"Fort William, Kolkata - WBPCB",Kolkata,West Bengal,Active,22.55664,88.342674,Zeel/C1 station_data.csv,verified_name_match
+WB010,"Jadavpur, Kolkata - WBPCB",Kolkata,West Bengal,Active,22.49929,88.36917,Zeel/C1 station_data.csv,verified_name_match
+WB011,"Rabindra Bharati University, Kolkata - WBPCB",Kolkata,West Bengal,Active,22.627847,88.380669,Zeel/C1 station_data.csv,verified_name_match
+WB012,"Rabindra Sarobar, Kolkata - WBPCB",Kolkata,West Bengal,Active,22.51106,88.35142,Zeel/C1 station_data.csv,verified_name_match
+WB013,"Victoria, Kolkata - WBPCB",Kolkata,West Bengal,Active,22.5448082,88.3403691,Zeel/C1 station_data.csv,verified_name_match

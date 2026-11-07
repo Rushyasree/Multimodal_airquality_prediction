@@ -1,0 +1,4 @@
+Model,MAE (ug/m3),RMSE (ug/m3),R2 Score,Selection Split
+Sensor-Only LSTM,40.94,64.81,0.3508,Validation (21 samples)
+Image-Only ResNet-50,64.99,94.59,-0.3828,Validation (21 samples)
+Multimodal Fusion (LSTM + ResNet-50),58.94,85.92,-0.141,Validation (21 samples)

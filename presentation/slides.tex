@@ -1,0 +1,251 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{whale}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\graphicspath{{../paper/figures/}{./}}
+
+\title[VayuDrishti]{VayuDrishti: Robust Longitudinal Air Quality Forecasting, Distribution-Free Uncertainty Calibration, and Empirical Limits of Multimodal Sensing Across India}
+
+\author[Sree et al.]{
+  Teliki Rushya Sree\inst{1} \and 
+  Machireddy Swathi\inst{1} \and 
+  Thanuja Varakala\inst{1} \and 
+  Palli Shilpa\inst{1} \and 
+  Thotta Ramatulasi\inst{2}
+}
+
+\institute[CSE Dept]{
+  \inst{1} Department of Computer Science and Engineering \and
+  \inst{2} Faculty Supervisor
+}
+
+\date[Conference 2026]{Academic Research Conference / Capstone Defense 2026}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{1. Motivation \& Urban Air Pollution Crisis in India}
+  \begin{itemize}
+    \item \textbf{Public Health Emergency}: Severe ambient particulate matter ($\text{PM}_{2.5}$ and $\text{PM}_{10}$) regularly exceeds NAAQS ($60/100\ \mu\text{g/m}^3$) and WHO thresholds ($15/45\ \mu\text{g/m}^3$) by $5\times$--$10\times$.
+    \item \textbf{Extreme Seasonal Volatility}: Post-monsoon agricultural stubble burning and winter thermal boundary layer inversions cause episodic smog shocks.
+    \item \textbf{Operational Need}: Municipal authorities require reliable 1-hour ahead ($t+1$) early warnings for dynamic traffic management, school advisories, and vulnerable population protection.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{2. Three Operational Barriers in Indian Sensor Networks}
+  \begin{block}{1. Telemetry Dropouts \& Gaseous Sensor Downtime}
+    Standard 27-channel deep LSTMs require trace gases ($\text{NO}_x, \text{CO}, \text{SO}_2, \text{O}_3$). In real CAAQMS operations, secondary analyzers experience frequent maintenance dropouts, causing high-dimensional models to crash.
+  \end{block}
+  \begin{block}{2. Uncalibrated Uncertainty in Heavy-Tailed Regimes}
+    Particulate residuals during episodic events exhibit non-Gaussian, heteroskedastic distributions. Standard Gaussian confidence intervals fail.
+  \end{block}
+  \begin{block}{3. Unverified Multimodal Hypotheses}
+    Recent literature proposes fusing opportunistic outdoor camera photos with ground sensors without auditing spatial-temporal alignment.
+  \end{block}
+\end{frame}
+
+\begin{frame}{3. Dataset Scope: Historical Reanalysis \& Nationwide Live Cohort}
+  \begin{itemize}
+    \item \textbf{Historical Regulatory Dataset}: 1,369,779 hourly records from 90 CPCB continuous stations (2015--2020) across 23 States and Union Territories.
+    \item \textbf{Meteorological Reanalysis}: Hourly ERA5-Land variables ($T, T_d, RH, u, v, P$) bilinearly matched to all 90 station coordinates.
+    \item \textbf{Nationwide Longitudinal Live Portfolio}: 15 continuous CAAQMS stations across 11 Indian States/UTs evaluated over 236,289 live sequences and 506,848 seasonal evaluations.
+    \item \textbf{Environmental Vision}: Curated outdoor photographs from PM25Vision across Indian coordinates.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{4. Historical Benchmark: 2-Layer LSTM Forecaster}
+  \textbf{Evaluated on 404,431 strictly held-out test sequences across 90 stations:}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Numerical Accuracy ($t+1$ hour)}
+        \begin{itemize}
+          \item $\text{PM}_{2.5}$ MAE: \textbf{10.57 $\mu\text{g/m}^3$} ($R^2 = 0.9492$)
+          \item $\text{PM}_{10}$ MAE: \textbf{18.86 $\mu\text{g/m}^3$} ($R^2 = 0.9301$)
+          \item RMSE reduction vs. persistence:
+            \begin{itemize}
+              \item $\text{PM}_{2.5}$: 18.58 vs 19.81 $\mu\text{g/m}^3$ ($-6.2\%$)
+              \item $\text{PM}_{10}$: 32.20 vs 36.24 $\mu\text{g/m}^3$ ($-11.1\%$)
+            \end{itemize}
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{CPCB NAQI Category Assessment}
+        \begin{itemize}
+          \item Exact category: 77.04\% ($\text{PM}_{2.5}$), 80.88\% ($\text{PM}_{10}$)
+          \item \textbf{Adjacent category ($\pm 1$ bin): $>99.3\%$}
+          \item Multi-tier classification errors: $<0.65\%$
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{5. Empirical Negative Result: Opportunistic Multimodal Sensing}
+  \textbf{Auditing 640 unique outdoor images from PM25Vision paired with CPCB monitors:}
+  \begin{enumerate}
+    \item \textbf{Spatial Displacement}: 50.6\% of images exceed 5 km from the nearest monitor (mean: 92.8 km).
+    \item \textbf{Temporal Mismatch}: Images have only calendar dates (`YYYY-MM-DD`) with zero sub-daily timestamps, despite a \textbf{166.72 $\mu\text{g/m}^3$} average diurnal station $\text{PM}_{2.5}$ swing.
+    \item \textbf{Burst Clustering}: Matched cohort represents only \textbf{36 independent groups} (40\% from 2 days).
+    \item \textbf{Label Discrepancy}: Images exhibit a systematic \textbf{$+70.74\ \mu\text{g/m}^3$} positive calibration bias.
+    \item \textbf{Controlled Ablation Failure}: Multimodal early fusion degraded MAE by \textbf{12.19 $\mu\text{g/m}^3$} (85.86 vs 73.67 $\mu\text{g/m}^3$, $R^2 = -0.5064$).
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{6. Standalone Adapted GBDT Architecture}
+  \textbf{Canonical 49-Feature Autoregressive Schema (Zero Trace Gas Reliance):}
+  \begin{itemize}
+    \item \textbf{Particulate Lags (24)}: $\text{PM}_{2.5}(t-k), \text{PM}_{10}(t-k)$ for $k \in \{0, \dots, 11\}$.
+    \item \textbf{Rolling Statistics (14)}: 3h, 6h, 12h, 24h rolling mean, std, min, max, coarse-to-fine ratio.
+    \item \textbf{Cyclical Harmonics (4)}: $\sin/\cos$ of hour-of-day and month-of-year.
+    \item \textbf{Calendar (3)}: Day of week, day of year, weekend flag.
+    \item \textbf{Spatial Coordinates (4)}: Latitude, longitude, elevation, target-encoded station ID.
+  \end{itemize}
+  \begin{alertblock}{Zero Trace Gas Failure Mode}
+    Operates strictly on particulate telemetry, guaranteeing 100\% uptime during trace gas outages.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{7. Severity-Gated Adaptive Ensemble}
+  \textbf{Dynamic Routing Based on Instantaneous Concentration Severity:}
+  $$\hat{y}(t+1) = \alpha(C_t) \hat{y}_{\text{GBDT}}(t+1) + (1 - \alpha(C_t)) \hat{y}_{\text{LSTM}}(t+1)$$
+  \begin{itemize}
+    \item $C_t = \max(\text{PM}_{2.5}(t), \text{PM}_{10}(t))$ monitors real-time pollution level.
+    \item In clean/moderate air ($C_t < 90\ \mu\text{g/m}^3$), deep sequence representations (LSTM) dominate.
+    \item In hazardous smog shocks ($C_t > 250\ \mu\text{g/m}^3$), GBDT receives primary weight, preventing recurrent activation saturation.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{8. Multi-Station Nationwide Live Evaluation}
+  \textbf{Evaluation across 236,289 live sequence evaluations in 15 stations (11 States/UTs):}
+  \begin{table}
+    \centering
+    \scriptsize
+    \begin{tabular}{lrrrrrrrr}
+      \toprule
+      \textbf{Model Architecture} & \multicolumn{4}{c}{\textbf{$\text{PM}_{2.5}$ Metrics ($\mu\text{g/m}^3$)}} & \multicolumn{4}{c}{\textbf{$\text{PM}_{10}$ Metrics ($\mu\text{g/m}^3$)}} \\
+      \cmidrule(lr){2-5} \cmidrule(lr){6-9}
+      & \textbf{MAE} & \textbf{RMSE} & \textbf{$R^2$} & \textbf{Gain} & \textbf{MAE} & \textbf{RMSE} & \textbf{$R^2$} & \textbf{Gain} \\
+      \midrule
+      1-Hour Persistence Baseline & 6.95 & 14.49 & 0.7844 & 0.0\% & 17.16 & 38.70 & 0.8089 & 0.0\% \\
+      Adapted LSTM (27 features)  & 6.80 & 13.18 & 0.8215 & +2.1\% & 16.48 & 34.65 & 0.8468 & +4.0\% \\
+      Standalone GBDT (49 feats)  & 6.67 & 13.17 & 0.8219 & +4.0\% & 16.29 & 35.24 & 0.8415 & +5.1\% \\
+      \textbf{Severity-Gated Ensemble} & \textbf{6.62} & \textbf{13.04} & \textbf{0.8254} & \textbf{+4.7\%} & \textbf{16.14} & \textbf{34.53} & \textbf{0.8479} & \textbf{+5.9\%} \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+  \begin{itemize}
+    \item Substantial gains in industrial hotspots: Visakhapatnam (+7.3\%), Anand Vihar (+6.1\%), Ahmedabad (+6.5\%), Chennai Manali (+10.2\%).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{9. Distribution-Free Conformal Uncertainty Calibration}
+  \textbf{Split-conformal prediction intervals evaluated on 118,145 test instances:}
+  \begin{table}
+    \centering
+    \small
+    \begin{tabular}{lrrrr}
+      \toprule
+      \textbf{Parameter} & \textbf{Nominal Level} & \textbf{Empirical Coverage} & \textbf{Slack ($\Delta$)} & \textbf{Mean Interval Width} \\
+      \midrule
+      $\text{PM}_{2.5}$ & 80.0\% & \textbf{92.87\%} & +12.87\% & 24.12 $\mu\text{g/m}^3$ \\
+      $\text{PM}_{2.5}$ & 90.0\% & \textbf{96.76\%} & +6.76\% & 35.84 $\mu\text{g/m}^3$ \\
+      $\text{PM}_{2.5}$ & 95.0\% & \textbf{98.38\%} & +3.38\% & 48.31 $\mu\text{g/m}^3$ \\
+      \midrule
+      $\text{PM}_{10}$  & 80.0\% & \textbf{93.66\%} & +13.66\% & 60.25 $\mu\text{g/m}^3$ \\
+      $\text{PM}_{10}$  & 90.0\% & \textbf{97.23\%} & +7.23\% & 94.27 $\mu\text{g/m}^3$ \\
+      $\text{PM}_{10}$  & 95.0\% & \textbf{98.71\%} & +3.71\% & 131.50 $\mu\text{g/m}^3$ \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+  \begin{block}{Safety Guarantee}
+    Guarantees valid finite-sample marginal coverage $\mathbb{P}(y_{t+1} \in \mathcal{C}_{1-\alpha}) \ge 1-\alpha$ without assuming Gaussianity.
+  \end{block}
+\end{frame}
+
+\begin{frame}{10. Rigorous Statistical Hypothesis Testing}
+  \textbf{Stationary Block Bootstrap ($B=5,000$, block length $L=24\text{h}$ to preserve diurnal correlation):}
+  \begin{itemize}
+    \item \textbf{Pooled $\text{PM}_{2.5}$ Nationwide} ($N=236,289$):
+      $$\Delta = -0.28\ \mu\text{g/m}^3,\quad 95\%\ \text{CI}: [-0.30, -0.25],\quad p_{\text{Wilcoxon}} = 4.98 \times 10^{-12}$$
+    \item \textbf{Pooled $\text{PM}_{10}$ Nationwide} ($N=236,289$):
+      $$\Delta = -0.87\ \mu\text{g/m}^3,\quad 95\%\ \text{CI}: [-0.94, -0.79],\quad p_{\text{Wilcoxon}} = 7.57 \times 10^{-24}$$
+    \item \textbf{Multiple Testing Controls}: All 18 pre-registered tests pass Bonferroni FWER ($p < 0.0028$) and Benjamini-Hochberg FDR ($q < 0.05$).
+    \item \textbf{Severe Hazard Regimes}: In *Very Poor* air ($N=4,847$), GBDT achieves a \textbf{2.48 $\mu\text{g/m}^3$ MAE reduction} ($p = 3.71 \times 10^{-25}$).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{11. Spatial Advection: Sea Breeze vs Inland Emissions}
+  \textbf{Auditing 3 dense intra-urban corridors ($<25\text{ km}$):}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Mumbai Marine Corridor (17.2 km)}
+        \begin{itemize}
+          \item Bandra $\leftrightarrow$ Colaba coastal transect.
+          \item Peak cross-correlation at an \textbf{advective lag of $\tau = +1\text{ hour}$} ($r = 0.5385$ vs 0.5283 at $\tau=0$).
+          \item Spatial neighbor lags improve next-hour MAE from 6.10 to \textbf{6.05 $\mu\text{g/m}^3$} (\textbf{$+0.86\%$ gain}).
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Inland Corridors (Delhi \& Kolkata)}
+        \begin{itemize}
+          \item Anand Vihar $\leftrightarrow$ DTU ($23\text{ km}$); Bidhannagar $\leftrightarrow$ Jadavpur ($10\text{ km}$).
+          \item Peak correlation is synchronous ($\tau = 0$).
+          \item In-situ emissions dominate; unweighted neighbor concatenation degrades performance ($-2.0\%$ Delhi, $-3.0\%$ Kolkata).
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{12. Production Deployment \& Interactive System}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Streamlit Dashboard (`app.py`)}
+        \begin{itemize}
+          \item 8 operational modules.
+          \item Dynamic IST greeting \& CPCB advisor.
+          \item 100\% pass across all smoke tests (`tests/test_eight_sections_smoke.py`).
+        \end{itemize}
+      \end{block}
+      \begin{block}{Autonomous Ingestion Daemon}
+        \begin{itemize}
+          \item Hourly OpenAQ v3 telemetry collector.
+          \item Composite key deduplication.
+          \item Strict model retraining lock.
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Containerization & Replication}
+        \begin{itemize}
+          \item Production `Dockerfile` and `docker-compose.yml`.
+          \item One-click master replication script:
+            \texttt{python scripts/reproduce\_all\_results.py}
+          \item All 6 verification stages pass with 100\% consistency.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{13. Conclusion \& Research Contributions}
+  \begin{enumerate}
+    \item \textbf{Operational Standalone Architecture}: Built a 49-variable standalone GBDT that eliminates failure modes caused by trace gas dropouts, beating persistence by up to 5.92\%.
+    \item \textbf{Distribution-Free Uncertainty Bounds}: Provided split-conformal calibration with guaranteed finite-sample coverage ($\ge 92.8\%$) under severe smog conditions.
+    \item \textbf{Physical Transport Demarcation}: Isolated coastal sea-breeze advective gains from inland local emission dominance.
+    \item \textbf{Methodological Honesty}: Established the empirical negative result on opportunistic environmental imagery, defining the boundary conditions for future synchronous sensing.
+  \end{enumerate}
+  \begin{center}
+    \textbf{Thank you! Questions \& Discussion Welcome.}
+  \end{center}
+\end{frame}
+
+\end{document}

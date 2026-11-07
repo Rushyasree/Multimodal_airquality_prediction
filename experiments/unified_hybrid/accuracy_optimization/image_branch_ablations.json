@@ -1,0 +1,79 @@
+{
+  "test_cohort_size": 97,
+  "conditions": {
+    "condition_A_sensor_fallback": {
+      "description": "Sensor-Only Fallback (mask=0, zero vector)",
+      "pm25_mae": 9.0434,
+      "pm25_rmse": 15.5682,
+      "pm25_r2": 0.9625,
+      "pm10_mae": 15.8173,
+      "pm10_rmse": 21.9772,
+      "pm10_r2": 0.9817,
+      "mean_alpha": 0.0,
+      "min_alpha": 0.0,
+      "max_alpha": 0.0,
+      "mean_delta_pm25": -0.0118
+    },
+    "condition_B_matched_images": {
+      "description": "Full Hybrid with Matched Images (mask=1)",
+      "pm25_mae": 8.9798,
+      "pm25_rmse": 15.5225,
+      "pm25_r2": 0.9628,
+      "pm10_mae": 15.8821,
+      "pm10_rmse": 21.9961,
+      "pm10_r2": 0.9817,
+      "mean_alpha": 0.7794,
+      "min_alpha": 0.6941,
+      "max_alpha": 0.852,
+      "mean_delta_pm25": 0.084
+    },
+    "condition_C_masked_images": {
+      "description": "Full Hybrid with Images Masked (mask=0, actual features present)",
+      "pm25_mae": 9.0434,
+      "pm25_rmse": 15.5682,
+      "pm25_r2": 0.9625,
+      "pm10_mae": 15.8173,
+      "pm10_rmse": 21.9772,
+      "pm10_r2": 0.9817,
+      "mean_alpha": 0.0,
+      "min_alpha": 0.0,
+      "max_alpha": 0.0,
+      "mean_delta_pm25": -0.0118
+    },
+    "condition_D_shuffled_images": {
+      "description": "Full Hybrid with Images Shuffled across Test Instances (50 permutations)",
+      "pm25_mae_mean": 8.9762,
+      "pm25_mae_std": 0.003,
+      "pm25_mae_min": 8.9693,
+      "pm25_mae_max": 8.9819,
+      "pm10_mae_mean": 15.884,
+      "mean_alpha": 0.7793
+    },
+    "condition_E1_neutral_zero": {
+      "description": "Neutral Zero Representation (zero vector with mask=1)",
+      "pm25_mae": 8.9569,
+      "pm25_rmse": 15.5183,
+      "pm25_r2": 0.9628,
+      "pm10_mae": 15.9114,
+      "pm10_rmse": 22.0082,
+      "pm10_r2": 0.9816,
+      "mean_alpha": 0.7395,
+      "min_alpha": 0.6818,
+      "max_alpha": 0.8067,
+      "mean_delta_pm25": 0.1399
+    },
+    "condition_E2_neutral_mean": {
+      "description": "Neutral Mean Representation (training set centroid with mask=1)",
+      "pm25_mae": 8.9251,
+      "pm25_rmse": 15.5005,
+      "pm25_r2": 0.9629,
+      "pm10_mae": 15.9219,
+      "pm10_rmse": 22.0093,
+      "pm10_r2": 0.9816,
+      "mean_alpha": 0.8149,
+      "min_alpha": 0.7687,
+      "max_alpha": 0.8673,
+      "mean_delta_pm25": 0.1751
+    }
+  }
+}

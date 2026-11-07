@@ -1,0 +1,3 @@
+cluster_name,city,transect,distance_km,transect_bearing_deg,total_aligned_hours,favorable_wind_hours,mean_along_wind_velocity_ms,theoretical_advection_transit_hours,empirical_peak_lag_under_wind,empirical_peak_corr_under_wind
+Delhi NCR Urban Corridor,Delhi,DL002 -> DL008,22.97,299.8,24,0,2.5,2.55,0,0.0
+Kolkata Gangetic Urban Corridor,Kolkata,WB008 -> WB010,10.07,204.6,17,17,3.14,0.89,0,0.0

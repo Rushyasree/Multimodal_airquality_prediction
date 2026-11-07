@@ -1,0 +1,22 @@
+% Controlled Multimodal Alignment Ablation & Negative Result Table
+\begin{table}[t]
+\caption{Controlled Multimodal Alignment Ablation on Held-Out Matched Test Instances ($N=60$ Across 9 Independent Station-Date Groups)}
+\label{tab:negative_result_ablation}
+\centering
+\small
+\begin{tabular}{llrrr}
+\toprule
+\textbf{Target Pollutant} & \textbf{Modality / Model} & \textbf{MAE ($\mu\text{g/m}^3$)} & \textbf{RMSE ($\mu\text{g/m}^3$)} & \textbf{$R^2$} \\
+\midrule
+\multirow{3}{*}{$\text{PM}_{2.5}$} 
+& Daily Weather Only (ERA5-Land) & 193.18 & 219.87 & -5.4129 \\
+& Image Only (ResNet-50 Features) & \textbf{73.67} & \textbf{95.38} & \textbf{-0.2070} \\
+& Multimodal Early Fusion & 85.86 & 106.56 & -0.5064 \\
+\midrule
+\multirow{3}{*}{$\text{PM}_{10}$} 
+& Daily Weather Only (ERA5-Land) & 297.12 & 349.23 & -3.2755 \\
+& Image Only (ResNet-50 Features) & \textbf{137.65} & \textbf{172.13} & \textbf{-0.0387} \\
+& Multimodal Early Fusion & 150.47 & 186.16 & -0.2150 \\
+\bottomrule
+\end{tabular}
+\end{table}

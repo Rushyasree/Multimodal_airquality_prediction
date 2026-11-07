@@ -1,0 +1,37 @@
+# Python & virtual environment
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.ipynb_checkpoints/
+.env
+
+# Testing & logs
+.pytest_cache/
+*.log
+*.tmp
+scratch/
+backup/
+
+# Raw and heavy datasets (> 100MB / non-runtime)
+data/raw/
+data/processed/model_sequences/
+data/processed/sequences/
+data/processed/air_quality_hourly_clean.csv
+data/processed/air_quality_weather_merged.csv
+data/processed/recent_air_quality_cleaned.csv
+*.npy
+*.npz
+
+# Large experimental checkpoints (> 50MB)
+experiments/**/checkpoints/best_fusion_model.pt
+experiments/**/checkpoints/best_image_model.pt
+experiments/**/checkpoints/best_unified_hybrid_model.pt
+experiments/recent_data_audit/
+experiments/multimodal_fusion/validation_v2/checkpoints/
+
+# Predictions & outputs
+outputs/logs/*
+outputs/predictions/*

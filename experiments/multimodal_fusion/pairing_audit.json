@@ -1,0 +1,31 @@
+{
+  "total_images_in_clean_manifest": 640,
+  "images_within_5km": 316,
+  "images_exceeding_5km": 324,
+  "unique_station_date_groups_within_5km": 48,
+  "usable_paired_images": 199,
+  "usable_station_date_groups": 33,
+  "distinct_stations": 18,
+  "distance_km_stats": {
+    "min": 0.0522,
+    "mean": 0.7588738693467336,
+    "median": 0.5995,
+    "max": 2.5602
+  },
+  "timestamp_precision": {
+    "sensor_telemetry": "Exact hourly UTC/IST timestamp (e.g., YYYY-MM-DD HH:00:00)",
+    "image_metadata": "Calendar date only (YYYY-MM-DD); 0% sub-daily timestamps available in manifest or EXIF",
+    "pairing_policy": "Representative Midday Sensor Sequence (closest available target to 12:00 PM on matching date)"
+  },
+  "target_definitions": {
+    "primary_sensor_target": "Actual CPCB ground monitor PM2.5 measurement at target hour (mean: 133.51 ug/m3, std: 141.36 ug/m3)",
+    "image_static_label": "PM25Vision web-scraped label (mean: 187.85 ug/m3, std: 64.02 ug/m3)",
+    "mean_absolute_discrepancy": 96.37417085427136
+  },
+  "burst_clustering": {
+    "top_group": "DL026__2018-10-24",
+    "top_group_count": 42,
+    "top_2_groups_pct": 33.165829145728644
+  },
+  "causal_alignment_limitation": "Strict next-hour causal image fusion cannot be validated using the current PM25Vision dataset because image capture hours are missing. Pairing relies on representative midday 24-hour sequence alignment. This prototype demonstrates the complete working multimodal fusion neural architecture and its training/inference pipeline, but must not be represented as a validated operational next-hour forecast."
+}

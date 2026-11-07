@@ -1,0 +1,4 @@
+cluster_name,city,target_station,neighbor_station,distance_km,test_samples,persistence_mae,persistence_rmse,persistence_r2,single_station_gbdt_mae,single_station_gbdt_rmse,single_station_gbdt_r2,multinode_spatial_gbdt_mae,multinode_spatial_gbdt_rmse,multinode_spatial_gbdt_r2,spatial_mae_reduction_vs_single,pct_gain_from_spatial_lags,pct_gain_vs_persistence
+Delhi NCR Urban Corridor,Delhi,DL008,DL002,22.97,6668,14.738,50.7316,0.2729,13.9088,40.1992,0.5435,14.1912,40.4491,0.5378,-0.2824,-2.03,3.71
+Mumbai Coastal Marine Corridor,Mumbai,MH008,MH005,17.2,3591,6.3074,18.7503,0.5999,6.0976,15.2016,0.737,6.045,14.7784,0.7514,0.0526,0.86,4.16
+Kolkata Gangetic Urban Corridor,Kolkata,WB010,WB008,10.07,8002,2.9356,5.7618,0.9361,2.8557,5.5541,0.9406,2.9414,5.4474,0.9429,-0.0857,-3.0,-0.2

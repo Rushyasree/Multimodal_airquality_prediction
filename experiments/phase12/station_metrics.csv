@@ -1,0 +1,16 @@
+station_id,station_name,city,state,cohort,source,sample_count,pm25_persistence_mae,pm25_gbdt_mae,pm25_gbdt_rmse,pm25_gbdt_r2,pm25_gbdt_bias,pm25_pct_improvement,pm10_persistence_mae,pm10_gbdt_mae,pm10_gbdt_rmse,pm10_gbdt_r2,pm10_gbdt_bias,pm10_pct_improvement
+AP001,"Secretariat, Amaravati - APPCB",Amaravati,Andhra Pradesh,Phase8-4Stations,Live Longitudinal Telemetry (2026),149,1.4452,2.0858,2.7041,0.8364,1.4223,-44.33,6.4072,7.6189,10.638,0.8201,2.2705,-18.91
+AP005,"GVM Corporation, Visakhapatnam - APPCB",Visakhapatnam,Andhra Pradesh,Phase8-4Stations,Holdout Benchmark (Apr-Aug 2025),3550,5.3493,5.1037,7.1546,0.7148,0.4961,4.59,17.6857,16.397,26.8832,0.7183,0.2776,7.29
+DL002,"Anand Vihar, Delhi - DPCC",Delhi,Delhi,Phase8-4Stations,Holdout Benchmark (Apr-Aug 2025),3357,15.0676,14.252,21.4349,0.6927,0.1058,5.41,34.4027,32.3015,50.4904,0.79,-0.0787,6.11
+DL008,"DTU, Delhi - CPCB",Delhi,Delhi,Phase8-4Stations,Holdout Benchmark (Apr-Aug 2025),2674,11.0653,10.6291,25.7694,0.65,0.791,3.94,35.7809,34.0956,75.1281,0.6486,-1.1765,4.71
+MH005,"Bandra, Mumbai - MPCB",Mumbai,Maharashtra,Expanded-MultiStation,Holdout Benchmark (Apr-Aug 2025),2828,5.4221,5.5351,7.5796,0.7093,1.4664,-2.08,9.9806,9.3097,13.9768,0.8962,0.6477,6.72
+MH008,"Colaba, Mumbai - MPCB",Mumbai,Maharashtra,Expanded-MultiStation,Holdout Benchmark (Apr-Aug 2025),2226,5.7994,6.4849,21.6711,-0.6867,2.3191,-11.82,15.8346,15.7946,51.4435,-0.3115,2.0682,0.25
+GJ001,"Maninagar, Ahmedabad - GPCB",Ahmedabad,Gujarat,Expanded-MultiStation,Holdout Benchmark (Apr-Aug 2025),3059,5.4732,5.1254,6.7354,0.7886,0.8074,6.35,14.115,13.2028,29.6708,0.7318,0.135,6.46
+WB008,"Bidhannagar, Kolkata - WBPCB",Kolkata,West Bengal,Expanded-MultiStation,Holdout Benchmark (Apr-Aug 2025),3455,2.5162,2.6367,3.385,0.8445,0.586,-4.79,2.7305,3.1617,4.9438,0.9006,0.9236,-15.79
+WB010,"Jadavpur, Kolkata - WBPCB",Kolkata,West Bengal,Expanded-MultiStation,Holdout Benchmark (Apr-Aug 2025),3562,2.2894,2.3303,3.5165,0.912,-0.5441,-1.79,4.4727,4.5029,6.7471,0.9151,0.8126,-0.68
+BR008,"Muradpur, Patna - BSPCB",Patna,Bihar,Expanded-MultiStation,Holdout Benchmark (Apr-Aug 2025),3379,4.6783,4.5388,10.5364,0.9064,-0.1092,2.98,19.2786,17.5699,38.8061,0.8361,-2.0145,8.86
+KA004,"Bapuji Nagar, Bengaluru - KSPCB",Bengaluru,Karnataka,Expanded-MultiStation,Holdout Benchmark (Apr-Aug 2025),3548,3.8664,3.8018,6.2238,0.7578,0.5589,1.67,9.6667,9.3423,15.3003,0.7661,1.1042,3.36
+TG001,"Bollaram Industrial Area, Hyderabad - TSPCB",Hyderabad,Telangana,Expanded-MultiStation,Holdout Benchmark (Apr-Aug 2025),3089,3.3502,3.485,4.867,0.7839,1.3642,-4.02,10.2579,10.0494,14.853,0.8276,1.333,2.03
+TN002,"Manali Village, Chennai - TNPCB",Chennai,Tamil Nadu,Expanded-MultiStation,Holdout Benchmark (Apr-Aug 2025),3180,5.4892,5.2041,7.6905,0.735,0.6776,5.19,5.4706,4.9115,7.2277,0.8352,0.9781,10.22
+CH001,"Sector-25, Chandigarh - CPCC",Chandigarh,Chandigarh,Expanded-MultiStation,Holdout Benchmark (Apr-Aug 2025),3037,3.6557,3.6277,4.883,0.9522,-0.3826,0.77,6.6102,6.4435,12.8365,0.9218,1.0989,2.52
+AS001,"Railway Colony, Guwahati - APCB",Guwahati,Assam,Expanded-MultiStation,Holdout Benchmark (Apr-Aug 2025),2456,6.4563,6.0325,9.1415,0.8754,0.5699,6.56,14.7358,14.3966,33.9203,0.6664,2.6545,2.3

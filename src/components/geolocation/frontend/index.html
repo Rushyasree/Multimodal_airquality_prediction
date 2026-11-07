@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VayuDrishti Geolocation</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      background: transparent;
+      font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 2px 0;
+      height: 100%;
+    }
+    .geo-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(8, 26, 56, 0.95) 0%, rgba(13, 40, 85, 0.95) 100%);
+      color: #00f2fe;
+      border: 1px solid rgba(0, 242, 254, 0.45);
+      border-radius: 10px;
+      padding: 9px 18px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 242, 254, 0.15);
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      white-space: nowrap;
+      user-select: none;
+      outline: none;
+    }
+    .geo-btn:hover:not(:disabled) {
+      background: linear-gradient(135deg, rgba(14, 45, 96, 0.98) 0%, rgba(20, 60, 125, 0.98) 100%);
+      border-color: #00f2fe;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 242, 254, 0.35);
+      transform: translateY(-1px);
+    }
+    .geo-btn:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+    .geo-btn:disabled {
+      opacity: 0.7;
+      cursor: wait;
+      border-color: rgba(0, 242, 254, 0.25);
+    }
+    .geo-btn.active-detected {
+      background: linear-gradient(135deg, rgba(6, 78, 59, 0.9) 0%, rgba(4, 120, 87, 0.9) 100%);
+      color: #34d399;
+      border-color: rgba(52, 211, 153, 0.6);
+      box-shadow: 0 0 16px rgba(52, 211, 153, 0.25);
+    }
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(0, 242, 254, 0.25);
+      border-top-color: #00f2fe;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .reset-btn {
+      display: none;
+      background: rgba(15, 23, 42, 0.8);
+      color: #94a3b8;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .reset-btn:hover {
+      color: #f1f5f9;
+      border-color: #94a3b8;
+      background: rgba(30, 41, 59, 0.9);
+    }
+  </style>
+</head>
+<body>
+  <button id="locBtn" class="geo-btn" type="button" onclick="requestGeolocation()">
+    <span id="locIcon">📍</span>
+    <span id="locText">Use My Current Location</span>
+  </button>
+  <button id="resetBtn" class="reset-btn" type="button" onclick="resetGeolocation()">
+    Reset
+  </button>
+
+  <script>
+    // Standard Streamlit Component Protocol Implementation
+    function sendStreamlitMessage(type, data) {
+      if (window.parent) {
+        window.parent.postMessage(Object.assign({
+          isStreamlitMessage: true,
+          type: type
+        }, data), "*");
+      }
+    }
+
+    function setFrameHeight(height) {
+      const h = height || document.body.scrollHeight || 48;
+      sendStreamlitMessage("streamlit:setFrameHeight", { height: Math.max(h, 48) });
+    }
+
+    function setComponentValue(value) {
+      sendStreamlitMessage("streamlit:setComponentValue", { value: value });
+    }
+
+    // Handle render events from Streamlit parent window
+    window.addEventListener("message", function(event) {
+      if (!event.data || event.data.type !== "streamlit:render") return;
+
+      const args = event.data.args || {};
+      const isDetected = args.is_detected || false;
+      const btn = document.getElementById("locBtn");
+      const reset = document.getElementById("resetBtn");
+      const locIcon = document.getElementById("locIcon");
+      const locText = document.getElementById("locText");
+
+      if (isDetected) {
+        btn.classList.add("active-detected");
+        locIcon.textContent = "✓";
+        locText.textContent = "Location Active";
+        reset.style.display = "inline-flex";
+      } else {
+        btn.classList.remove("active-detected");
+        locIcon.textContent = "📍";
+        locText.textContent = args.button_label || "Use My Current Location";
+        reset.style.display = "none";
+      }
+
+      setFrameHeight(48);
+    });
+
+    // Notify Streamlit parent window once when the component is ready
+    function notifyReady() {
+      sendStreamlitMessage("streamlit:componentReady", { apiVersion: 1 });
+    }
+
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+      notifyReady();
+    } else {
+      window.addEventListener("DOMContentLoaded", notifyReady, { once: true });
+      window.addEventListener("load", notifyReady, { once: true });
+    }
+
+    // Explicit User-Triggered Geolocation Request
+    function requestGeolocation() {
+      const btn = document.getElementById("locBtn");
+      const locIcon = document.getElementById("locIcon");
+      const locText = document.getElementById("locText");
+      const reset = document.getElementById("resetBtn");
+
+      // 1. Check Browser Geolocation API availability
+      if (!navigator.geolocation) {
+        setComponentValue({
+          status: "unsupported",
+          message: "Geolocation is not supported by your browser."
+        });
+        return;
+      }
+
+      // 2. Check Secure Context (HTTPS or localhost required for Geolocation in modern browsers)
+      const hostname = window.location.hostname || "";
+      const isLocalhost = hostname === "localhost" ||
+                          hostname === "127.0.0.1" ||
+                          hostname === "[::1]" ||
+                          hostname.endsWith(".localhost");
+      if (window.isSecureContext === false && !isLocalhost) {
+        setComponentValue({
+          status: "insecure",
+          message: "Browser Geolocation requires a secure HTTPS connection or localhost. Please select your city manually."
+        });
+        return;
+      }
+
+      // 3. UI State: Loading Spinner
+      btn.disabled = true;
+      locIcon.innerHTML = '<span class="spinner"></span>';
+      locText.textContent = "Detecting Location...";
+
+      const geoOptions = {
+        enableHighAccuracy: true,
+        timeout: 12000,
+        maximumAge: 0
+      };
+
+      navigator.geolocation.getCurrentPosition(
+        function success(pos) {
+          btn.disabled = false;
+          btn.classList.add("active-detected");
+          locIcon.textContent = "✓";
+          locText.textContent = "Location Active";
+          reset.style.display = "inline-flex";
+          setFrameHeight(48);
+
+          setComponentValue({
+            status: "granted",
+            coords: {
+              latitude: pos.coords.latitude,
+              longitude: pos.coords.longitude,
+              accuracy: pos.coords.accuracy,
+              altitude: pos.coords.altitude,
+              heading: pos.coords.heading,
+              speed: pos.coords.speed
+            },
+            timestamp: pos.timestamp
+          });
+        },
+        function error(err) {
+          btn.disabled = false;
+          btn.classList.remove("active-detected");
+          locIcon.textContent = "📍";
+          locText.textContent = "Use My Current Location";
+          reset.style.display = "none";
+          setFrameHeight(48);
+
+          let reason = "unknown";
+          let message = err.message || "Failed to retrieve location.";
+
+          if (err.code === 1) { // PERMISSION_DENIED
+            reason = "denied";
+            message = "Location permission was denied. You can enable location in your browser settings or select a city manually.";
+          } else if (err.code === 2) { // POSITION_UNAVAILABLE
+            reason = "unavailable";
+            message = "Current location information is unavailable from your device or network.";
+          } else if (err.code === 3) { // TIMEOUT
+            reason = "timeout";
+            message = "Location detection timed out after 12 seconds. Please click again or select a station manually.";
+          }
+
+          setComponentValue({
+            status: reason,
+            code: err.code,
+            message: message
+          });
+        },
+        geoOptions
+      );
+    }
+
+    function resetGeolocation() {
+      const btn = document.getElementById("locBtn");
+      const reset = document.getElementById("resetBtn");
+      const locIcon = document.getElementById("locIcon");
+      const locText = document.getElementById("locText");
+
+      btn.classList.remove("active-detected");
+      btn.disabled = false;
+      locIcon.textContent = "📍";
+      locText.textContent = "Use My Current Location";
+      reset.style.display = "none";
+      setFrameHeight(48);
+
+      setComponentValue({
+        status: "reset",
+        message: "Location cleared."
+      });
+    }
+  </script>
+</body>
+</html>

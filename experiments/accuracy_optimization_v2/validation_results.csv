@@ -1,0 +1,14 @@
+Target,Model_Type,Config_ID,Params,Validation_MAE,Validation_RMSE,Validation_R2,Training_Time_s
+PM2.5,Direct GBDT,cfg_1,"{'max_iter': 100, 'max_leaf_nodes': 31, 'learning_rate': 0.1, 'l2_regularization': 1.0, 'min_samples_leaf': 20}",18.8556,39.6381,0.8365,6.12
+PM2.5,Direct GBDT,cfg_2,"{'max_iter': 150, 'max_leaf_nodes': 31, 'learning_rate': 0.08, 'l2_regularization': 2.0, 'min_samples_leaf': 30}",19.624,41.1708,0.8236,7.01
+PM2.5,Direct GBDT,cfg_3,"{'max_iter': 150, 'max_leaf_nodes': 63, 'learning_rate': 0.08, 'l2_regularization': 2.0, 'min_samples_leaf': 30}",19.5086,40.6746,0.8278,15.91
+PM2.5,Direct GBDT,cfg_4,"{'max_iter': 100, 'max_leaf_nodes': 63, 'learning_rate': 0.05, 'l2_regularization': 5.0, 'min_samples_leaf': 50}",19.3037,40.0906,0.8327,6.79
+PM10,Direct GBDT,cfg_1,"{'max_iter': 100, 'max_leaf_nodes': 31, 'learning_rate': 0.1, 'l2_regularization': 1.0, 'min_samples_leaf': 20}",33.277,62.7189,0.839,4.16
+PM10,Direct GBDT,cfg_2,"{'max_iter': 150, 'max_leaf_nodes': 31, 'learning_rate': 0.08, 'l2_regularization': 2.0, 'min_samples_leaf': 30}",33.4683,63.2815,0.8361,5.17
+PM10,Direct GBDT,cfg_3,"{'max_iter': 150, 'max_leaf_nodes': 63, 'learning_rate': 0.08, 'l2_regularization': 2.0, 'min_samples_leaf': 30}",33.6575,63.2215,0.8364,7.79
+PM10,Direct GBDT,cfg_4,"{'max_iter': 100, 'max_leaf_nodes': 63, 'learning_rate': 0.05, 'l2_regularization': 5.0, 'min_samples_leaf': 50}",32.6182,61.2026,0.8467,8.69
+PM2.5,Residual GBDT (LSTM + delta),residual_default,"l2=3.0, lr=0.08, leaves=31",14.5431,27.7237,0.92,0.0
+PM10,Residual GBDT (LSTM + delta),residual_default,"l2=3.0, lr=0.08, leaves=31",28.0068,50.1805,0.897,0.0
+PM2.5,Ensemble (LSTM + GBDT),w_lstm=0.90,"weight_lstm=0.90, weight_gbdt=0.10",14.4631,27.4873,0.9214,0.0
+PM10,Ensemble (LSTM + GBDT),w_lstm=0.80,"weight_lstm=0.80, weight_gbdt=0.20",27.5239,49.1376,0.9012,0.0
+PM2.5,Sensor-Only (Weather Excluded),ablation_no_weather,All 8 weather channels zeroed/excluded,18.8735,39.6645,0.8363,0.0

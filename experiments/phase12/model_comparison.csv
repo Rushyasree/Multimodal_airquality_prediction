@@ -1,0 +1,5 @@
+model_name,architecture,input_requirements,test_instances,pm25_mae,pm25_rmse,pm25_r2,pm25_bias,pm25_pct_improvement_vs_persistence,pm10_mae,pm10_rmse,pm10_r2,pm10_bias,pm10_pct_improvement_vs_persistence
+1-Hour Persistence Baseline,Persistence,Telemetry at t,236289,6.9476,14.4869,0.7844,-0.032,0.0,17.1584,38.6982,0.8089,0.0275,0.0
+Sensor-Only Standalone Adapted GBDT,Adapted GBDT (49 feats),"Particulates Only (PM2.5, PM10)",236289,6.6716,13.1663,0.8219,0.4372,3.97,16.2906,35.2406,0.8415,0.6399,5.06
+Sensor + Meteorology Forecaster,Adapted LSTM (27 feats),"Particulates + ERA5 Weather (T, RH, WS, WD, Precip)",236289,6.8011,13.1813,0.8215,0.5155,2.11,16.4791,34.6463,0.8468,1.4953,3.96
+Unified Adapted Severity-Gated Ensemble,Gated Hybrid Ensemble,Particulates + Weather + Particulate Lags,236289,6.6199,13.0366,0.8254,0.4542,4.72,16.1425,34.5278,0.8479,0.9899,5.92

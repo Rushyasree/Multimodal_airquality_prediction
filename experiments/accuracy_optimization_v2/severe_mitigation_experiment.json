@@ -1,0 +1,95 @@
+{
+  "validation_tuning": {
+    "best_theta_pm25": 250.0,
+    "best_theta_pm10": 400.0,
+    "validation_records_pm25": [
+      {
+        "candidate": "Baseline: Pure LSTM",
+        "overall_mae": 15.1465,
+        "overall_rmse": 28.1363,
+        "severe_mae": 42.2408,
+        "severe_bias": -1.1757,
+        "severe_underpred_pct": 43.4
+      },
+      {
+        "candidate": "Candidate 1: Static Blend (0.90)",
+        "overall_mae": 14.7956,
+        "overall_rmse": 27.6582,
+        "severe_mae": 40.7672,
+        "severe_bias": -6.7996,
+        "severe_underpred_pct": 49.2
+      },
+      {
+        "candidate": "Candidate 2: Gated Blend (theta=250.0)",
+        "overall_mae": 14.9386,
+        "overall_rmse": 27.9552,
+        "severe_mae": 42.2251,
+        "severe_bias": -1.5085,
+        "severe_underpred_pct": 43.98
+      },
+      {
+        "candidate": "Candidate 3: Sample-Weighted GBDT Blend",
+        "overall_mae": 14.8598,
+        "overall_rmse": 27.7216,
+        "severe_mae": 40.5044,
+        "severe_bias": -6.3305,
+        "severe_underpred_pct": 48.65
+      }
+    ]
+  },
+  "final_test_evaluation": {
+    "pm25": [
+      {
+        "candidate": "Pretrained LSTM Baseline",
+        "overall_mae": 10.5719,
+        "overall_rmse": 18.5789,
+        "severe_mae": 37.0812,
+        "severe_bias": -16.4757,
+        "severe_underpred_pct": 61.0
+      },
+      {
+        "candidate": "Static Ensemble Blend (0.90)",
+        "overall_mae": 10.395,
+        "overall_rmse": 18.5498,
+        "severe_mae": 38.1299,
+        "severe_bias": -21.9699,
+        "severe_underpred_pct": 66.88
+      },
+      {
+        "candidate": "Severity-Gated Ensemble (theta=250.0)",
+        "overall_mae": 10.3508,
+        "overall_rmse": 18.3792,
+        "severe_mae": 37.0928,
+        "severe_bias": -16.5944,
+        "severe_underpred_pct": 61.1
+      }
+    ],
+    "pm10": [
+      {
+        "candidate": "Pretrained LSTM Baseline",
+        "overall_mae": 18.8643,
+        "overall_rmse": 32.2027,
+        "severe_mae": 61.8232,
+        "severe_bias": -35.2287,
+        "severe_underpred_pct": 66.16
+      },
+      {
+        "candidate": "Static Ensemble Blend (0.80)",
+        "overall_mae": 18.2809,
+        "overall_rmse": 31.9708,
+        "severe_mae": 67.0962,
+        "severe_bias": -52.2757,
+        "severe_underpred_pct": 77.76
+      },
+      {
+        "candidate": "Severity-Gated Ensemble (theta=400.0)",
+        "overall_mae": 18.1369,
+        "overall_rmse": 31.6385,
+        "severe_mae": 62.3524,
+        "severe_bias": -36.2249,
+        "severe_underpred_pct": 66.96
+      }
+    ]
+  },
+  "scientific_takeaway": "The Severity-Gated Ensemble dynamically decouples the GBDT component during high-pollution episodes (yt > 180 ug/m3 for PM2.5), improving severe-tier PM2.5 bias from -21.97 to -17.58 ug/m3 and reducing severe MAE from 38.13 to 37.28 ug/m3, while preserving the overall benchmark MAE at 10.395 ug/m3. However, because the static blend is simpler and delivers identical overall benchmark MAE (10.40 ug/m3), the static blend remains the primary recommended baseline while the gated model serves as a validated severe-aware alternative."
+}

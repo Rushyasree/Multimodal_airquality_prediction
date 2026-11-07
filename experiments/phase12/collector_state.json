@@ -1,0 +1,16 @@
+{
+  "collector_version": "v2.0-autonomous",
+  "trial_phase": "Phase 12: Autonomous Live Monitoring",
+  "created_at_utc": "2026-11-05T12:17:41.071653+00:00",
+  "last_successful_run_utc": null,
+  "last_run_duration_seconds": 0.0,
+  "total_execution_cycles": 0,
+  "total_observations_ingested": 6207,
+  "total_predictions_generated": 420,
+  "total_targets_matched": 418,
+  "unmatched_predictions_count": 2,
+  "active_stations_monitored": 15,
+  "recent_outages_logged": [],
+  "station_telemetry_status": {},
+  "updated_at_utc": "2026-11-05T15:17:02.701117+00:00"
+}

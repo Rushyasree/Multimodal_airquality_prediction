@@ -1,0 +1,28 @@
+{
+  "model_name": "ResNet-50 Transfer Learning Regressor",
+  "modality": "Image-only (PM25Vision)",
+  "backbone": "ResNet-50 (Pretrained ImageNet)",
+  "device": "cpu",
+  "best_epoch": 8,
+  "target_preprocessing": {
+    "strategy": "StandardScaler fitted on training split only",
+    "mean": 204.1526,
+    "std": 61.3761
+  },
+  "splits": {
+    "train_samples": 439,
+    "val_samples": 122,
+    "test_samples": 79
+  },
+  "validation_metrics": {
+    "MAE": 110.9253,
+    "RMSE": 132.0669,
+    "R2": -0.8197
+  },
+  "test_metrics": {
+    "MAE": 66.2148,
+    "RMSE": 80.6779,
+    "R2": 0.1524
+  },
+  "execution_time_seconds": 122.01
+}
