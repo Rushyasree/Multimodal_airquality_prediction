@@ -56,13 +56,13 @@ class LiveAirQualityService:
                 "measurements": {"PM2.5": 42.0, "PM10": 85.0},
             }
 
-        measurements = obs.get("measurements", {})
+        measurements = obs.get("pollutants") or obs.get("measurements", {})
         pm25_val = measurements.get("PM2.5")
         pm10_val = measurements.get("PM10")
 
         return {
             "result_type": "Observation",
-            "station_id": obs.get("station_id", station_id or "AP001"),
+            "station_id": station_id or obs.get("station_id", "AP001"),
             "station_name": obs.get("station_name", "Station"),
             "city": obs.get("city", target_city),
             "data_source": obs.get("data_source", "CPCB / OpenAQ"),

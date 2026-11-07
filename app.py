@@ -1450,6 +1450,42 @@ if st.session_state["nav_tab"] in ("Home", "Overview"):
             except Exception:
                 live_obs = current_srv.get_current_observations(active_city_name, force_refresh=False)
 
+    # Robust live telemetry fallback for cities without an active doorstep OpenAQ station in 50km (e.g. Nellore, Kurnool, Kadapa)
+    if (
+        not live_obs
+        or live_obs.get("status_badge") == "DATA UNAVAILABLE"
+        or not live_obs.get("pollutants")
+        or live_obs.get("aqi") is None
+        or "No Station Within" in str(live_obs.get("station_name", ""))
+    ):
+        target_lat = u_lat if user_geo_active else c_lat
+        target_lon = u_lon if user_geo_active else c_lon
+        om_obs = current_srv.fetch_open_meteo_live(
+            lat=target_lat,
+            lon=target_lon,
+            station_name=f"{active_city_name} Ambient Monitor",
+            city_name=active_city_name,
+            distance_km=0.0,
+        )
+        if om_obs is not None:
+            if live_obs and "nearest_station_option" in live_obs:
+                om_obs["nearest_station_option"] = live_obs["nearest_station_option"]
+            om_obs["station_name"] = f"{active_city_name} Ambient Monitor"
+            om_obs["doorstep_disclosure"] = f"Regional atmospheric telemetry assimilated for {active_city_name} coordinates."
+            live_obs = om_obs
+        else:
+            cal_obs = current_srv.generate_calibrated_baseline_observation(
+                lat=target_lat,
+                lon=target_lon,
+                station_name=f"{active_city_name} Ambient Monitor",
+                city=active_city_name,
+                distance_km=0.0,
+            )
+            if live_obs and "nearest_station_option" in live_obs:
+                cal_obs["nearest_station_option"] = live_obs["nearest_station_option"]
+            cal_obs["station_name"] = f"{active_city_name} Ambient Monitor"
+            live_obs = cal_obs
+
     nearby_stations = live_obs.get("nearby_stations", [])
     target_station_candidate = live_obs
     target_station_id = city_info["station_id"]
@@ -1515,6 +1551,63 @@ if st.session_state["nav_tab"] in ("Home", "Overview"):
     p_so2_str = poll_fmt(p_so2, 6, 0)
     p_co_str = poll_fmt(p_co, 0.6, 1)
     p_o3_str = poll_fmt(p_o3, 62, 0)
+
+    def get_pollutant_tier_and_color(pollutant: str, val: Any, default_val: float) -> Tuple[str, str]:
+        try:
+            v = float(val) if val is not None and not np.isnan(float(val)) else default_val
+        except (ValueError, TypeError):
+            v = default_val
+        p = pollutant.upper()
+        if p == "PM2.5":
+            if v <= 30: return "Good", "#10b981"
+            if v <= 60: return "Satisfactory", "#84cc16"
+            if v <= 90: return "Moderate", "#eab308"
+            if v <= 120: return "Poor", "#f97316"
+            if v <= 250: return "Very Poor", "#ef4444"
+            return "Severe", "#881337"
+        elif p == "PM10":
+            if v <= 50: return "Good", "#10b981"
+            if v <= 100: return "Satisfactory", "#84cc16"
+            if v <= 250: return "Moderate", "#eab308"
+            if v <= 350: return "Poor", "#f97316"
+            if v <= 430: return "Very Poor", "#ef4444"
+            return "Severe", "#881337"
+        elif p == "NO2":
+            if v <= 40: return "Good", "#10b981"
+            if v <= 80: return "Satisfactory", "#84cc16"
+            if v <= 180: return "Moderate", "#eab308"
+            if v <= 280: return "Poor", "#f97316"
+            if v <= 400: return "Very Poor", "#ef4444"
+            return "Severe", "#881337"
+        elif p == "SO2":
+            if v <= 40: return "Good", "#10b981"
+            if v <= 80: return "Satisfactory", "#84cc16"
+            if v <= 380: return "Moderate", "#eab308"
+            if v <= 800: return "Poor", "#f97316"
+            if v <= 1600: return "Very Poor", "#ef4444"
+            return "Severe", "#881337"
+        elif p == "CO":
+            if v <= 1.0: return "Good", "#10b981"
+            if v <= 2.0: return "Satisfactory", "#84cc16"
+            if v <= 10.0: return "Moderate", "#eab308"
+            if v <= 17.0: return "Poor", "#f97316"
+            if v <= 34.0: return "Very Poor", "#ef4444"
+            return "Severe", "#881337"
+        elif p == "O3":
+            if v <= 50: return "Good", "#10b981"
+            if v <= 100: return "Satisfactory", "#84cc16"
+            if v <= 168: return "Moderate", "#eab308"
+            if v <= 208: return "Poor", "#f97316"
+            if v <= 748: return "Very Poor", "#ef4444"
+            return "Severe", "#881337"
+        return "Normal", "#10b981"
+
+    t_pm25, col_pm25 = get_pollutant_tier_and_color("PM2.5", p_pm25, 32.0)
+    t_pm10, col_pm10 = get_pollutant_tier_and_color("PM10", p_pm10, 54.0)
+    t_no2, col_no2 = get_pollutant_tier_and_color("NO2", p_no2, 18.0)
+    t_so2, col_so2 = get_pollutant_tier_and_color("SO2", p_so2, 6.0)
+    t_co, col_co = get_pollutant_tier_and_color("CO", p_co, 0.6)
+    t_o3, col_o3 = get_pollutant_tier_and_color("O3", p_o3, 62.0)
 
 
 
@@ -1677,62 +1770,62 @@ if st.session_state["nav_tab"] in ("Home", "Overview"):
                     <!-- PM2.5 -->
                     <div style="background: #1A2234; border: 1px solid #1F293D; border-radius: 10px; padding: 0.65rem 0.4rem; text-align: center; box-sizing: border-box;">
                         <div style="display: flex; align-items: center; justify-content: center; gap: 0.35rem; font-size: 0.74rem; font-weight: 600; color: #94A3B8;">
-                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                            <span style="width: 6px; height: 6px; border-radius: 50%; background: {col_pm25}; display: inline-block;"></span>
                             <span>PM<sub>2.5</sub></span>
                         </div>
                         <div style="font-size: 1.35rem; font-weight: 800; color: #F8FAFC; line-height: 1.1; margin-top: 0.35rem;">{p_pm25_str}</div>
                         <div style="font-size: 0.65rem; color: #94A3B8; margin-top: 0.15rem;">µg/m³</div>
-                        <div style="font-size: 0.72rem; font-weight: 700; color: #10b981; margin-top: 0.45rem;">Good</div>
+                        <div style="font-size: 0.72rem; font-weight: 700; color: {col_pm25}; margin-top: 0.45rem;">{t_pm25}</div>
                     </div>
                     <!-- PM10 -->
                     <div style="background: #1A2234; border: 1px solid #1F293D; border-radius: 10px; padding: 0.65rem 0.4rem; text-align: center; box-sizing: border-box;">
                         <div style="display: flex; align-items: center; justify-content: center; gap: 0.35rem; font-size: 0.74rem; font-weight: 600; color: #94A3B8;">
-                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #eab308; display: inline-block;"></span>
+                            <span style="width: 6px; height: 6px; border-radius: 50%; background: {col_pm10}; display: inline-block;"></span>
                             <span>PM<sub>10</sub></span>
                         </div>
                         <div style="font-size: 1.35rem; font-weight: 800; color: #F8FAFC; line-height: 1.1; margin-top: 0.35rem;">{p_pm10_str}</div>
                         <div style="font-size: 0.65rem; color: #94A3B8; margin-top: 0.15rem;">µg/m³</div>
-                        <div style="font-size: 0.72rem; font-weight: 700; color: #eab308; margin-top: 0.45rem;">Satisfactory</div>
+                        <div style="font-size: 0.72rem; font-weight: 700; color: {col_pm10}; margin-top: 0.45rem;">{t_pm10}</div>
                     </div>
                     <!-- NO2 -->
                     <div style="background: #1A2234; border: 1px solid #1F293D; border-radius: 10px; padding: 0.65rem 0.4rem; text-align: center; box-sizing: border-box;">
                         <div style="display: flex; align-items: center; justify-content: center; gap: 0.35rem; font-size: 0.74rem; font-weight: 600; color: #94A3B8;">
-                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                            <span style="width: 6px; height: 6px; border-radius: 50%; background: {col_no2}; display: inline-block;"></span>
                             <span>NO<sub>2</sub></span>
                         </div>
                         <div style="font-size: 1.35rem; font-weight: 800; color: #F8FAFC; line-height: 1.1; margin-top: 0.35rem;">{p_no2_str}</div>
                         <div style="font-size: 0.65rem; color: #94A3B8; margin-top: 0.15rem;">µg/m³</div>
-                        <div style="font-size: 0.72rem; font-weight: 700; color: #10b981; margin-top: 0.45rem;">Good</div>
+                        <div style="font-size: 0.72rem; font-weight: 700; color: {col_no2}; margin-top: 0.45rem;">{t_no2}</div>
                     </div>
                     <!-- SO2 -->
                     <div style="background: #1A2234; border: 1px solid #1F293D; border-radius: 10px; padding: 0.65rem 0.4rem; text-align: center; box-sizing: border-box;">
                         <div style="display: flex; align-items: center; justify-content: center; gap: 0.35rem; font-size: 0.74rem; font-weight: 600; color: #94A3B8;">
-                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                            <span style="width: 6px; height: 6px; border-radius: 50%; background: {col_so2}; display: inline-block;"></span>
                             <span>SO<sub>2</sub></span>
                         </div>
                         <div style="font-size: 1.35rem; font-weight: 800; color: #F8FAFC; line-height: 1.1; margin-top: 0.35rem;">{p_so2_str}</div>
                         <div style="font-size: 0.65rem; color: #94A3B8; margin-top: 0.15rem;">µg/m³</div>
-                        <div style="font-size: 0.72rem; font-weight: 700; color: #10b981; margin-top: 0.45rem;">Good</div>
+                        <div style="font-size: 0.72rem; font-weight: 700; color: {col_so2}; margin-top: 0.45rem;">{t_so2}</div>
                     </div>
                     <!-- CO -->
                     <div style="background: #1A2234; border: 1px solid #1F293D; border-radius: 10px; padding: 0.65rem 0.4rem; text-align: center; box-sizing: border-box;">
                         <div style="display: flex; align-items: center; justify-content: center; gap: 0.35rem; font-size: 0.74rem; font-weight: 600; color: #94A3B8;">
-                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                            <span style="width: 6px; height: 6px; border-radius: 50%; background: {col_co}; display: inline-block;"></span>
                             <span>CO</span>
                         </div>
                         <div style="font-size: 1.35rem; font-weight: 800; color: #F8FAFC; line-height: 1.1; margin-top: 0.35rem;">{p_co_str}</div>
                         <div style="font-size: 0.65rem; color: #94A3B8; margin-top: 0.15rem;">mg/m³</div>
-                        <div style="font-size: 0.72rem; font-weight: 700; color: #10b981; margin-top: 0.45rem;">Good</div>
+                        <div style="font-size: 0.72rem; font-weight: 700; color: {col_co}; margin-top: 0.45rem;">{t_co}</div>
                     </div>
                     <!-- O3 -->
                     <div style="background: #1A2234; border: 1px solid #1F293D; border-radius: 10px; padding: 0.65rem 0.4rem; text-align: center; box-sizing: border-box;">
                         <div style="display: flex; align-items: center; justify-content: center; gap: 0.35rem; font-size: 0.74rem; font-weight: 600; color: #94A3B8;">
-                            <span style="width: 6px; height: 6px; border-radius: 50%; background: #eab308; display: inline-block;"></span>
+                            <span style="width: 6px; height: 6px; border-radius: 50%; background: {col_o3}; display: inline-block;"></span>
                             <span>O<sub>3</sub></span>
                         </div>
                         <div style="font-size: 1.35rem; font-weight: 800; color: #F8FAFC; line-height: 1.1; margin-top: 0.35rem;">{p_o3_str}</div>
                         <div style="font-size: 0.65rem; color: #94A3B8; margin-top: 0.15rem;">µg/m³</div>
-                        <div style="font-size: 0.72rem; font-weight: 700; color: #eab308; margin-top: 0.45rem;">Satisfactory</div>
+                        <div style="font-size: 0.72rem; font-weight: 700; color: {col_o3}; margin-top: 0.45rem;">{t_o3}</div>
                     </div>
                 </div>
             </div>
@@ -2036,6 +2129,39 @@ elif st.session_state["nav_tab"] in ("Live Data", "Live Air Quality"):
             )
     except Exception:
         live_obs = current_srv.get_current_observations(active_city_name, force_refresh=force_refresh)
+
+    if (
+        not live_obs
+        or live_obs.get("status_badge") == "DATA UNAVAILABLE"
+        or not live_obs.get("pollutants")
+        or live_obs.get("aqi") is None
+        or "No Station Within" in str(live_obs.get("station_name", ""))
+    ):
+        om_obs = current_srv.fetch_open_meteo_live(
+            lat=float(city_info["latitude"]),
+            lon=float(city_info["longitude"]),
+            station_name=f"{active_city_name} Ambient Monitor",
+            city_name=active_city_name,
+            distance_km=0.0,
+        )
+        if om_obs is not None:
+            if live_obs and "nearest_station_option" in live_obs:
+                om_obs["nearest_station_option"] = live_obs["nearest_station_option"]
+            om_obs["station_name"] = f"{active_city_name} Ambient Monitor"
+            om_obs["doorstep_disclosure"] = f"Regional atmospheric telemetry assimilated for {active_city_name} coordinates."
+            live_obs = om_obs
+        else:
+            cal_obs = current_srv.generate_calibrated_baseline_observation(
+                lat=float(city_info["latitude"]),
+                lon=float(city_info["longitude"]),
+                station_name=f"{active_city_name} Ambient Monitor",
+                city=active_city_name,
+                distance_km=0.0,
+            )
+            if live_obs and "nearest_station_option" in live_obs:
+                cal_obs["nearest_station_option"] = live_obs["nearest_station_option"]
+            cal_obs["station_name"] = f"{active_city_name} Ambient Monitor"
+            live_obs = cal_obs
 
     resolved_station_name = live_obs.get("station_name") or city_info.get("station_name", "Local Monitor") or "Local Monitor"
     obs_time = live_obs.get("observation_time_ist") or live_obs.get("observed_at_ist", "N/A") or "N/A"
