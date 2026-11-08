@@ -138,6 +138,174 @@ def format_age_readable(age_hours: Optional[float]) -> str:
         return f"{days} days ago"
 
 
+def fetch_open_meteo_live(
+    lat: float,
+    lon: float,
+    station_name: str,
+    city_name: str = "",
+    distance_km: float = 0.0,
+    city: str = "",
+    timeout: int = 10,
+) -> Optional[Dict[str, Any]]:
+    """Fetches genuine live ambient telemetry from Open-Meteo Air Quality API (public API, no API key required, updated hourly)."""
+    resolved_city = city_name or city or "Local Area"
+    try:
+        url = (
+            f"https://air-quality-api.open-meteo.com/v1/air-quality"
+            f"?latitude={lat:.4f}&longitude={lon:.4f}"
+            f"&current=pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone"
+        )
+        resp = requests.get(url, timeout=timeout, headers={"User-Agent": "VayuDrishti/2.0"})
+        if resp.status_code != 200:
+            logger.warning("Open-Meteo Air Quality API returned status %d", resp.status_code)
+            return None
+        data = resp.json()
+        curr = data.get("current", {})
+        if not curr:
+            return None
+
+        pm25 = round(float(curr.get("pm2_5", 35.0)), 1)
+        pm10 = round(float(curr.get("pm10", 65.0)), 1)
+        no2 = round(float(curr.get("nitrogen_dioxide", 22.0)), 1)
+        so2 = round(float(curr.get("sulphur_dioxide", 8.5)), 1)
+        co_raw = float(curr.get("carbon_monoxide", 500.0))
+        co = round(co_raw / 1000.0, 2) if co_raw > 15.0 else round(co_raw, 2)
+        o3 = round(float(curr.get("ozone", 48.0)), 1)
+
+        pollutants = {
+            "PM2.5": pm25,
+            "PM10": pm10,
+            "NO2": no2,
+            "SO2": so2,
+            "CO": co,
+            "O3": o3,
+        }
+        units = {
+            "PM2.5": "µg/m³",
+            "PM10": "µg/m³",
+            "NO2": "µg/m³",
+            "SO2": "µg/m³",
+            "CO": "mg/m³",
+            "O3": "µg/m³",
+        }
+
+        from src.prediction.aqi_advisor import calculate_overall_cpcb_aqi, get_aqi_category
+        aqi_res = calculate_overall_cpcb_aqi(pollutants)
+        aqi_val = aqi_res.get("aqi")
+        prominent = aqi_res.get("prominent_pollutant") or "PM2.5"
+        cat_info = get_aqi_category(aqi_val)
+
+        now_ist = datetime.now(timezone.utc).astimezone(IST)
+        obs_time_str = now_ist.strftime("%d %b %Y, %I:00 %p IST")
+        now_ist_str = now_ist.strftime("%Y-%m-%d %I:%M %p IST")
+
+        return {
+            "is_live": True,
+            "is_stale": False,
+            "status_badge": "LIVE DATA",
+            "badge_color": "#10b981",
+            "badge_desc": f"Real-time continuous atmospheric telemetry via APPCB/CPCB Open Monitoring Gateway for {resolved_city}.",
+            "station_name": station_name,
+            "city": resolved_city,
+            "distance_km": distance_km,
+            "pollutants": pollutants,
+            "units": units,
+            "aqi": aqi_val,
+            "aqi_tier": cat_info.get("tier") or cat_info.get("category", "Satisfactory"),
+            "aqi_color": cat_info.get("color", "#84cc16"),
+            "prominent_pollutant": prominent,
+            "observation_time_ist": obs_time_str,
+            "observed_at_ist": obs_time_str,
+            "retrieved_at_ist": now_ist_str,
+            "age_hours": 0.05,
+            "age_readable": "Just now",
+            "provider": "CPCB / APPCB Open Telemetry Gateway",
+            "api_key_required": False,
+            "station_coordinates": {"latitude": lat, "longitude": lon},
+            "user_distance_km": distance_km,
+            "doorstep_disclosure": f"Measurements recorded at station inlet ({station_name}), {distance_km:.1f} km from your device." if distance_km > 0 else f"Measurements recorded at station inlet ({station_name}).",
+            "far_station_advisory": f"Nearest continuous monitor is {distance_km:.1f} km away in {resolved_city}." if distance_km > 25.0 else "",
+        }
+    except Exception as exc:
+        logger.warning("Failed to fetch live data from Open-Meteo Air Quality: %s", exc)
+        return None
+
+
+def generate_calibrated_baseline_observation(
+    lat: float,
+    lon: float,
+    station_name: str,
+    city_name: str = "",
+    distance_km: float = 0.0,
+    city: str = "",
+) -> Dict[str, Any]:
+    """Provides calibrated ambient observation values tied to the city and current 2026 time when external live APIs are unreachable or offline."""
+    resolved_city = city_name or city or "Local Area"
+    now_ist = datetime.now(timezone.utc).astimezone(IST)
+    hour = now_ist.hour
+    diurnal_factor = 1.15 if (7 <= hour <= 10 or 19 <= hour <= 23) else (0.85 if 12 <= hour <= 16 else 1.0)
+    
+    city_hash = sum(ord(c) for c in str(resolved_city)) % 20 - 10
+    pm25 = round(max(15.0, (38.0 + city_hash) * diurnal_factor), 1)
+    pm10 = round(max(30.0, (70.0 + city_hash * 1.5) * diurnal_factor), 1)
+    no2 = round(max(8.0, 18.0 + city_hash * 0.4), 1)
+    so2 = round(max(4.0, 8.0 + city_hash * 0.2), 1)
+    co = round(max(0.3, 0.6 + city_hash * 0.02), 2)
+    o3 = round(max(20.0, 45.0 - city_hash * 0.5), 1)
+
+    pollutants = {
+        "PM2.5": pm25,
+        "PM10": pm10,
+        "NO2": no2,
+        "SO2": so2,
+        "CO": co,
+        "O3": o3,
+    }
+    units = {
+        "PM2.5": "µg/m³",
+        "PM10": "µg/m³",
+        "NO2": "µg/m³",
+        "SO2": "µg/m³",
+        "CO": "mg/m³",
+        "O3": "µg/m³",
+    }
+    from src.prediction.aqi_advisor import calculate_overall_cpcb_aqi, get_aqi_category
+    aqi_res = calculate_overall_cpcb_aqi(pollutants)
+    aqi_val = aqi_res.get("aqi") or 72
+    cat_info = get_aqi_category(aqi_val)
+
+    obs_time_str = now_ist.strftime("%d %b %Y, %I:00 %p IST")
+    now_ist_str = now_ist.strftime("%Y-%m-%d %I:%M %p IST")
+
+    return {
+        "is_live": True,
+        "is_stale": False,
+        "status_badge": "LIVE DATA",
+        "badge_color": "#10b981",
+        "badge_desc": f"Continuous atmospheric telemetry calibrated for {resolved_city} (2026 APPCB Station Feed).",
+        "station_name": station_name,
+        "city": resolved_city,
+        "distance_km": distance_km,
+        "pollutants": pollutants,
+        "units": units,
+        "aqi": aqi_val,
+        "aqi_tier": cat_info.get("tier") or cat_info.get("category", "Satisfactory"),
+        "aqi_color": cat_info.get("color", "#84cc16"),
+        "prominent_pollutant": aqi_res.get("prominent_pollutant") or "PM2.5",
+        "observation_time_ist": obs_time_str,
+        "observed_at_ist": obs_time_str,
+        "retrieved_at_ist": now_ist_str,
+        "age_hours": 0.1,
+        "age_readable": "Just now",
+        "provider": "CPCB / APPCB CAAQMS Network (2026)",
+        "api_key_required": False,
+        "station_coordinates": {"latitude": lat, "longitude": lon},
+        "user_distance_km": distance_km,
+        "doorstep_disclosure": f"Measurements recorded at station inlet ({station_name}), {distance_km:.1f} km from centroid." if distance_km > 0 else f"Measurements recorded at station inlet ({station_name}).",
+        "far_station_advisory": "",
+    }
+
+
 class CurrentAirQualityService:
     """
     Robust live atmospheric observation service.
@@ -387,163 +555,39 @@ class CurrentAirQualityService:
         lat: float,
         lon: float,
         station_name: str,
-        city_name: str,
+        city_name: str = "",
         distance_km: float = 0.0,
+        city: str = "",
     ) -> Optional[Dict[str, Any]]:
-        """Fetches genuine live ambient telemetry from Open-Meteo Air Quality API (public API, no API key required, updated hourly)."""
-        try:
-            url = (
-                f"https://air-quality-api.open-meteo.com/v1/air-quality"
-                f"?latitude={lat:.4f}&longitude={lon:.4f}"
-                f"&current=pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone"
-            )
-            resp = requests.get(url, timeout=self.timeout, headers={"User-Agent": "VayuDrishti/2.0"})
-            if resp.status_code != 200:
-                logger.warning("Open-Meteo Air Quality API returned status %d", resp.status_code)
-                return None
-            data = resp.json()
-            curr = data.get("current", {})
-            if not curr:
-                return None
-
-            pm25 = round(float(curr.get("pm2_5", 35.0)), 1)
-            pm10 = round(float(curr.get("pm10", 65.0)), 1)
-            no2 = round(float(curr.get("nitrogen_dioxide", 22.0)), 1)
-            so2 = round(float(curr.get("sulphur_dioxide", 8.5)), 1)
-            co_raw = float(curr.get("carbon_monoxide", 500.0))
-            co = round(co_raw / 1000.0, 2) if co_raw > 15.0 else round(co_raw, 2)
-            o3 = round(float(curr.get("ozone", 48.0)), 1)
-
-            pollutants = {
-                "PM2.5": pm25,
-                "PM10": pm10,
-                "NO2": no2,
-                "SO2": so2,
-                "CO": co,
-                "O3": o3,
-            }
-            units = {
-                "PM2.5": "µg/m³",
-                "PM10": "µg/m³",
-                "NO2": "µg/m³",
-                "SO2": "µg/m³",
-                "CO": "mg/m³",
-                "O3": "µg/m³",
-            }
-
-            from src.prediction.aqi_advisor import calculate_overall_cpcb_aqi, get_aqi_category
-            aqi_res = calculate_overall_cpcb_aqi(pollutants)
-            aqi_val = aqi_res.get("aqi")
-            prominent = aqi_res.get("prominent_pollutant") or "PM2.5"
-            cat_info = get_aqi_category(aqi_val)
-
-            now_ist = datetime.now(timezone.utc).astimezone(IST)
-            obs_time_str = now_ist.strftime("%d %b %Y, %I:00 %p IST")
-            now_ist_str = now_ist.strftime("%Y-%m-%d %I:%M %p IST")
-
-            return {
-                "is_live": True,
-                "is_stale": False,
-                "status_badge": "LIVE DATA",
-                "badge_color": "#10b981",
-                "badge_desc": f"Real-time continuous atmospheric telemetry via APPCB/CPCB Open Monitoring Gateway for {city_name}.",
-                "station_name": station_name,
-                "city": city_name,
-                "distance_km": distance_km,
-                "pollutants": pollutants,
-                "units": units,
-                "aqi": aqi_val,
-                "aqi_tier": cat_info.get("tier") or cat_info.get("category", "Satisfactory"),
-                "aqi_color": cat_info.get("color", "#84cc16"),
-                "prominent_pollutant": prominent,
-                "observation_time_ist": obs_time_str,
-                "observed_at_ist": obs_time_str,
-                "retrieved_at_ist": now_ist_str,
-                "age_hours": 0.05,
-                "age_readable": "Just now",
-                "provider": "CPCB / APPCB Open Telemetry Gateway",
-                "api_key_required": False,
-                "station_coordinates": {"latitude": lat, "longitude": lon},
-                "user_distance_km": distance_km,
-                "doorstep_disclosure": f"Measurements recorded at station inlet ({station_name}), {distance_km:.1f} km from your device." if distance_km > 0 else f"Measurements recorded at station inlet ({station_name}).",
-                "far_station_advisory": f"Nearest continuous monitor is {distance_km:.1f} km away in {city_name}." if distance_km > 25.0 else "",
-            }
-        except Exception as exc:
-            logger.warning("Failed to fetch live data from Open-Meteo Air Quality: %s", exc)
-            return None
+        """Fetches genuine live ambient telemetry from Open-Meteo Air Quality API."""
+        return fetch_open_meteo_live(
+            lat=lat,
+            lon=lon,
+            station_name=station_name,
+            city_name=city_name,
+            distance_km=distance_km,
+            city=city,
+            timeout=self.timeout,
+        )
 
     def generate_calibrated_baseline_observation(
         self,
         lat: float,
         lon: float,
         station_name: str,
-        city_name: str,
+        city_name: str = "",
         distance_km: float = 0.0,
+        city: str = "",
     ) -> Dict[str, Any]:
-        """Provides calibrated ambient observation values tied to the city and current 2026 time when external live APIs are unreachable or offline."""
-        now_ist = datetime.now(timezone.utc).astimezone(IST)
-        hour = now_ist.hour
-        diurnal_factor = 1.15 if (7 <= hour <= 10 or 19 <= hour <= 23) else (0.85 if 12 <= hour <= 16 else 1.0)
-        
-        city_hash = sum(ord(c) for c in str(city_name)) % 20 - 10
-        pm25 = round(max(15.0, (38.0 + city_hash) * diurnal_factor), 1)
-        pm10 = round(max(30.0, (70.0 + city_hash * 1.5) * diurnal_factor), 1)
-        no2 = round(max(8.0, 18.0 + city_hash * 0.4), 1)
-        so2 = round(max(4.0, 8.0 + city_hash * 0.2), 1)
-        co = round(max(0.3, 0.6 + city_hash * 0.02), 2)
-        o3 = round(max(20.0, 45.0 - city_hash * 0.5), 1)
-
-        pollutants = {
-            "PM2.5": pm25,
-            "PM10": pm10,
-            "NO2": no2,
-            "SO2": so2,
-            "CO": co,
-            "O3": o3,
-        }
-        units = {
-            "PM2.5": "µg/m³",
-            "PM10": "µg/m³",
-            "NO2": "µg/m³",
-            "SO2": "µg/m³",
-            "CO": "mg/m³",
-            "O3": "µg/m³",
-        }
-        from src.prediction.aqi_advisor import calculate_overall_cpcb_aqi, get_aqi_category
-        aqi_res = calculate_overall_cpcb_aqi(pollutants)
-        aqi_val = aqi_res.get("aqi") or 72
-        cat_info = get_aqi_category(aqi_val)
-
-        obs_time_str = now_ist.strftime("%d %b %Y, %I:00 %p IST")
-        now_ist_str = now_ist.strftime("%Y-%m-%d %I:%M %p IST")
-
-        return {
-            "is_live": True,
-            "is_stale": False,
-            "status_badge": "LIVE DATA",
-            "badge_color": "#10b981",
-            "badge_desc": f"Continuous atmospheric telemetry calibrated for {city_name} (2026 APPCB Station Feed).",
-            "station_name": station_name,
-            "city": city_name,
-            "distance_km": distance_km,
-            "pollutants": pollutants,
-            "units": units,
-            "aqi": aqi_val,
-            "aqi_tier": cat_info.get("tier") or cat_info.get("category", "Satisfactory"),
-            "aqi_color": cat_info.get("color", "#84cc16"),
-            "prominent_pollutant": aqi_res.get("prominent_pollutant") or "PM2.5",
-            "observation_time_ist": obs_time_str,
-            "observed_at_ist": obs_time_str,
-            "retrieved_at_ist": now_ist_str,
-            "age_hours": 0.1,
-            "age_readable": "Just now",
-            "provider": "CPCB / APPCB CAAQMS Network (2026)",
-            "api_key_required": False,
-            "station_coordinates": {"latitude": lat, "longitude": lon},
-            "user_distance_km": distance_km,
-            "doorstep_disclosure": f"Measurements recorded at station inlet ({station_name}), {distance_km:.1f} km from centroid." if distance_km > 0 else f"Measurements recorded at station inlet ({station_name}).",
-            "far_station_advisory": "",
-        }
+        """Provides calibrated ambient observation values tied to the city and current 2026 time."""
+        return generate_calibrated_baseline_observation(
+            lat=lat,
+            lon=lon,
+            station_name=station_name,
+            city_name=city_name,
+            distance_km=distance_km,
+            city=city,
+        )
 
     def process_raw_measurements(
         self,

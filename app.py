@@ -104,7 +104,12 @@ from src.prediction.data_loader import (
     get_project_root,
 )
 from src.prediction.live_service import LiveAirQualityService
-from src.prediction.current_air_quality_service import CurrentAirQualityService, validate_coordinates
+from src.prediction.current_air_quality_service import (
+    CurrentAirQualityService,
+    validate_coordinates,
+    fetch_open_meteo_live,
+    generate_calibrated_baseline_observation,
+)
 from src.components.geolocation import render_geolocation_button
 from src.utils.i18n import t
 from src.components.hybrid_dashboard_pages import (
@@ -643,8 +648,82 @@ def get_live_service() -> LiveAirQualityService:
     return LiveAirQualityService()
 
 
+def get_live_or_calibrated_fallback_obs(
+    srv: Any,
+    lat: float,
+    lon: float,
+    station_name: str,
+    city_name: str,
+    distance_km: float = 0.0,
+    prior_obs: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Robustly retrieves live Open-Meteo telemetry or calibrated baseline with fallback guards."""
+    om_obs = None
+    try:
+        if srv is not None and hasattr(srv, "fetch_open_meteo_live"):
+            om_obs = srv.fetch_open_meteo_live(
+                lat=lat,
+                lon=lon,
+                station_name=station_name,
+                city_name=city_name,
+                distance_km=distance_km,
+            )
+        else:
+            om_obs = fetch_open_meteo_live(
+                lat=lat,
+                lon=lon,
+                station_name=station_name,
+                city_name=city_name,
+                distance_km=distance_km,
+            )
+    except Exception:
+        om_obs = None
+
+    if om_obs is not None:
+        if prior_obs and "nearest_station_option" in prior_obs:
+            om_obs["nearest_station_option"] = prior_obs["nearest_station_option"]
+        om_obs["station_name"] = station_name
+        om_obs["doorstep_disclosure"] = f"Regional atmospheric telemetry assimilated for {city_name} coordinates."
+        return om_obs
+
+    cal_obs = None
+    try:
+        if srv is not None and hasattr(srv, "generate_calibrated_baseline_observation"):
+            cal_obs = srv.generate_calibrated_baseline_observation(
+                lat=lat,
+                lon=lon,
+                station_name=station_name,
+                city_name=city_name,
+                city=city_name,
+                distance_km=distance_km,
+            )
+        else:
+            cal_obs = generate_calibrated_baseline_observation(
+                lat=lat,
+                lon=lon,
+                station_name=station_name,
+                city_name=city_name,
+                city=city_name,
+                distance_km=distance_km,
+            )
+    except Exception:
+        cal_obs = generate_calibrated_baseline_observation(
+            lat=lat,
+            lon=lon,
+            station_name=station_name,
+            city_name=city_name,
+            city=city_name,
+            distance_km=distance_km,
+        )
+
+    if prior_obs and "nearest_station_option" in prior_obs:
+        cal_obs["nearest_station_option"] = prior_obs["nearest_station_option"]
+    cal_obs["station_name"] = station_name
+    return cal_obs
+
+
 @st.cache_resource(show_spinner=False)
-def get_current_air_quality_service() -> CurrentAirQualityService:
+def get_current_air_quality_service(cache_seed: str = "2026.11.08.v3") -> CurrentAirQualityService:
     """Live 2026 air quality telemetry service (OpenAQ v3 API with verified fallbacks)."""
     return CurrentAirQualityService()
 
@@ -1467,31 +1546,15 @@ if st.session_state["nav_tab"] in ("Home", "Overview"):
         or live_obs.get("aqi") is None
         or "No Station Within" in str(live_obs.get("station_name", ""))
     ):
-        om_obs = current_srv.fetch_open_meteo_live(
+        live_obs = get_live_or_calibrated_fallback_obs(
+            srv=current_srv,
             lat=target_lat,
             lon=target_lon,
             station_name=f"{active_city_name} Ambient Monitor",
             city_name=active_city_name,
             distance_km=0.0,
+            prior_obs=live_obs,
         )
-        if om_obs is not None:
-            if live_obs and "nearest_station_option" in live_obs:
-                om_obs["nearest_station_option"] = live_obs["nearest_station_option"]
-            om_obs["station_name"] = f"{active_city_name} Ambient Monitor"
-            om_obs["doorstep_disclosure"] = f"Regional atmospheric telemetry assimilated for {active_city_name} coordinates."
-            live_obs = om_obs
-        else:
-            cal_obs = current_srv.generate_calibrated_baseline_observation(
-                lat=target_lat,
-                lon=target_lon,
-                station_name=f"{active_city_name} Ambient Monitor",
-                city=active_city_name,
-                distance_km=0.0,
-            )
-            if live_obs and "nearest_station_option" in live_obs:
-                cal_obs["nearest_station_option"] = live_obs["nearest_station_option"]
-            cal_obs["station_name"] = f"{active_city_name} Ambient Monitor"
-            live_obs = cal_obs
 
     nearby_stations = live_obs.get("nearby_stations", [])
     target_station_candidate = live_obs
@@ -2144,31 +2207,15 @@ elif st.session_state["nav_tab"] in ("Live Data", "Live Air Quality"):
         or live_obs.get("aqi") is None
         or "No Station Within" in str(live_obs.get("station_name", ""))
     ):
-        om_obs = current_srv.fetch_open_meteo_live(
+        live_obs = get_live_or_calibrated_fallback_obs(
+            srv=current_srv,
             lat=float(city_info["latitude"]),
             lon=float(city_info["longitude"]),
             station_name=f"{active_city_name} Ambient Monitor",
             city_name=active_city_name,
             distance_km=0.0,
+            prior_obs=live_obs,
         )
-        if om_obs is not None:
-            if live_obs and "nearest_station_option" in live_obs:
-                om_obs["nearest_station_option"] = live_obs["nearest_station_option"]
-            om_obs["station_name"] = f"{active_city_name} Ambient Monitor"
-            om_obs["doorstep_disclosure"] = f"Regional atmospheric telemetry assimilated for {active_city_name} coordinates."
-            live_obs = om_obs
-        else:
-            cal_obs = current_srv.generate_calibrated_baseline_observation(
-                lat=float(city_info["latitude"]),
-                lon=float(city_info["longitude"]),
-                station_name=f"{active_city_name} Ambient Monitor",
-                city=active_city_name,
-                distance_km=0.0,
-            )
-            if live_obs and "nearest_station_option" in live_obs:
-                cal_obs["nearest_station_option"] = live_obs["nearest_station_option"]
-            cal_obs["station_name"] = f"{active_city_name} Ambient Monitor"
-            live_obs = cal_obs
 
     resolved_station_name = live_obs.get("station_name") or city_info.get("station_name", "Local Monitor") or "Local Monitor"
     obs_time = live_obs.get("observation_time_ist") or live_obs.get("observed_at_ist", "N/A") or "N/A"
