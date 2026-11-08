@@ -1388,13 +1388,18 @@ if st.session_state["nav_tab"] in ("Home", "Overview"):
 
     # Station resolution & telemetry fetch
     user_chosen_id = st.session_state.get("selected_station_candidate_id")
+    user_geo_active = bool(st.session_state.get("user_geo_active") and "user_lat" in st.session_state)
 
-    if st.session_state.get("user_geo_active") and "user_lat" in st.session_state:
+    if user_geo_active:
         u_lat = float(st.session_state["user_lat"])
         u_lon = float(st.session_state["user_lon"])
+        target_lat = u_lat
+        target_lon = u_lon
         active_city_name = st.session_state.get("selected_city", "Amaravati")
         city_match = catalog_df[catalog_df["city"].str.lower() == active_city_name.lower()]
         city_info = city_match.iloc[0] if not city_match.empty else catalog_df.iloc[0]
+        c_lat = float(city_info["latitude"])
+        c_lon = float(city_info["longitude"])
         if force_refresh:
             get_cached_best_nearby_observation.clear()
             try:
@@ -1427,6 +1432,10 @@ if st.session_state["nav_tab"] in ("Home", "Overview"):
         city_info = city_match.iloc[0]
         c_lat = float(city_info["latitude"])
         c_lon = float(city_info["longitude"])
+        target_lat = c_lat
+        target_lon = c_lon
+        u_lat = c_lat
+        u_lon = c_lon
         if force_refresh:
             get_cached_best_nearby_observation.clear()
             try:
@@ -1458,8 +1467,6 @@ if st.session_state["nav_tab"] in ("Home", "Overview"):
         or live_obs.get("aqi") is None
         or "No Station Within" in str(live_obs.get("station_name", ""))
     ):
-        target_lat = u_lat if user_geo_active else c_lat
-        target_lon = u_lon if user_geo_active else c_lon
         om_obs = current_srv.fetch_open_meteo_live(
             lat=target_lat,
             lon=target_lon,
