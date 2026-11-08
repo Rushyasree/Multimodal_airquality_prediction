@@ -17,7 +17,7 @@ backup/
 
 # Raw and heavy datasets (> 100MB / non-runtime)
 data/raw/
-data/processed/model_sequences/
+data/processed/model_sequences/*.npy
 data/processed/sequences/
 data/processed/air_quality_hourly_clean.csv
 data/processed/air_quality_weather_merged.csv

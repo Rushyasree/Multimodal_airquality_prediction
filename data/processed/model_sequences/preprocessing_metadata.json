@@ -1,0 +1,168 @@
+{
+  "window_size_hours": 24,
+  "forecast_horizon_hours": 1,
+  "feature_names": [
+    "PM2.5",
+    "PM10",
+    "NO",
+    "NO2",
+    "NOx",
+    "NH3",
+    "CO",
+    "SO2",
+    "O3",
+    "Benzene",
+    "Toluene",
+    "Xylene",
+    "temperature_C",
+    "dewpoint_C",
+    "relative_humidity",
+    "wind_speed",
+    "precipitation_mm",
+    "wind_direction_sin",
+    "wind_direction_cos",
+    "hour_sin",
+    "hour_cos",
+    "month_sin",
+    "month_cos",
+    "day_of_week_sin",
+    "day_of_week_cos",
+    "Latitude",
+    "Longitude"
+  ],
+  "target_names": [
+    "PM2.5",
+    "PM10"
+  ],
+  "split_counts": {
+    "train": 336641,
+    "validation": 326423,
+    "test": 404431
+  },
+  "array_shapes": {
+    "train": {
+      "X_shape": [
+        336641,
+        24,
+        27
+      ],
+      "y_shape": [
+        336641,
+        2
+      ]
+    },
+    "validation": {
+      "X_shape": [
+        326423,
+        24,
+        27
+      ],
+      "y_shape": [
+        326423,
+        2
+      ]
+    },
+    "test": {
+      "X_shape": [
+        404431,
+        24,
+        27
+      ],
+      "y_shape": [
+        404431,
+        2
+      ]
+    }
+  },
+  "training_preprocessing_cutoff": "2018-11-06 14:00:00",
+  "imputation_medians": {
+    "PM2.5": 56.0,
+    "PM10": 134.335,
+    "NO": 7.99,
+    "NO2": 28.64,
+    "NOx": 30.64,
+    "NH3": 23.74,
+    "CO": 0.9,
+    "SO2": 9.4,
+    "O3": 28.17,
+    "Benzene": 0.85,
+    "Toluene": 4.4,
+    "Xylene": 0.3,
+    "temperature_C": 26.4122925,
+    "dewpoint_C": 17.8596805,
+    "relative_humidity": 65.60590350000001,
+    "wind_speed": 2.377992,
+    "precipitation_mm": 0.0,
+    "wind_direction_sin": -0.3500058184920891,
+    "wind_direction_cos": 0.1634175490391227,
+    "hour_sin": 0.0,
+    "hour_cos": -1.8369701987210292e-16,
+    "month_sin": -2.4492935982947064e-16,
+    "month_cos": -1.8369701987210292e-16,
+    "day_of_week_sin": 0.0,
+    "day_of_week_cos": -0.22252093395631434,
+    "Latitude": 28.563262,
+    "Longitude": 77.2011573
+  },
+  "scaler_means": {
+    "PM2.5": 81.64293031177533,
+    "PM10": 178.6898032176665,
+    "NO": 24.953721902345386,
+    "NO2": 40.17551994311925,
+    "NOx": 50.10886038654751,
+    "NH3": 28.85813838661259,
+    "CO": 1.203291741601491,
+    "SO2": 12.413478997337203,
+    "O3": 46.57977184960059,
+    "Benzene": 2.6076836193636237,
+    "Toluene": 13.456065445403294,
+    "Xylene": 1.0853726526230678,
+    "temperature_C": 25.904274265448194,
+    "dewpoint_C": 16.872931702363527,
+    "relative_humidity": 62.671974140686935,
+    "wind_speed": 2.5593653579421627,
+    "precipitation_mm": 0.10016659816810496,
+    "wind_direction_sin": -0.10911232857102655,
+    "wind_direction_cos": 0.10874821476352517,
+    "hour_sin": -0.00785153171225401,
+    "hour_cos": -0.0017670368670662025,
+    "month_sin": -0.09063851691313964,
+    "month_cos": -0.0934703031431646,
+    "day_of_week_sin": 0.004736097500796027,
+    "day_of_week_cos": -0.003972031464375307,
+    "Latitude": 25.166001115797645,
+    "Longitude": 77.67901158747483
+  },
+  "scaler_stds": {
+    "PM2.5": 82.58622829979058,
+    "PM10": 150.97453348335367,
+    "NO": 51.67947177859957,
+    "NO2": 38.72429180732731,
+    "NOx": 64.66488761777504,
+    "NH3": 23.15784461113146,
+    "CO": 1.5594029105188802,
+    "SO2": 12.108480735318905,
+    "O3": 66.17042451616243,
+    "Benzene": 6.298209613720326,
+    "Toluene": 30.882154641582172,
+    "Xylene": 5.988864691081628,
+    "temperature_C": 6.465243161273609,
+    "dewpoint_C": 6.634965447964508,
+    "relative_humidity": 22.640582068604473,
+    "wind_speed": 1.3007214396165863,
+    "precipitation_mm": 0.4317204533220433,
+    "wind_direction_sin": 0.7753568297091309,
+    "wind_direction_cos": 0.6124460075492043,
+    "hour_sin": 0.7069973106849121,
+    "hour_cos": 0.7071704417711361,
+    "month_sin": 0.7321953700685246,
+    "month_cos": 0.6685341440288053,
+    "day_of_week_sin": 0.7062284707085997,
+    "day_of_week_cos": 0.7079570181212287,
+    "Latitude": 5.672415653382151,
+    "Longitude": 1.960692700873212
+  },
+  "coordinate_source": "data\\processed\\station_coordinates_90.csv",
+  "data_source": "data\\processed\\air_quality_weather_merged.csv",
+  "sequence_index_source": "data\\processed\\sequences\\air_quality_24h_sequence_index.csv"
+}
