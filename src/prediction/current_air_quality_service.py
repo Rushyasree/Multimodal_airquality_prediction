@@ -200,12 +200,13 @@ def fetch_open_meteo_live(
         now_ist_str = now_ist.strftime("%Y-%m-%d %I:%M %p IST")
 
         return {
-            "is_live": True,
+            "is_live": False,
+            "is_modeled": True,
             "is_stale": False,
-            "status_badge": "LIVE DATA",
-            "badge_color": "#10b981",
-            "badge_desc": f"Real-time continuous atmospheric telemetry via APPCB/CPCB Open Monitoring Gateway for {resolved_city}.",
-            "station_name": station_name,
+            "status_badge": "REGIONAL REANALYSIS",
+            "badge_color": "#0284c7",
+            "badge_desc": f"Hourly regional atmospheric model reanalysis (Open-Meteo European CAMS / ECMWF reanalysis for {resolved_city} coordinates). Modeled regional estimate, not a direct physical station monitor inlet.",
+            "station_name": f"{resolved_city} Regional Atmospheric Monitor",
             "city": resolved_city,
             "distance_km": distance_km,
             "pollutants": pollutants,
@@ -219,12 +220,13 @@ def fetch_open_meteo_live(
             "retrieved_at_ist": now_ist_str,
             "age_hours": 0.05,
             "age_readable": "Just now",
-            "provider": "CPCB / APPCB Open Telemetry Gateway",
+            "provider": "Open-Meteo / ECMWF Atmospheric Reanalysis",
+            "data_provenance": "Regional Atmospheric Model Reanalysis (Open-Meteo API)",
             "api_key_required": False,
             "station_coordinates": {"latitude": lat, "longitude": lon},
             "user_distance_km": distance_km,
-            "doorstep_disclosure": f"Measurements recorded at station inlet ({station_name}), {distance_km:.1f} km from your device." if distance_km > 0 else f"Measurements recorded at station inlet ({station_name}).",
-            "far_station_advisory": f"Nearest continuous monitor is {distance_km:.1f} km away in {resolved_city}." if distance_km > 25.0 else "",
+            "doorstep_disclosure": f"Regional atmospheric model reanalysis for {resolved_city} coordinates ({distance_km:.1f} km from user location)." if distance_km > 0 else f"Regional atmospheric model reanalysis for {resolved_city} coordinates.",
+            "far_station_advisory": f"Modeled regional reanalysis assimilated for {resolved_city}." if distance_km > 25.0 else "",
         }
     except Exception as exc:
         logger.warning("Failed to fetch live data from Open-Meteo Air Quality: %s", exc)
@@ -278,12 +280,13 @@ def generate_calibrated_baseline_observation(
     now_ist_str = now_ist.strftime("%Y-%m-%d %I:%M %p IST")
 
     return {
-        "is_live": True,
+        "is_live": False,
+        "is_modeled": True,
         "is_stale": False,
-        "status_badge": "LIVE DATA",
-        "badge_color": "#10b981",
-        "badge_desc": f"Continuous atmospheric telemetry calibrated for {resolved_city} (2026 APPCB Station Feed).",
-        "station_name": station_name,
+        "status_badge": "MODELED BASELINE",
+        "badge_color": "#64748b",
+        "badge_desc": f"Calibrated climatological atmospheric baseline for {resolved_city} (offline diagnostic mode). Not a direct physical station measurement.",
+        "station_name": f"{resolved_city} Climatological Baseline",
         "city": resolved_city,
         "distance_km": distance_km,
         "pollutants": pollutants,
@@ -292,17 +295,18 @@ def generate_calibrated_baseline_observation(
         "aqi_tier": cat_info.get("tier") or cat_info.get("category", "Satisfactory"),
         "aqi_color": cat_info.get("color", "#84cc16"),
         "prominent_pollutant": aqi_res.get("prominent_pollutant") or "PM2.5",
-        "observation_time_ist": obs_time_str,
-        "observed_at_ist": obs_time_str,
+        "observation_time_ist": "N/A (Climatological Model)",
+        "observed_at_ist": "N/A (Climatological Model)",
         "retrieved_at_ist": now_ist_str,
         "age_hours": 0.1,
-        "age_readable": "Just now",
-        "provider": "CPCB / APPCB CAAQMS Network (2026)",
+        "age_readable": "Modeled",
+        "provider": "VayuDrishti Climatological Baseline Engine",
+        "data_provenance": "Calibrated Climatological Estimate (Offline Mode)",
         "api_key_required": False,
         "station_coordinates": {"latitude": lat, "longitude": lon},
         "user_distance_km": distance_km,
-        "doorstep_disclosure": f"Measurements recorded at station inlet ({station_name}), {distance_km:.1f} km from centroid." if distance_km > 0 else f"Measurements recorded at station inlet ({station_name}).",
-        "far_station_advisory": "",
+        "doorstep_disclosure": f"Offline climatological reference calculated for {resolved_city} centroid.",
+        "far_station_advisory": "No active physical station reported within 50 km; displaying calibrated baseline.",
     }
 
 

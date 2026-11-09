@@ -20,6 +20,7 @@ from src.services.live_air_quality_service import LiveAirQualityService
 from src.services.sensor_forecast_service import SensorForecastService
 from src.services.image_estimation_service import ImageEstimationService
 from src.services.hybrid_prediction_service import HybridPredictionService
+from src.prediction.data_loader import get_verified_24h_sequence_for_station
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 
@@ -42,11 +43,19 @@ class ModelComparisonService:
     ) -> Dict[str, Any]:
         """Runs and aggregates all prediction methods and live observations side-by-side."""
 
+        # 0. Synchronize identical antecedent 24h sequence across all forecasting models
+        if df_24h is None:
+            df_to_use, seq_provenance, is_synth = get_verified_24h_sequence_for_station(station_id)
+        else:
+            df_to_use = df_24h
+            seq_provenance = f"Supplied 24h Telemetry for {station_id}"
+            is_synth = False
+
         # 1. Live observation
         live_res = self.live_service.get_live_observation(station_id=station_id, city=city)
 
-        # 2. Sensor-only LSTM
-        sensor_res = self.sensor_service.get_forecast(station_id=station_id, df_24h=df_24h)
+        # 2. Sensor-only LSTM (evaluated on synchronized df_to_use)
+        sensor_res = self.sensor_service.get_forecast(station_id=station_id, df_24h=df_to_use)
 
         # 3. Image-only ResNet-50
         if image_input is not None:
@@ -65,7 +74,7 @@ class ModelComparisonService:
                     "pm10": None,
                     "unit": "ug/m3",
                     "timestamp_precision": "Calendar Date Only (Sub-daily EXIF hours absent in PM25Vision)",
-                    "status": "Simulated Sample",
+                    "status": "Curated Sample",
                     "metrics": {"pm25_mae": 60.99, "pm25_rmse": 88.20, "pm25_r2": -0.2023},
                 }
 
@@ -75,10 +84,10 @@ class ModelComparisonService:
         hum = weather_dict.get("humidity", 65.0)
         wind = weather_dict.get("wind_speed", 2.8)
 
-        # 5. Unified Hybrid Model
+        # 5. Unified Hybrid Model (evaluated on the EXACT SAME df_to_use and image_input)
         hybrid_res = self.hybrid_service.predict_hybrid(
             station_id=station_id,
-            df_24h=df_24h,
+            df_24h=df_to_use,
             image_input=image_input,
         )
 
@@ -161,6 +170,9 @@ class ModelComparisonService:
             "sensor_forecast": sensor_res,
             "image_estimate": image_res,
             "hybrid_prediction": hybrid_res,
+            "sequence_provenance": seq_provenance,
+            "is_synthetic_input": is_synth,
+            "synchronization_status": "Strictly Synchronized (Identical 24h Sequence)",
             "weather_context": {
                 "temperature": temp,
                 "humidity": hum,

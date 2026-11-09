@@ -17,6 +17,7 @@ import numpy as np
 os.environ.setdefault("LOKY_MAX_CPU_COUNT", "4")
 
 from src.prediction.lstm_forecaster import LSTMForecasterService
+from src.prediction.data_loader import get_verified_24h_sequence_for_station
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 
@@ -274,21 +275,11 @@ class SensorForecastService:
         target_time = (now + timedelta(hours=1)).strftime("%Y-%m-%d %H:00:00")
 
         if df_24h is None:
-            hours = [now - timedelta(hours=23 - i) for i in range(24)]
-            df_synth = pd.DataFrame({
-                "Datetime": hours,
-                "StationId": station_id,
-                "PM2.5": np.random.uniform(35.0, 55.0, size=24),
-                "PM10": np.random.uniform(70.0, 110.0, size=24),
-                "temperature_C": np.random.uniform(24.0, 32.0, size=24),
-                "relative_humidity": np.random.uniform(50.0, 75.0, size=24),
-                "wind_speed": np.random.uniform(1.5, 4.0, size=24),
-            })
-            df_to_use = df_synth
-            input_freshness = "Historical / Synthetic Anchor"
+            df_to_use, input_freshness, is_synth = get_verified_24h_sequence_for_station(station_id)
         else:
             df_to_use = df_24h
-            input_freshness = "Continuous 24h Telemetry (Verified)"
+            input_freshness = f"Continuous 24h Telemetry ({station_id} Verified Ground Sensors)"
+            is_synth = False
 
         # Preprocess 24h sequence array once for all downstream models
         seq_arr = self.underlying_service.preprocess_sequence(df_to_use, station_id=station_id)

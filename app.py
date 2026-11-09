@@ -1581,15 +1581,22 @@ if st.session_state["nav_tab"] in ("Home", "Overview"):
 
     aqi_num = live_obs.get("aqi")
     if aqi_num is None:
-        aqi_num = live_obs.get("historical_aqi", 82)
-    if aqi_num is None or (isinstance(aqi_num, float) and np.isnan(aqi_num)):
-        aqi_num = 82
-    aqi_num = int(round(float(aqi_num)))
+        aqi_num = live_obs.get("historical_aqi")
+    if aqi_num is None and polls:
+        from src.prediction.aqi_advisor import calculate_overall_cpcb_aqi
+        calc_res = calculate_overall_cpcb_aqi(polls)
+        aqi_num = calc_res.get("aqi")
 
-    aqi_tier = live_obs.get("aqi_tier", "Satisfactory")
-    if aqi_tier in ("Unavailable", "Insufficient Pollutants", "Unknown"):
-        aqi_tier = "Satisfactory"
-    aqi_color = live_obs.get("aqi_color", "#84cc16")
+    if aqi_num is not None and not (isinstance(aqi_num, float) and np.isnan(aqi_num)):
+        aqi_num = int(round(float(aqi_num)))
+        from src.prediction.aqi_advisor import get_aqi_category
+        cat_info = get_aqi_category(aqi_num)
+        aqi_tier = cat_info.get("tier") or cat_info.get("category", "Satisfactory")
+        aqi_color = cat_info.get("color", "#84cc16")
+    else:
+        aqi_num = None
+        aqi_tier = "Unavailable"
+        aqi_color = "#94a3b8"
 
     now_ist = datetime.now(ZoneInfo("Asia/Kolkata"))
     greeting_text = get_time_based_greeting(now_ist)
@@ -1599,7 +1606,12 @@ if st.session_state["nav_tab"] in ("Home", "Overview"):
     dom_poll = live_obs.get("prominent_pollutant") or "PM2.5"
     obs_time = live_obs.get("observation_time_ist") or live_obs.get("observed_at_ist")
     if not obs_time or obs_time in ("N/A", "Calibrated CPCB Archive", "Historical Archive"):
-        obs_time = now_ist.strftime("%d %b %Y, %I:%M %p IST")
+        if live_obs.get("status_badge") == "REGIONAL REANALYSIS":
+            obs_time = "Hourly Regional Reanalysis"
+        elif live_obs.get("status_badge") == "MODELED BASELINE":
+            obs_time = "N/A (Climatological Model)"
+        else:
+            obs_time = "Pending Station Feed" 
     provider_str = live_obs.get("provider", "OpenAQ")
     if "OpenAQ" in provider_str:
         provider_str = "OpenAQ"
@@ -1723,6 +1735,18 @@ if st.session_state["nav_tab"] in ("Home", "Overview"):
         cur_idx = city_list.index(active_city_name) if active_city_name in city_list else 0
         st.selectbox("📍 Select City:", city_list, index=cur_idx, key="home_top_city_sel", on_change=on_home_top_city_change)
     with c_sel2:
+        status_badge_val = live_obs.get("status_badge", "LIVE DATA")
+        if is_live_data:
+            telemetry_badge_html = f'<span style="background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.72rem; font-weight: 700; padding: 0.18rem 0.55rem; border-radius: 4px; border: 1px solid rgba(16, 185, 129, 0.3);">🟢 {status_badge_val}</span>'
+        elif status_badge_val == "REGIONAL REANALYSIS":
+            telemetry_badge_html = '<span style="background: rgba(2, 132, 199, 0.15); color: #38bdf8; font-size: 0.72rem; font-weight: 700; padding: 0.18rem 0.55rem; border-radius: 4px; border: 1px solid rgba(2, 132, 199, 0.3);">🌐 Regional Reanalysis</span>'
+        elif status_badge_val == "MODELED BASELINE":
+            telemetry_badge_html = '<span style="background: rgba(100, 116, 139, 0.15); color: #94a3b8; font-size: 0.72rem; font-weight: 700; padding: 0.18rem 0.55rem; border-radius: 4px; border: 1px solid rgba(100, 116, 139, 0.3);">📊 Climatological Baseline</span>'
+        elif is_historical:
+            telemetry_badge_html = '<span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 0.72rem; font-weight: 700; padding: 0.18rem 0.55rem; border-radius: 4px; border: 1px solid rgba(56, 189, 248, 0.3);">🏛️ Historical Archive</span>'
+        else:
+            telemetry_badge_html = f'<span style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; font-size: 0.72rem; font-weight: 700; padding: 0.18rem 0.55rem; border-radius: 4px; border: 1px solid rgba(245, 158, 11, 0.3);">⚠️ {status_badge_val}</span>'
+    
         render_html(
             f"""
             <div style="background: #111827; border: 1px solid #1F293D; border-radius: 10px; padding: 0.65rem 1rem; margin-top: 1.6rem; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
@@ -1731,7 +1755,7 @@ if st.session_state["nav_tab"] in ("Home", "Overview"):
                     &nbsp;•&nbsp; <span style="color: #94A3B8;">{active_city_name}, AP</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <span style="background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.72rem; font-weight: 700; padding: 0.18rem 0.55rem; border-radius: 4px; border: 1px solid rgba(16, 185, 129, 0.3);">🟢 Live Telemetry</span>
+                    {telemetry_badge_html}
                 </div>
             </div>
             """
@@ -2278,12 +2302,14 @@ elif st.session_state["nav_tab"] in ("Live Data", "Live Air Quality"):
         aqi_val = live_obs.get("aqi")
         if aqi_val is None:
             aqi_val = live_obs.get("historical_aqi")
-        if aqi_val is None or (isinstance(aqi_val, float) and np.isnan(aqi_val)):
-            aqi_val = 82
+        if aqi_val is None and polls:
+            from src.prediction.aqi_advisor import calculate_overall_cpcb_aqi
+            calc_res = calculate_overall_cpcb_aqi(polls)
+            aqi_val = calc_res.get("aqi")
         try:
-            aqi_val = int(round(float(aqi_val)))
+            aqi_val = int(round(float(aqi_val))) if aqi_val is not None and not (isinstance(aqi_val, float) and np.isnan(aqi_val)) else None
         except (ValueError, TypeError):
-            aqi_val = 82
+            aqi_val = None
 
         aqi_tier = live_obs.get("aqi_tier") or "Satisfactory"
         if aqi_tier in ("Unavailable", "Insufficient Pollutants", "Unknown"):

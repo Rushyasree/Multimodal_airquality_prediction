@@ -120,6 +120,23 @@ def render_unified_hybrid_page():
             image_input=selected_image,
         )
 
+        # Antecedent Sequence Provenance Banner
+        seq_prov = res.get("sequence_provenance", "Continuous 24h Telemetry")
+        is_synth = res.get("is_synthetic_input", False)
+        prov_badge_color = "#f59e0b" if is_synth else "#38bdf8"
+        prov_icon = "⚠️" if is_synth else "📊"
+        render_html(
+            f"""
+            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid #1F293D; border-radius: 8px; padding: 0.5rem 0.8rem; margin-bottom: 0.85rem; font-size: 0.80rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                <div>
+                    <span style="color: #94A3B8;">Antecedent Telemetry Input:</span>
+                    <strong style="color: {prov_badge_color}; margin-left: 0.35rem;">{prov_icon} {seq_prov}</strong>
+                </div>
+                <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 0.70rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 4px;">Synchronized 24h Window</span>
+            </div>
+            """
+        )
+
         # Prediction Metric Cards
         c_pm25, c_pm10, c_alpha = st.columns(3)
         with c_pm25:
@@ -260,6 +277,8 @@ def render_unified_hybrid_page():
         )
         st.plotly_chart(fig_hybrid, use_container_width=True, config={"displayModeBar": False})
 
+        st.caption("🔬 **Scientific Limitation of Visual Modality:** The fine-tuned ResNet-50 visual estimator operates as an experimental ambient optical haze feature extractor (standalone $R^2 \approx 0.15$). It is designed strictly as an auxiliary optical residual correction to continuous ground sensors, not an autonomous camera sensor.")
+
 
 # --- Page: Model Comparison ---
 def render_side_by_side_comparison_page():
@@ -306,6 +325,19 @@ def render_side_by_side_comparison_page():
 
     res = comp_srv.compare_all(station_id=st_id, city=city_name)
     df_comp = res["comparison_table"]
+
+    seq_prov = res.get("sequence_provenance", "Synchronized 24h Station Telemetry")
+    render_html(
+        f"""
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid #1F293D; border-radius: 8px; padding: 0.6rem 0.9rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; font-size: 0.82rem;">
+            <div>
+                <span style="color: #94A3B8;">Evaluation Sequence Alignment:</span>
+                <strong style="color: #38BDF8; margin-left: 0.35rem;">🔄 {seq_prov}</strong>
+            </div>
+            <span style="background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px; border: 1px solid rgba(16, 185, 129, 0.3);">Identical Antecedent Horizon</span>
+        </div>
+        """
+    )
 
     st.markdown("### 📋 Side-by-Side Methodology Comparison Table")
     st.dataframe(df_comp, use_container_width=True, hide_index=True)
