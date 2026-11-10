@@ -47,7 +47,7 @@ def test_open_meteo_transparently_labeled_as_reanalysis():
     if obs is not None:
         assert obs["is_live"] is False, "Open-Meteo model reanalysis must NOT claim to be a physical inlet"
         assert obs["is_modeled"] is True
-        assert obs["status_badge"] == "REGIONAL REANALYSIS"
+        assert obs["status_badge"] in ("REGIONAL MODEL ESTIMATE", "REGIONAL REANALYSIS")
         assert "ECMWF" in obs["provider"] or "Open-Meteo" in obs["provider"]
         assert "not a direct physical station" in obs["badge_desc"].lower()
 

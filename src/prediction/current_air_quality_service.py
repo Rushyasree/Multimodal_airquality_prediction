@@ -203,7 +203,7 @@ def fetch_open_meteo_live(
             "is_live": False,
             "is_modeled": True,
             "is_stale": False,
-            "status_badge": "REGIONAL REANALYSIS",
+            "status_badge": "REGIONAL MODEL ESTIMATE",
             "badge_color": "#0284c7",
             "badge_desc": f"Hourly regional atmospheric model reanalysis (Open-Meteo European CAMS / ECMWF reanalysis for {resolved_city} coordinates). Modeled regional estimate, not a direct physical station monitor inlet.",
             "station_name": f"{resolved_city} Regional Atmospheric Monitor",
@@ -479,7 +479,7 @@ class CurrentAirQualityService:
 
         age_str = format_age_readable(age_hours)
         if age_hours <= self.freshness_live_hours:
-            return "LIVE DATA", "#10b981", f"Real-time observation ({age_str})."
+            return "LIVE MEASURED OBSERVATION", "#10b981", f"Real-time observation ({age_str})."
         elif age_hours <= self.freshness_recent_hours:
             return "RECENT OBSERVATION", "#f59e0b", f"Recent observation ({age_str})."
         else:

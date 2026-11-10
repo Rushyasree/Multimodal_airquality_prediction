@@ -18,6 +18,8 @@ os.environ.setdefault("LOKY_MAX_CPU_COUNT", "4")
 
 from src.prediction.lstm_forecaster import LSTMForecasterService
 from src.prediction.data_loader import get_verified_24h_sequence_for_station
+from src.prediction.sequence_validator import validate_forecast_sequence
+import hashlib
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 
@@ -271,9 +273,6 @@ class SensorForecastService:
             enable_shadow: If True, executes adapted model in non-blocking shadow mode
                 and returns payload under 'shadow_forecast' without altering primary forecast.
         """
-        now = datetime.now()
-        target_time = (now + timedelta(hours=1)).strftime("%Y-%m-%d %H:00:00")
-
         if df_24h is None:
             df_to_use, input_freshness, is_synth = get_verified_24h_sequence_for_station(station_id)
         else:
@@ -281,8 +280,14 @@ class SensorForecastService:
             input_freshness = f"Continuous 24h Telemetry ({station_id} Verified Ground Sensors)"
             is_synth = False
 
+        val_res = validate_forecast_sequence(df_to_use, station_id=station_id, require_exact_station=False)
+        forecast_issue_time = val_res.end_time if val_res.end_time else datetime.now().strftime("%Y-%m-%d %H:00:00")
+        target_time = val_res.target_time if val_res.target_time else (datetime.now() + timedelta(hours=1)).strftime("%Y-%m-%d %H:00:00")
+        forecast_state = "LIVE FORECAST (VALIDATED INPUT)" if (val_res.valid and val_res.source_type == "LIVE_MEASURED") else "HISTORICAL DEMO FORECAST" 
+
         # Preprocess 24h sequence array once for all downstream models
         seq_arr = self.underlying_service.preprocess_sequence(df_to_use, station_id=station_id)
+        sensor_digest = hashlib.sha256(seq_arr.tobytes()).hexdigest()
 
         fallback_note = None
 
@@ -412,10 +417,16 @@ class SensorForecastService:
 
         result = {
             "result_type": "Independent Forecast",
+            "forecast_state": forecast_state,
             "station_id": station_id,
+            "forecast_issue_time": forecast_issue_time,
             "forecast_horizon": "Next 1 Hour (t + 1)",
             "target_time": target_time,
             "input_freshness": input_freshness,
+            "sequence_validation": val_res.to_dict(),
+            "sensor_tensor_digest": sensor_digest,
+            "sensor_tensor_shape": list(seq_arr.shape),
+            "is_synthetic_input": is_synth,
             "model_version": model_version,
             "pm25": round(pm25_pred, 2),
             "pm10": round(pm10_pred, 2),

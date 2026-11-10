@@ -21,6 +21,7 @@ from src.services.sensor_forecast_service import SensorForecastService
 from src.services.image_estimation_service import ImageEstimationService
 from src.services.hybrid_prediction_service import HybridPredictionService
 from src.prediction.data_loader import get_verified_24h_sequence_for_station
+from src.prediction.sequence_validator import validate_forecast_sequence
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 
@@ -51,6 +52,12 @@ class ModelComparisonService:
             seq_provenance = f"Supplied 24h Telemetry for {station_id}"
             is_synth = False
 
+        # Enforce Sequence Validation & Provenance Classification
+        val_res = validate_forecast_sequence(df_to_use, station_id=station_id, max_age_hours=3.0)
+        forecast_issue_time = val_res.end_time or "Unknown"
+        target_time = val_res.target_time or "Unknown"
+        forecast_state = "LIVE FORECAST (VALIDATED INPUT)" if val_res.valid else "HISTORICAL DEMO FORECAST"
+
         # 1. Live observation
         live_res = self.live_service.get_live_observation(station_id=station_id, city=city)
 
@@ -68,7 +75,7 @@ class ModelComparisonService:
                 image_res = self.image_service.estimate_from_image(img_p)
             else:
                 image_res = {
-                    "result_type": "Independent Estimate",
+                    "result_type": "IMAGE-BASED EXPERIMENTAL ESTIMATE",
                     "model_version": "ResNet-50 PM25Vision Baseline v1.0",
                     "pm25": 55.0,
                     "pm10": None,
@@ -91,15 +98,23 @@ class ModelComparisonService:
             image_input=image_input,
         )
 
-        # Build comparison summary list
+        sensor_digest_lstm = sensor_res.get("sensor_tensor_digest")
+        sensor_digest_hybrid = hybrid_res.get("sensor_tensor_digest")
+        tensor_matched = bool(sensor_digest_lstm and sensor_digest_lstm == sensor_digest_hybrid)
+
+        # Build comparison summary list with explicit states and aligned horizons
+        live_badge = live_res.get("status_badge") or (
+            "LIVE MEASURED OBSERVATION" if live_res.get("source_type") == "CPCB_API" else "REGIONAL MODEL ESTIMATE"
+        )
+
         rows = [
             {
                 "Method": "Live Ground Station",
-                "Result Type": "Actual Observation",
+                "Result Type": live_badge,
                 "PM2.5 (ug/m3)": live_res.get("pm25"),
                 "PM10 (ug/m3)": live_res.get("pm10"),
                 "Timestamp / Horizon": f"Observed: {live_res.get('observation_time', 'N/A')}",
-                "Data Source": live_res.get("data_source", "CPCB / OpenAQ"),
+                "Data Source": live_res.get("data_source", "CPCB / APPCB Monitor Inlet"),
                 "Model Version": "N/A (Physical Instrument)",
                 "Input Freshness": live_res.get("freshness_status", "Fresh"),
                 "Modality Availability": "Ground Station Telemetry",
@@ -108,11 +123,11 @@ class ModelComparisonService:
             },
             {
                 "Method": "Sensor-Only LSTM",
-                "Result Type": "Independent Forecast",
+                "Result Type": forecast_state,
                 "PM2.5 (ug/m3)": sensor_res.get("pm25"),
                 "PM10 (ug/m3)": sensor_res.get("pm10"),
-                "Timestamp / Horizon": f"Target: {sensor_res.get('target_time')} (t+1)",
-                "Data Source": "24h Continuous Telemetry",
+                "Timestamp / Horizon": f"Target: {target_time} (t+1 from issue {forecast_issue_time})",
+                "Data Source": seq_provenance,
                 "Model Version": sensor_res.get("model_version"),
                 "Input Freshness": sensor_res.get("input_freshness"),
                 "Modality Availability": "Sensor Sequence (27 features)",
@@ -121,14 +136,14 @@ class ModelComparisonService:
             },
             {
                 "Method": "Image-Only ResNet-50",
-                "Result Type": "Independent Estimate",
+                "Result Type": "IMAGE-BASED EXPERIMENTAL ESTIMATE",
                 "PM2.5 (ug/m3)": image_res.get("pm25"),
                 "PM10 (ug/m3)": "Not Supported",
-                "Timestamp / Horizon": "Optical Snapshot (Calendar Date)",
-                "Data Source": "Outdoor Camera Photo",
+                "Timestamp / Horizon": "Calendar Date Precision (Not Contemporaneous)",
+                "Data Source": "Outdoor Camera Daylight Photo",
                 "Model Version": image_res.get("model_version"),
-                "Input Freshness": image_res.get("timestamp_precision"),
-                "Modality Availability": "Single RGB Image",
+                "Input Freshness": "Asynchronous Image Snapshot",
+                "Modality Availability": "Single RGB Image (224x224)",
                 "Reported MAE (ug/m3)": f"PM2.5: {image_res['metrics']['pm25_mae']:.1f}",
                 "Reported R2": f"PM2.5: {image_res['metrics']['pm25_r2']:.4f}",
             },
@@ -147,15 +162,17 @@ class ModelComparisonService:
             },
             {
                 "Method": "Unified Hybrid Model",
-                "Result Type": "Integrated Multimodal Prediction",
+                "Result Type": forecast_state,
                 "PM2.5 (ug/m3)": hybrid_res.get("pm25"),
                 "PM10 (ug/m3)": hybrid_res.get("pm10"),
-                "Timestamp / Horizon": f"Target: {hybrid_res.get('target_time')} (t+1)",
-                "Data Source": "Fused Telemetry + Vision",
+                "Timestamp / Horizon": f"Target: {target_time} (t+1 from issue {forecast_issue_time})",
+                "Data Source": f"{seq_provenance} + Optical Haze Prior",
                 "Model Version": hybrid_res.get("model_version"),
-                "Input Freshness": hybrid_res.get("input_freshness"),
+                "Input Freshness": f"{sensor_res.get('input_freshness')} | Asynchronous Image",
                 "Modality Availability": (
-                    f"Sensor: Yes | Weather: Yes | Image: {'Yes' if hybrid_res['modality_availability']['visual_environment'] else 'Fallback'}"
+                    "Sensor + Weather + Visual"
+                    if hybrid_res["modality_availability"]["visual_environment"]
+                    else "Sensor + Weather (Visual Fallback Active)"
                 ),
                 "Reported MAE (ug/m3)": f"PM2.5: {hybrid_res['metrics']['pm25_mae']:.1f} | PM10: {hybrid_res['metrics']['pm10_mae']:.1f}",
                 "Reported R2": f"PM2.5: {hybrid_res['metrics']['pm25_r2']:.4f} | PM10: {hybrid_res['metrics']['pm10_r2']:.4f}",
@@ -170,9 +187,21 @@ class ModelComparisonService:
             "sensor_forecast": sensor_res,
             "image_estimate": image_res,
             "hybrid_prediction": hybrid_res,
+            "forecast_issue_time": forecast_issue_time,
+            "target_time": target_time,
+            "forecast_state": forecast_state,
+            "sequence_validation": val_res.to_dict(),
             "sequence_provenance": seq_provenance,
             "is_synthetic_input": is_synth,
+            "tensor_digest_lstm": sensor_digest_lstm,
+            "tensor_digest_hybrid": sensor_digest_hybrid,
+            "tensor_matched": tensor_matched,
             "synchronization_status": "Strictly Synchronized (Identical 24h Sequence)",
+            "tensor_synchronization_status": (
+                "Strictly Synchronized (Identical Tensor Digest)"
+                if tensor_matched
+                else "Synchronized (Identical DataFrame)"
+            ),
             "weather_context": {
                 "temperature": temp,
                 "humidity": hum,

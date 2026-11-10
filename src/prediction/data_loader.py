@@ -204,20 +204,18 @@ def get_verified_24h_sequence_for_station(station_id: str = "AP001") -> Tuple[pd
                 seq = ap_match[ap_match["StationId"] == "AP001"].tail(24).copy().reset_index(drop=True)
                 if seq.empty or len(seq) < 24:
                     seq = ap_match.tail(24).copy().reset_index(drop=True)
-                seq["StationId"] = clean_sid
                 start_t = str(seq["Datetime"].iloc[0])
                 end_t = str(seq["Datetime"].iloc[-1])
-                prov = f"Regional CAAQMS Benchmark Sequence (from AP001 Amaravati continuous station, {start_t} to {end_t})"
+                prov = f"Regional CAAQMS Benchmark Sequence (Proxy from AP001 for {clean_sid}, {start_t} to {end_t})"
                 return seq, prov, False
 
         # 3. National standard reference scenario from verified database
         national_seq = df_demo[df_demo["StationId"] == "AP001"].tail(24).copy().reset_index(drop=True)
         if national_seq.empty or len(national_seq) < 24:
             national_seq = df_demo.head(24).copy().reset_index(drop=True)
-        national_seq["StationId"] = clean_sid
         start_t = str(national_seq["Datetime"].iloc[0])
         end_t = str(national_seq["Datetime"].iloc[-1])
-        prov = f"CPCB National Benchmark Reference Sequence (Station AP001 profile for {clean_sid}, {start_t} to {end_t})"
+        prov = f"CPCB National Benchmark Reference Sequence (Station AP001 proxy for {clean_sid}, {start_t} to {end_t})"
         return national_seq, prov, False
 
     # 4. Deterministic offline fallback (never uses unseeded random uniform noise)

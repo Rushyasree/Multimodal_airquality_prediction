@@ -98,13 +98,13 @@ def render_unified_hybrid_page():
             picked_idx = st.selectbox("Choose Verified Outdoor Photo:", range(len(sample_labels)), format_func=lambda x: sample_labels[x], key="hybrid_sample_picker")
             sample_obj = curated_samples[picked_idx]
             selected_image = sample_obj.get("image_path") or sample_obj.get("path")
-            st.image(selected_image, caption=f"Capture Date: {sample_obj.get('capture_date', 'N/A')} | CPCB Reference", use_container_width=True)
+            st.image(selected_image, caption=f"Capture Date: {sample_obj.get('capture_date', 'N/A')} | Daylight Camera (Calendar-Date Precision Only • Asynchronous Optical Prior)", use_container_width=True)
 
         elif image_mode == "Upload Custom Photo":
             uploaded = st.file_uploader("Upload an outdoor daylight photo:", type=["jpg", "jpeg", "png"], key="hybrid_file_uploader")
             if uploaded:
                 selected_image = Image.open(uploaded)
-                st.image(selected_image, caption="Uploaded Outdoor Image", use_container_width=True)
+                st.image(selected_image, caption="Uploaded Outdoor Image (Calendar-Date Optical Prior • Asynchronous)", use_container_width=True)
 
         else:
             st.info("ℹ️ Camera input is unselected/masked. The model will run in verified sensor-telemetry fallback mode.")
@@ -122,17 +122,32 @@ def render_unified_hybrid_page():
 
         # Antecedent Sequence Provenance Banner
         seq_prov = res.get("sequence_provenance", "Continuous 24h Telemetry")
+        forecast_state = res.get("forecast_state", "HISTORICAL DEMO FORECAST")
+        issue_time = res.get("forecast_issue_time", "N/A")
+        target_time = res.get("target_time", "N/A")
         is_synth = res.get("is_synthetic_input", False)
         prov_badge_color = "#f59e0b" if is_synth else "#38bdf8"
         prov_icon = "⚠️" if is_synth else "📊"
+        state_badge_bg = "rgba(16, 185, 129, 0.15)" if "LIVE" in forecast_state else "rgba(245, 158, 11, 0.15)"
+        state_badge_color = "#10b981" if "LIVE" in forecast_state else "#f59e0b"
+        state_badge_border = "rgba(16, 185, 129, 0.3)" if "LIVE" in forecast_state else "rgba(245, 158, 11, 0.3)"
+
         render_html(
             f"""
-            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid #1F293D; border-radius: 8px; padding: 0.5rem 0.8rem; margin-bottom: 0.85rem; font-size: 0.80rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid #1F293D; border-radius: 8px; padding: 0.65rem 0.9rem; margin-bottom: 0.85rem; font-size: 0.80rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
                 <div>
-                    <span style="color: #94A3B8;">Antecedent Telemetry Input:</span>
-                    <strong style="color: {prov_badge_color}; margin-left: 0.35rem;">{prov_icon} {seq_prov}</strong>
+                    <div>
+                        <span style="color: #94A3B8;">Input Sequence:</span>
+                        <strong style="color: {prov_badge_color}; margin-left: 0.35rem;">{prov_icon} {seq_prov}</strong>
+                    </div>
+                    <div style="font-size: 0.74rem; color: #64748B; margin-top: 0.2rem;">
+                        Issue Time: <span style="color: #CBD5E1;">{issue_time}</span> &nbsp;|&nbsp; Target Horizon: <span style="color: #38BDF8; font-weight: 600;">{target_time} (t+1)</span>
+                    </div>
                 </div>
-                <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 0.70rem; font-weight: 700; padding: 0.1rem 0.45rem; border-radius: 4px;">Synchronized 24h Window</span>
+                <div style="display: flex; gap: 0.4rem; align-items: center;">
+                    <span style="background: {state_badge_bg}; color: {state_badge_color}; font-size: 0.70rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px; border: 1px solid {state_badge_border};">{forecast_state}</span>
+                    <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 0.70rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px;">Synchronized 24h Window</span>
+                </div>
             </div>
             """
         )
@@ -327,14 +342,31 @@ def render_side_by_side_comparison_page():
     df_comp = res["comparison_table"]
 
     seq_prov = res.get("sequence_provenance", "Synchronized 24h Station Telemetry")
+    forecast_state = res.get("forecast_state", "HISTORICAL DEMO FORECAST")
+    issue_time = res.get("forecast_issue_time", "N/A")
+    target_time = res.get("target_time", "N/A")
+    tensor_matched = res.get("tensor_matched", False)
+
+    state_badge_color = "#10b981" if "LIVE" in forecast_state else "#f59e0b"
+    state_badge_bg = "rgba(16, 185, 129, 0.15)" if "LIVE" in forecast_state else "rgba(245, 158, 11, 0.15)"
+    state_badge_border = "rgba(16, 185, 129, 0.3)" if "LIVE" in forecast_state else "rgba(245, 158, 11, 0.3)"
+
     render_html(
         f"""
-        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid #1F293D; border-radius: 8px; padding: 0.6rem 0.9rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; font-size: 0.82rem;">
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid #1F293D; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; font-size: 0.82rem;">
             <div>
-                <span style="color: #94A3B8;">Evaluation Sequence Alignment:</span>
-                <strong style="color: #38BDF8; margin-left: 0.35rem;">🔄 {seq_prov}</strong>
+                <div>
+                    <span style="color: #94A3B8;">Evaluation Sequence:</span>
+                    <strong style="color: #38BDF8; margin-left: 0.35rem;">🔄 {seq_prov}</strong>
+                </div>
+                <div style="margin-top: 0.25rem; font-size: 0.76rem; color: #64748B;">
+                    Issue Time: <span style="color: #CBD5E1;">{issue_time}</span> &nbsp;|&nbsp; Target Horizon: <span style="color: #38BDF8; font-weight: 600;">{target_time} (t+1)</span>
+                </div>
             </div>
-            <span style="background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px; border: 1px solid rgba(16, 185, 129, 0.3);">Identical Antecedent Horizon</span>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <span style="background: {state_badge_bg}; color: {state_badge_color}; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; border: 1px solid {state_badge_border};">{forecast_state}</span>
+                <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; border: 1px solid rgba(56, 189, 248, 0.3);">{('Tensor Digest: Verified SHA-256 Match' if tensor_matched else 'DataFrame Synchronized')}</span>
+            </div>
         </div>
         """
     )

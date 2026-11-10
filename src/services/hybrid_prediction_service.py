@@ -18,6 +18,8 @@ from experiments.unified_hybrid.accuracy_optimization.hybrid_model_optimized imp
 from src.prediction.lstm_forecaster import LSTMForecasterService
 from src.prediction.image_estimator import ImageEstimatorService
 from src.prediction.data_loader import get_verified_24h_sequence_for_station
+from src.prediction.sequence_validator import validate_forecast_sequence
+import hashlib
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 
@@ -87,9 +89,6 @@ class HybridPredictionService:
         distance_km: float = 0.75,
     ) -> Dict[str, Any]:
         """Executes unified multimodal prediction with adaptive quality gating and fallback."""
-        now = datetime.now()
-        target_time = (now + timedelta(hours=1)).strftime("%Y-%m-%d %H:00:00")
-
         # 1. Preprocess Sensor Sequence (24 x 27)
         if df_24h is None:
             df_to_use, input_freshness, is_synth = get_verified_24h_sequence_for_station(station_id)
@@ -98,11 +97,18 @@ class HybridPredictionService:
             input_freshness = f"Continuous 24h Telemetry ({station_id} Verified Ground Sensors)"
             is_synth = False
 
+        val_res = validate_forecast_sequence(df_to_use, station_id=station_id, require_exact_station=False)
+        forecast_issue_time = val_res.end_time if val_res.end_time else datetime.now().strftime("%Y-%m-%d %H:00:00")
+        target_time = val_res.target_time if val_res.target_time else (datetime.now() + timedelta(hours=1)).strftime("%Y-%m-%d %H:00:00")
+        forecast_state = "LIVE FORECAST (VALIDATED INPUT)" if (val_res.valid and val_res.source_type == "LIVE_MEASURED") else "HISTORICAL DEMO FORECAST"
+
         try:
             seq_arr = self.lstm_service.preprocess_sequence(df_to_use, station_id=station_id)
             sensor_tensor = torch.from_numpy(seq_arr).float()
+            sensor_digest = hashlib.sha256(seq_arr.tobytes()).hexdigest()
         except Exception:
             sensor_tensor = torch.zeros((1, 24, 27), dtype=torch.float32)
+            sensor_digest = hashlib.sha256(sensor_tensor.numpy().tobytes()).hexdigest()
 
         # 2. Process Visual Modality & Determine Fallback Status
         mask_val = 0.0
@@ -160,10 +166,15 @@ class HybridPredictionService:
 
         return {
             "result_type": "Unified Hybrid Prediction",
+            "forecast_state": forecast_state,
             "model_version": self.model_version,
             "station_id": station_id,
-            "target_time": target_time,
+            "forecast_issue_time": forecast_issue_time,
             "forecast_horizon": "Next 1 Hour (t + 1)",
+            "target_time": target_time,
+            "sequence_validation": val_res.to_dict(),
+            "sensor_tensor_digest": sensor_digest,
+            "sensor_tensor_shape": list(sensor_tensor.shape),
             "pm25": round(pm25_pred, 2),
             "pm10": round(pm10_pred, 2),
             "sensor_pm25": round(sensor_pm25, 2),
