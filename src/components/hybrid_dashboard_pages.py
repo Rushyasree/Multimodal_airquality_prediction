@@ -16,11 +16,14 @@ from typing import Dict, Any, Optional
 from pathlib import Path
 from datetime import datetime
 import json
+import logging
 import pandas as pd
 import numpy as np
 import streamlit as st
 import plotly.graph_objects as go
 from PIL import Image
+
+logger = logging.getLogger("VayuDrishti.HybridPages")
 
 from src.services.live_air_quality_service import LiveAirQualityService
 from src.services.sensor_forecast_service import SensorForecastService
@@ -81,7 +84,7 @@ def render_unified_hybrid_page():
             index=0,
             key="hybrid_station_selector",
         )
-        st_id = station_pick.split()[0]
+        st_id = (station_pick or "AP001").split()[0]
 
         image_mode = st.radio(
             "Select Visual Modality Input:",
@@ -91,16 +94,34 @@ def render_unified_hybrid_page():
         )
 
         selected_image = None
-        curated_samples = image_srv.get_curated_sample_images()
+        curated_samples = image_srv.get_curated_sample_images() or []
 
         if image_mode == "Curated Outdoor Photo":
             if curated_samples:
-                sample_labels = [f"Sample {i+1}: {s.get('city', 'Sample')} - {s.get('station_name', 'Station')} (Actual: {s.get('actual_label', 'N/A')} µg/m³)" for i, s in enumerate(curated_samples)]
-                picked_idx = st.selectbox("Choose Verified Outdoor Photo:", range(len(sample_labels)), format_func=lambda x: sample_labels[x], key="hybrid_sample_picker")
-                if picked_idx is not None and 0 <= picked_idx < len(curated_samples):
+                sample_labels = [
+                    f"Sample {i+1}: {s.get('city', 'Sample')} - {s.get('station_name', 'Station')} (Actual: {s.get('actual_label', 'N/A')} µg/m³)"
+                    for i, s in enumerate(curated_samples)
+                ]
+                picked_idx = st.selectbox(
+                    "Choose Verified Outdoor Photo:",
+                    options=list(range(len(sample_labels))),
+                    index=0,
+                    format_func=lambda x: sample_labels[x] if (x is not None and isinstance(x, int) and 0 <= x < len(sample_labels)) else "",
+                    key="hybrid_sample_picker",
+                )
+                if picked_idx is not None and isinstance(picked_idx, int) and 0 <= picked_idx < len(curated_samples):
                     sample_obj = curated_samples[picked_idx]
-                    selected_image = sample_obj.get("image_path") or sample_obj.get("path")
-                    st.image(selected_image, caption=f"Capture Date: {sample_obj.get('capture_date', 'N/A')} | Daylight Camera (Calendar-Date Precision Only • Asynchronous Optical Prior)", use_container_width=True)
+                    img_candidate = sample_obj.get("image_path") or sample_obj.get("path")
+                    if img_candidate and Path(img_candidate).exists():
+                        selected_image = img_candidate
+                        st.image(
+                            selected_image,
+                            caption=f"Capture Date: {sample_obj.get('capture_date', 'N/A')} | Daylight Camera (Calendar-Date Precision Only • Asynchronous Optical Prior)",
+                            use_container_width=True,
+                        )
+                    else:
+                        st.info("ℹ️ Curated image asset is unavailable on disk. Falling back to sensor telemetry mode.")
+                        selected_image = None
                 else:
                     selected_image = None
             else:
@@ -110,8 +131,12 @@ def render_unified_hybrid_page():
         elif image_mode == "Upload Custom Photo":
             uploaded = st.file_uploader("Upload an outdoor daylight photo:", type=["jpg", "jpeg", "png"], key="hybrid_file_uploader")
             if uploaded:
-                selected_image = Image.open(uploaded)
-                st.image(selected_image, caption="Uploaded Outdoor Image (Calendar-Date Optical Prior • Asynchronous)", use_container_width=True)
+                try:
+                    selected_image = Image.open(uploaded)
+                    st.image(selected_image, caption="Uploaded Outdoor Image (Calendar-Date Optical Prior • Asynchronous)", use_container_width=True)
+                except Exception as img_err:
+                    st.warning(f"Unable to read uploaded photo: {img_err}. Running in sensor-only mode.")
+                    selected_image = None
 
         else:
             st.info("ℹ️ Camera input is unselected/masked. The model will run in verified sensor-telemetry fallback mode.")
@@ -122,22 +147,38 @@ def render_unified_hybrid_page():
     with col_view:
         st.markdown("### 🎯 Unified Model Prediction")
 
-        res = hybrid_srv.predict_hybrid(
-            station_id=st_id,
-            image_input=selected_image,
-        )
+        try:
+            res = hybrid_srv.predict_hybrid(
+                station_id=st_id,
+                image_input=selected_image,
+            )
+        except Exception as pred_err:
+            logger.exception("Hybrid prediction execution error | station=%s", st_id)
+            res = {
+                "status": "error",
+                "forecast_state": "PREDICTION ERROR",
+                "sequence_provenance": f"Physical Station Inlet ({st_id})",
+                "forecast_issue_time": "N/A",
+                "target_time": "N/A",
+                "pm25": None,
+                "pm10": None,
+                "gating_alpha": 0.0,
+                "image_contributed": False,
+                "scientific_note": f"Inference pipeline encountered an internal error: {pred_err}",
+            }
 
         # Antecedent Sequence Provenance Banner
-        seq_prov = res.get("sequence_provenance", "Continuous 24h Telemetry")
-        forecast_state = res.get("forecast_state", "HISTORICAL DEMO FORECAST")
-        issue_time = res.get("forecast_issue_time", "N/A")
-        target_time = res.get("target_time", "N/A")
-        is_synth = res.get("is_synthetic_input", False)
+        seq_prov = res.get("sequence_provenance") or "Continuous 24h Telemetry"
+        forecast_state = res.get("forecast_state") or "HISTORICAL DEMO FORECAST"
+        issue_time = res.get("forecast_issue_time") or "N/A"
+        target_time = res.get("target_time") or "N/A"
+        is_synth = bool(res.get("is_synthetic_input", False))
         prov_badge_color = "#f59e0b" if is_synth else "#38bdf8"
         prov_icon = "⚠️" if is_synth else "📊"
-        state_badge_bg = "rgba(16, 185, 129, 0.15)" if "LIVE" in forecast_state else "rgba(245, 158, 11, 0.15)"
-        state_badge_color = "#10b981" if "LIVE" in forecast_state else "#f59e0b"
-        state_badge_border = "rgba(16, 185, 129, 0.3)" if "LIVE" in forecast_state else "rgba(245, 158, 11, 0.3)"
+        state_str = str(forecast_state)
+        state_badge_bg = "rgba(16, 185, 129, 0.15)" if "LIVE" in state_str else ("rgba(239, 68, 68, 0.15)" if ("UNAVAILABLE" in state_str or "ERROR" in state_str) else "rgba(245, 158, 11, 0.15)")
+        state_badge_color = "#10b981" if "LIVE" in state_str else ("#ef4444" if ("UNAVAILABLE" in state_str or "ERROR" in state_str) else "#f59e0b")
+        state_badge_border = "rgba(16, 185, 129, 0.3)" if "LIVE" in state_str else ("rgba(239, 68, 68, 0.3)" if ("UNAVAILABLE" in state_str or "ERROR" in state_str) else "rgba(245, 158, 11, 0.3)")
 
         render_html(
             f"""
@@ -161,30 +202,35 @@ def render_unified_hybrid_page():
 
         # Prediction Metric Cards
         c_pm25, c_pm10, c_alpha = st.columns(3)
+        pm25_raw = res.get("pm25")
+        pm10_raw = res.get("pm10")
+        alpha_raw = res.get("gating_alpha")
+
         with c_pm25:
-            pm25_val = f"{res['pm25']:.1f} µg/m³" if res.get('pm25') is not None else "Unavailable"
+            pm25_str = f"{pm25_raw:.1f} µg/m³" if (pm25_raw is not None and isinstance(pm25_raw, (int, float))) else "Unavailable"
             st.metric(
                 label="Integrated PM2.5 Forecast",
-                value=pm25_val,
+                value=pm25_str,
                 delta=None,
             )
         with c_pm10:
-            pm10_val = f"{res['pm10']:.1f} µg/m³" if res.get('pm10') is not None else "Unavailable"
+            pm10_str = f"{pm10_raw:.1f} µg/m³" if (pm10_raw is not None and isinstance(pm10_raw, (int, float))) else "Unavailable"
             st.metric(
                 label="Integrated PM10 Forecast",
-                value=pm10_val,
+                value=pm10_str,
                 delta=None,
             )
         with c_alpha:
-            alpha_val = f"{res['gating_alpha']:.4f}" if res.get('gating_alpha') is not None else "N/A"
+            alpha_str = f"{alpha_raw:.4f}" if (alpha_raw is not None and isinstance(alpha_raw, (int, float))) else "N/A"
+            alpha_num = float(alpha_raw) if (alpha_raw is not None and isinstance(alpha_raw, (int, float))) else 0.0
             st.metric(
                 label="Visual Gate Weight (α)",
-                value=alpha_val,
-                delta="Active" if (res.get('gating_alpha') or 0.0) > 0.05 else "Fallback",
+                value=alpha_str,
+                delta="Active" if alpha_num > 0.05 else "Fallback",
             )
 
         # Clean Compact Status
-        if res["image_contributed"]:
+        if res.get("image_contributed", False):
             render_html(
                 f"""
                 <div style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 8px; padding: 0.6rem 0.9rem; margin: 0.85rem 0; display: flex; align-items: center; justify-content: space-between;">
@@ -210,21 +256,22 @@ def render_unified_hybrid_page():
             )
 
         # 1. AQI Category & Meaning Interpretation
-        if res.get('pm25') is not None:
-            pm25_val = float(res['pm25'])
-            if pm25_val <= 30:
+        if pm25_raw is not None and isinstance(pm25_raw, (int, float)):
+            pm25_num = float(pm25_raw)
+            if pm25_num <= 30:
                 aqi_cat, aqi_color, aqi_desc = "Good", "#10B981", "Air quality is clean and healthy. Safe for all outdoor activities."
-            elif pm25_val <= 60:
+            elif pm25_num <= 60:
                 aqi_cat, aqi_color, aqi_desc = "Satisfactory", "#84CC16", "Air quality is acceptable. Minor discomfort possible for sensitive individuals."
-            elif pm25_val <= 90:
+            elif pm25_num <= 90:
                 aqi_cat, aqi_color, aqi_desc = "Moderate", "#EAB308", "Air quality is moderate. Sensitive groups should reduce prolonged outdoor exertion."
-            elif pm25_val <= 120:
+            elif pm25_num <= 120:
                 aqi_cat, aqi_color, aqi_desc = "Poor", "#F97316", "Air quality is poor. Breathing discomfort likely for people with lung/heart disease."
-            elif pm25_val <= 250:
+            elif pm25_num <= 250:
                 aqi_cat, aqi_color, aqi_desc = "Very Poor", "#EF4444", "Respiratory illness likely upon prolonged exposure."
             else:
                 aqi_cat, aqi_color, aqi_desc = "Severe", "#881337", "Severe pollution. Healthy people affected, serious impacts on vulnerable groups."
         else:
+            pm25_num = None
             aqi_cat, aqi_color, aqi_desc = "Unavailable", "#94A3B8", "No forecast data available to compute air quality index."
 
         render_html(
@@ -245,9 +292,16 @@ def render_unified_hybrid_page():
         )
 
         # 2. Modality Contribution Breakdown (Explaining the fusion)
-        s_pm25 = res.get('sensor_pm25', pm25_val)
-        v_delta = res.get('visual_delta_pm25', 0.0)
-        gate_pct = float(res['gating_alpha']) * 100.0
+        s_pm25_raw = res.get("sensor_pm25")
+        s_pm25_num = float(s_pm25_raw) if (s_pm25_raw is not None and isinstance(s_pm25_raw, (int, float))) else pm25_num
+        s_pm25_disp = f"{s_pm25_num:.1f}" if s_pm25_num is not None else "N/A"
+
+        v_delta_raw = res.get("visual_delta_pm25")
+        v_delta_num = float(v_delta_raw) if (v_delta_raw is not None and isinstance(v_delta_raw, (int, float))) else 0.0
+        v_delta_disp = f"{v_delta_num:+.2f}"
+        v_delta_color = "#10B981" if v_delta_num <= 0 else "#F59E0B"
+
+        gate_pct = alpha_num * 100.0
 
         render_html(
             f"""
@@ -258,12 +312,12 @@ def render_unified_hybrid_page():
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.65rem;">
                     <div style="background: #1A2234; border: 1px solid #1F293D; border-radius: 8px; padding: 0.65rem 0.75rem;">
                         <div style="font-size: 0.72rem; color: #94A3B8; text-transform: uppercase;">1. Ground Sensor Trend</div>
-                        <div style="font-size: 1.25rem; font-weight: 800; color: #38BDF8; margin-top: 0.2rem;">{s_pm25:.1f} <span style="font-size: 0.75rem; font-weight: 500; color: #94A3B8;">µg/m³</span></div>
+                        <div style="font-size: 1.25rem; font-weight: 800; color: #38BDF8; margin-top: 0.2rem;">{s_pm25_disp} <span style="font-size: 0.75rem; font-weight: 500; color: #94A3B8;">µg/m³</span></div>
                         <div style="font-size: 0.70rem; color: #94A3B8; margin-top: 0.2rem;">24h sequence baseline</div>
                     </div>
                     <div style="background: #1A2234; border: 1px solid #1F293D; border-radius: 8px; padding: 0.65rem 0.75rem;">
                         <div style="font-size: 0.72rem; color: #94A3B8; text-transform: uppercase;">2. Camera Image Adjustment</div>
-                        <div style="font-size: 1.25rem; font-weight: 800; color: {'#10B981' if v_delta <= 0 else '#F59E0B'}; margin-top: 0.2rem;">{v_delta:+.2f} <span style="font-size: 0.75rem; font-weight: 500; color: #94A3B8;">µg/m³</span></div>
+                        <div style="font-size: 1.25rem; font-weight: 800; color: {v_delta_color}; margin-top: 0.2rem;">{v_delta_disp} <span style="font-size: 0.75rem; font-weight: 500; color: #94A3B8;">µg/m³</span></div>
                         <div style="font-size: 0.70rem; color: #94A3B8; margin-top: 0.2rem;">Optical haze correction</div>
                     </div>
                     <div style="background: #1A2234; border: 1px solid #1F293D; border-radius: 8px; padding: 0.65rem 0.75rem;">
@@ -277,33 +331,37 @@ def render_unified_hybrid_page():
         )
 
         # 3. Visual Comparison Chart
-        chart_bars = [
-            ("Ground Sensor Baseline", s_pm25, "#38BDF8"),
-            ("Unified Hybrid Forecast", pm25_val, "#2DD4BF"),
-        ]
-        fig_hybrid = go.Figure()
-        fig_hybrid.add_trace(go.Bar(
-            y=[b[0] for b in chart_bars],
-            x=[b[1] for b in chart_bars],
-            orientation="h",
-            marker=dict(color=[b[2] for b in chart_bars]),
-            text=[f"{b[1]:.1f} µg/m³" for b in chart_bars],
-            textposition="auto",
-            textfont=dict(color="#F8FAFC", family="Plus Jakarta Sans", size=12),
-        ))
-        fig_hybrid.add_vline(x=30, line_dash="dash", line_color="#10B981", annotation_text="Good (≤30)", annotation_position="top right", annotation_font=dict(color="#10B981", size=10))
-        fig_hybrid.add_vline(x=60, line_dash="dash", line_color="#84CC16", annotation_text="Satisfactory (≤60)", annotation_position="top right", annotation_font=dict(color="#84CC16", size=10))
-        fig_hybrid.update_layout(
-            title=dict(text="Forecast Comparison vs. CPCB Thresholds", font=dict(color="#F8FAFC", size=13)),
-            paper_bgcolor="#111827",
-            plot_bgcolor="#0A0E17",
-            font=dict(color="#94A3B8", family="Plus Jakarta Sans"),
-            height=200,
-            margin=dict(l=20, r=20, t=35, b=25),
-            xaxis=dict(showgrid=True, gridcolor="rgba(31, 41, 61, 0.7)", title=dict(text="PM2.5 Concentration (µg/m³)", font=dict(color="#94A3B8", size=11))),
-            yaxis=dict(showgrid=False),
-        )
-        st.plotly_chart(fig_hybrid, use_container_width=True, config={"displayModeBar": False})
+        if pm25_num is not None:
+            s_chart_val = s_pm25_num if s_pm25_num is not None else pm25_num
+            chart_bars = [
+                ("Ground Sensor Baseline", s_chart_val, "#38BDF8"),
+                ("Unified Hybrid Forecast", pm25_num, "#2DD4BF"),
+            ]
+            fig_hybrid = go.Figure()
+            fig_hybrid.add_trace(go.Bar(
+                y=[b[0] for b in chart_bars],
+                x=[b[1] for b in chart_bars],
+                orientation="h",
+                marker=dict(color=[b[2] for b in chart_bars]),
+                text=[f"{b[1]:.1f} µg/m³" for b in chart_bars],
+                textposition="auto",
+                textfont=dict(color="#F8FAFC", family="Plus Jakarta Sans", size=12),
+            ))
+            fig_hybrid.add_vline(x=30, line_dash="dash", line_color="#10B981", annotation_text="Good (≤30)", annotation_position="top right", annotation_font=dict(color="#10B981", size=10))
+            fig_hybrid.add_vline(x=60, line_dash="dash", line_color="#84CC16", annotation_text="Satisfactory (≤60)", annotation_position="top right", annotation_font=dict(color="#84CC16", size=10))
+            fig_hybrid.update_layout(
+                title=dict(text="Forecast Comparison vs. CPCB Thresholds", font=dict(color="#F8FAFC", size=13)),
+                paper_bgcolor="#111827",
+                plot_bgcolor="#0A0E17",
+                font=dict(color="#94A3B8", family="Plus Jakarta Sans"),
+                height=200,
+                margin=dict(l=20, r=20, t=35, b=25),
+                xaxis=dict(showgrid=True, gridcolor="rgba(31, 41, 61, 0.7)", title=dict(text="PM2.5 Concentration (µg/m³)", font=dict(color="#94A3B8", size=11))),
+                yaxis=dict(showgrid=False),
+            )
+            st.plotly_chart(fig_hybrid, use_container_width=True, config={"displayModeBar": False})
+        else:
+            st.info("ℹ️ Quantitative forecast comparison chart is unavailable when numeric sensor prediction cannot be computed.")
 
         st.caption("🔬 **Scientific Limitation of Visual Modality:** The fine-tuned ResNet-50 visual estimator operates as an experimental ambient optical haze feature extractor (standalone $R^2 \approx 0.15$). It is designed strictly as an auxiliary optical residual correction to continuous ground sensors, not an autonomous camera sensor.")
 
@@ -438,13 +496,14 @@ def render_side_by_side_comparison_page():
     ))
 
     # Add ground-truth reference line
-    fig.add_hline(
-        y=pm25_vals[0],
-        line_dash="dash",
-        line_color="#EF4444",
-        annotation_text=f"Live Ground PM2.5 Observation ({pm25_vals[0]} µg/m³)",
-        annotation_position="top left",
-    )
+    if pm25_vals and pm25_vals[0] is not None and isinstance(pm25_vals[0], (int, float)):
+        fig.add_hline(
+            y=pm25_vals[0],
+            line_dash="dash",
+            line_color="#EF4444",
+            annotation_text=f"Live Ground PM2.5 Observation ({pm25_vals[0]:.1f} µg/m³)",
+            annotation_position="top left",
+        )
 
     fig.update_layout(
         title="Side-by-Side Method Predictions vs. Live Ground Observation",
@@ -714,9 +773,18 @@ def render_individual_methods_page():
             demo_df = load_demo_scenarios()
             scenarios_meta = get_scenario_metadata_list()
             sc_map = {f"{s['city']} — {s['station_name']} ({s['station_id']})": s["id"] for s in scenarios_meta}
-            chosen_sc_label = st.selectbox("Select Antecedent Scenario:", list(sc_map.keys()), key="ind_lstm_sc_select")
-            chosen_sc_id = sc_map[chosen_sc_label]
-            chosen_meta = next(s for s in scenarios_meta if s["id"] == chosen_sc_id)
+            if sc_map:
+                chosen_sc_label = st.selectbox("Select Antecedent Scenario:", list(sc_map.keys()), index=0, key="ind_lstm_sc_select")
+                chosen_sc_id = sc_map.get(chosen_sc_label)
+            else:
+                chosen_sc_label = None
+                chosen_sc_id = None
+
+            chosen_meta = next((s for s in scenarios_meta if s["id"] == chosen_sc_id), None) if chosen_sc_id else None
+            if not chosen_meta or demo_df.empty:
+                st.info("ℹ️ Antecedent scenario dataset is unavailable in this environment.")
+                return
+
             fc_data = demo_df[demo_df["scenario_id"] == chosen_sc_id].sort_values("Datetime").reset_index(drop=True)
 
             lstm_service = SensorForecastService()
@@ -842,8 +910,14 @@ def render_individual_methods_page():
             if img_mode == "Curated Dataset Sample":
                 if sample_imgs:
                     s_titles = [f"{s.get('city', 'Sample')} - {s.get('category', s.get('station_name', ''))} (Ref: {s.get('pm25_reference', s.get('actual_label', 'N/A'))} µg/m³)" for s in sample_imgs]
-                    sel_idx = st.selectbox("Select Sample:", range(len(s_titles)), format_func=lambda i: s_titles[i], key="m3_sample_sel")
-                    if sel_idx is not None and 0 <= sel_idx < len(sample_imgs):
+                    sel_idx = st.selectbox(
+                        "Select Sample:",
+                        options=list(range(len(s_titles))),
+                        index=0,
+                        format_func=lambda i: s_titles[i] if (i is not None and isinstance(i, int) and 0 <= i < len(s_titles)) else "",
+                        key="m3_sample_sel",
+                    )
+                    if sel_idx is not None and isinstance(sel_idx, int) and 0 <= sel_idx < len(sample_imgs):
                         chosen_img_path = sample_imgs[sel_idx].get("image_path")
                         if chosen_img_path and Path(chosen_img_path).exists():
                             st.image(chosen_img_path, caption=s_titles[sel_idx], use_container_width=True)

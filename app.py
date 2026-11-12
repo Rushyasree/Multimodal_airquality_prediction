@@ -2413,8 +2413,13 @@ elif st.session_state["nav_tab"] in ("Individual Forecasting Methods", "Forecast
 elif st.session_state["nav_tab"] in ("Unified Hybrid Forecast", "Unified Hybrid"):
     _t_page_start = time.perf_counter()
     logger.info("START: Render Page: Unified Hybrid Forecast")
-    render_unified_hybrid_page()
-    logger.info("FINISH: Render Page: Unified Hybrid Forecast | elapsed=%.4fs", time.perf_counter() - _t_page_start)
+    try:
+        render_unified_hybrid_page()
+    except Exception as exc:
+        logger.exception("Unified Hybrid Forecast rendering failed")
+        st.error(f"⚠️ Unified Hybrid Forecast rendering failed: {type(exc).__name__}. See application logs for details.")
+    else:
+        logger.info("FINISH: Render Page: Unified Hybrid Forecast | elapsed=%.4fs", time.perf_counter() - _t_page_start)
 
 elif st.session_state["nav_tab"] in ("Side-by-Side Comparison", "Comparison"):
     _t_page_start = time.perf_counter()
