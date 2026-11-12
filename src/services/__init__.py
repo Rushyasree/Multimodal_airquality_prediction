@@ -40,6 +40,18 @@ def __getattr__(name: str) -> Any:
     elif name == "ConformalPredictionCalibrator":
         from src.services.forecast_uncertainty_service import ConformalPredictionCalibrator
         return ConformalPredictionCalibrator
+    elif name == "OperationalHealthService":
+        from src.services.operational_health_service import OperationalHealthService
+        return OperationalHealthService
+    elif name == "ForecastAuditLogger":
+        from src.services.forecast_audit_logger import ForecastAuditLogger
+        return ForecastAuditLogger
+    elif name == "ForecastExecutionLifecycleManager":
+        from src.services.forecast_execution_lifecycle import ForecastExecutionLifecycleManager
+        return ForecastExecutionLifecycleManager
+    elif name == "ForecastObservationMatcher":
+        from src.services.forecast_observation_matcher import ForecastObservationMatcher
+        return ForecastObservationMatcher
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 
@@ -52,4 +64,8 @@ __all__ = [
     "AutonomousLiveCollector",
     "MeteorologicalService",
     "ConformalPredictionCalibrator",
+    "OperationalHealthService",
+    "ForecastAuditLogger",
+    "ForecastExecutionLifecycleManager",
+    "ForecastObservationMatcher",
 ]
