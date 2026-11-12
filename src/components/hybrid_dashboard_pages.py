@@ -94,11 +94,18 @@ def render_unified_hybrid_page():
         curated_samples = image_srv.get_curated_sample_images()
 
         if image_mode == "Curated Outdoor Photo":
-            sample_labels = [f"Sample {i+1}: {s['city']} - {s['station_name']} (Actual: {s['actual_label']} µg/m³)" for i, s in enumerate(curated_samples)]
-            picked_idx = st.selectbox("Choose Verified Outdoor Photo:", range(len(sample_labels)), format_func=lambda x: sample_labels[x], key="hybrid_sample_picker")
-            sample_obj = curated_samples[picked_idx]
-            selected_image = sample_obj.get("image_path") or sample_obj.get("path")
-            st.image(selected_image, caption=f"Capture Date: {sample_obj.get('capture_date', 'N/A')} | Daylight Camera (Calendar-Date Precision Only • Asynchronous Optical Prior)", use_container_width=True)
+            if curated_samples:
+                sample_labels = [f"Sample {i+1}: {s.get('city', 'Sample')} - {s.get('station_name', 'Station')} (Actual: {s.get('actual_label', 'N/A')} µg/m³)" for i, s in enumerate(curated_samples)]
+                picked_idx = st.selectbox("Choose Verified Outdoor Photo:", range(len(sample_labels)), format_func=lambda x: sample_labels[x], key="hybrid_sample_picker")
+                if picked_idx is not None and 0 <= picked_idx < len(curated_samples):
+                    sample_obj = curated_samples[picked_idx]
+                    selected_image = sample_obj.get("image_path") or sample_obj.get("path")
+                    st.image(selected_image, caption=f"Capture Date: {sample_obj.get('capture_date', 'N/A')} | Daylight Camera (Calendar-Date Precision Only • Asynchronous Optical Prior)", use_container_width=True)
+                else:
+                    selected_image = None
+            else:
+                st.info("ℹ️ Curated outdoor sample photos are unavailable in the current deployment environment. Upload a photo below or proceed with sensor-only telemetry fallback.")
+                selected_image = None
 
         elif image_mode == "Upload Custom Photo":
             uploaded = st.file_uploader("Upload an outdoor daylight photo:", type=["jpg", "jpeg", "png"], key="hybrid_file_uploader")
@@ -834,10 +841,14 @@ def render_individual_methods_page():
             chosen_img_path = None
             if img_mode == "Curated Dataset Sample":
                 if sample_imgs:
-                    s_titles = [f"{s.get('city', 'Sample')} - {s.get('category', '')} (Ref: {s.get('pm25_reference', 'N/A')} µg/m³)" for s in sample_imgs]
+                    s_titles = [f"{s.get('city', 'Sample')} - {s.get('category', s.get('station_name', ''))} (Ref: {s.get('pm25_reference', s.get('actual_label', 'N/A'))} µg/m³)" for s in sample_imgs]
                     sel_idx = st.selectbox("Select Sample:", range(len(s_titles)), format_func=lambda i: s_titles[i], key="m3_sample_sel")
-                    chosen_img_path = sample_imgs[sel_idx]["image_path"]
-                    st.image(chosen_img_path, caption=s_titles[sel_idx], use_container_width=True)
+                    if sel_idx is not None and 0 <= sel_idx < len(sample_imgs):
+                        chosen_img_path = sample_imgs[sel_idx].get("image_path")
+                        if chosen_img_path and Path(chosen_img_path).exists():
+                            st.image(chosen_img_path, caption=s_titles[sel_idx], use_container_width=True)
+                else:
+                    st.info("ℹ️ Curated outdoor sample photos are unavailable in the current environment. Upload a photo below.")
             else:
                 uploaded_file = st.file_uploader("Upload Daylight Photo (JPEG/PNG):", type=["jpg", "jpeg", "png"], key="m3_uploader")
                 if uploaded_file:
