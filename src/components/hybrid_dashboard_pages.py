@@ -662,10 +662,6 @@ def render_data_sources_system_health_page():
     st.success("✓ Zero secrets or internal credentials are exposed to dashboard clients. All upstream API tokens and internal exception traces are strictly redacted in backend logs.")
 
 
-    st.markdown("### 🔒 Security & API Key Protection")
-    st.success("✓ Zero secrets are exposed in client-side code. All external API keys are loaded securely via backend `.env` configuration and masked in all logs.")
-
-
 # --- Page: Individual Forecasters ---
 def render_individual_methods_page():
     render_html(
@@ -924,10 +920,10 @@ def render_model_performance_page():
                 <div>
                     <div style="display: flex; align-items: center; gap: 0.65rem;">
                         <span style="font-size: 1.65rem;">🏆</span>
-                        <h2 style="font-size: 1.6rem; font-weight: 700; color: #F8FAFC; margin: 0; letter-spacing: -0.01em;">Model Performance & Scientific Benchmarks</h2>
+                        <h2 style="font-size: 1.6rem; font-weight: 700; color: #F8FAFC; margin: 0; letter-spacing: -0.01em;">Model Performance & Operational Benchmarks</h2>
                     </div>
                     <div style="color: #94A3B8; font-size: 0.88rem; margin-top: 0.4rem; max-width: 820px; line-height: 1.5;">
-                        Empirical verification metrics and peer-reviewed evaluation across 404,431 sequence evaluations, per-class confusion matrices, and multimodal fusion validation cohorts.
+                        Empirical verification metrics and rigorous evaluation across 404,431 sequence evaluations, per-class confusion matrices, and multimodal fusion validation cohorts.
                     </div>
                 </div>
                 <div style="text-align: right; background: #0A0E17; padding: 0.6rem 0.9rem; border-radius: 10px; border: 1px solid #1F293D;">
@@ -1019,7 +1015,7 @@ def render_model_performance_page():
 
     render_html("""
     <div style="background: #1A2234; border-left: 3px solid #38BDF8; padding: 1.1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.85rem; color: #94A3B8; line-height: 1.6;">
-        <strong style="color: #F8FAFC;">Scientific Assessment & Grouped Uncertainty:</strong><br>
+        <strong style="color: #F8FAFC;">Operational Performance & Grouped Uncertainty:</strong><br>
         • <strong>Negative Transfer Resolved:</strong> Prior concatenation fusion collapsed to PM2.5 MAE = 58.94 ug/m3 ($R^2 = -0.1410$). The <strong>Optimized Residual Hybrid Model</strong> recovers baseline performance with test PM2.5 MAE = <strong>8.98 ug/m3</strong> ($R^2 = 0.9628$).<br>
         • <strong>Grouped Cluster Bootstrap (K=9 Groups):</strong> Station-date clustered 95% CI for PM2.5 improvement is <strong>[-0.0063, +0.1178] ug/m3</strong> ($p = 0.0982$). Because this interval spans zero, the hybrid model is <strong>competitive and resilient</strong> rather than conclusively superior to pure telemetry.<br>
         • <strong>Image Modality Ablation:</strong> Image shuffling and neutral representation ablations reveal that the ~0.06 ug/m3 shift is a conservative global calibration bias adjustment rather than localized optical depth extraction, attributable to the lack of sub-daily timestamps in public camera datasets.<br>
@@ -1068,7 +1064,7 @@ def render_model_performance_page():
 
     render_html("""
     <div style="background: #1A2234; border-left: 3px solid #00E676; padding: 1.1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.85rem; color: #94A3B8; line-height: 1.6;">
-        <strong style="color: #F8FAFC;">Accuracy Optimization v2 Key Research Findings:</strong><br>
+        <strong style="color: #F8FAFC;">Model Accuracy & Optimization Insights:</strong><br>
         • <strong>Winning Multi-Modal Ensemble:</strong> Blending LSTM sequential representations (0.90 PM2.5 / 0.80 PM10) with tree-based tabular gradient boosting (0.10 PM2.5 / 0.20 PM10) achieves the best overall performance: PM2.5 MAE = <strong>10.40 µg/m³</strong> (RMSE 18.55, R² 0.9494) and PM10 MAE = <strong>18.28 µg/m³</strong> (RMSE 31.97, R² 0.9311) on all 404,431 test sequences.<br>
         • <strong>Short-term Inertia Dominance:</strong> Next-hour forecasting is heavily driven by 1-hour physical inertia (Persistence MAE = 10.68 µg/m³). Diurnal cycles (24h lag MAE = 28.99 µg/m³) and weekly cycles (168h lag MAE = 45.12 µg/m³) have vastly weaker short-term predictive power.<br>
         • <strong>Severe Pollution Underprediction:</strong> In the 'Severe' category (>250 µg/m³), regression models exhibit mean-reversion bias (-16 to -22 µg/m³), while outperforming persistence in the 'Very Poor' category (120-250 µg/m³, Ensemble MAE 17.46 vs Persistence 21.10).<br>

@@ -178,7 +178,7 @@ class OperationalHealthService:
         self.cache_last_updated: Optional[datetime] = None
         self.last_retrieval_time: Optional[datetime] = None
         self.exceptions_log: List[Dict[str, Any]] = []
-        self._state_lock = threading.Lock()
+        self._state_lock = threading.RLock()
         self._initialized = True
 
     def record_api_call(
