@@ -1,216 +1,278 @@
-# VayuDrishti — Breathe Smarter | Air Quality Intelligence for India
+# VayuDrishti — AI-Based Air Quality Monitoring and Forecasting
 
-**A Robust Spatio-Temporal Machine Learning Framework for Longitudinal Air Quality Forecasting, Distribution-Free Conformal Calibration, and Empirical Multimodal Evaluation Across Indian Urban Environments**
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://vayudrishti-airquality.streamlit.app/)
+[![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![QA Tests](https://img.shields.io/badge/QA%20Tests-65%2F65%20Passing-brightgreen.svg)](docs/qa/README.md)
 
-**Authors:**
-- Teliki Rushya Sree
-- Machireddy Swathi
-- Thanuja Varakala
-- Palli Shilpa
-
-**Faculty Supervisor:**
-- Prof. Thotta Ramatulasi
-
-*Department of Computer Science and Engineering, India*
+> **Breathe Smarter:** An operational, multi-modal environmental intelligence platform providing real-time air quality monitoring, calibrated 24-hour sequence forecasting, and empirical uncertainty quantification across Indian urban environments.
 
 ---
 
-## 1. Project Overview & Operational Capabilities
+## 1. Project Overview
 
-**VayuDrishti** (*Breathe Smarter — Air Quality Intelligence for India*) is an operational environmental monitoring, forecasting, and uncertainty quantification platform. Built for high-stakes municipal and public health decision-making in developing countries, VayuDrishti bridges atmospheric deep learning with real-world sensor resilience.
+**VayuDrishti** (*Sanskrit: "Vision of Air"*) is an end-to-end air quality monitoring and next-hour forecasting platform designed for municipal authorities, public health officials, environmental researchers, and citizens.
 
-### Core Datasets & Scope:
-- **Historical Regulatory Telemetry:** 1,369,779 cleaned hourly records from 90 Central Pollution Control Board (CPCB) continuous ambient air quality monitoring stations (CAAQMS) spanning 2015–2020 across 23 States and Union Territories.
-- **Meteorological Reanalysis:** ECMWF ERA5-Land hourly atmospheric variables ($T$, $T_d$, $RH$, $u$, $v$, $P$) bilinearly interpolated to all 90 CAAQMS coordinates.
-- **Nationwide Longitudinal Live Portfolio:** 15 continuous CAAQMS stations spanning 11 Indian States/UTs with 236,289 live and holdout test sequences and 506,848 seasonal evaluations.
-- **Environmental Vision:** Curated outdoor photographs from the PM25Vision dataset across Indian coordinates.
-- **CPCB NAQI Standard:** Official Indian National Air Quality Index engine with piecewise linear sub-indices, dominant pollutant identification, 3-pollutant minimum requirement, and targeted health advisories.
+### The Problem It Solves
+Urban centers across India experience rapid fluctuations in particulate matter ($\text{PM}_{2.5}$ and $\text{PM}_{10}$) driven by seasonal dust events, industrial emissions, and changing meteorological patterns. Many public dashboards present raw sensor values without predictive insight, or rely on complex black-box models that fail silently during telemetry dropouts.
 
----
-
-## 2. Nationwide Multi-Station & Andhra Pradesh Portfolio
-
-VayuDrishti features nationwide coverage across major climatic, industrial, and coastal regimes:
-
-| Station ID | City, State / UT | Station Name | Climatic / Regional Zone | Sample Count ($N$) |
-|:---:|:---|:---|:---|:---:|
-| `AP001` | Amaravati, Andhra Pradesh | Secretariat, Amaravati - APPCB | Coastal Plain / Capital Region | 149 (Live) |
-| `AP005` | Visakhapatnam, Andhra Pradesh | GVM Corporation - APPCB | Coastal Marine / Port | 3,550 |
-| `DL002` | Delhi, National Capital Territory | Anand Vihar - DPCC | Indo-Gangetic / Transport Hub | 3,357 |
-| `DL008` | Delhi, National Capital Territory | DTU, Delhi - CPCB | Indo-Gangetic / Institutional | 2,674 |
-| `MH005` | Mumbai, Maharashtra | Bandra, Mumbai - MPCB | West Coast Marine | 2,828 |
-| `MH008` | Mumbai, Maharashtra | Colaba, Mumbai - MPCB | Coastal Peninsula | 2,226 |
-| `GJ001` | Ahmedabad, Gujarat | Maninagar - GPCB | Western Semi-Arid / Urban | 3,059 |
-| `WB008` | Kolkata, West Bengal | Bidhannagar - WBPCB | Lower Gangetic Basin | 3,455 |
-| `WB010` | Kolkata, West Bengal | Jadavpur - WBPCB | Lower Gangetic Basin | 3,562 |
-| `BR008` | Patna, Bihar | Muradpur, Patna - BSPCB | Middle Gangetic Basin | 3,379 |
-| `KA004` | Bengaluru, Karnataka | Bapuji Nagar - KSPCB | Deccan Plateau / Urban | 3,548 |
-| `TG001` | Hyderabad, Telangana | Bollaram Industrial - TSPCB | Deccan Plateau / Industrial | 3,089 |
-| `TN002` | Chennai, Tamil Nadu | Manali Village - TNPCB | Coromandel Coast / Petrochemical | 3,180 |
-| `CH001` | Chandigarh, Union Territory | Sector-25 - CPCC | Himalayan Foothills / Urban | 3,037 |
-| `AS001` | Guwahati, Assam | Railway Colony - APCB | Brahmaputra Valley | 2,456 |
-
-### Strict Scientific Data Availability & Proxy Rules:
-- **No Fabricated Telemetry:** For city centers without direct in-situ CAAQMS instrumentation (e.g., Vijayawada, Guntur), the platform strictly reports `"Historical model data unavailable"`.
-- **Explicit Proxy Opt-In:** Users can opt-in to analyze regional air parcels using the closest operational CAAQMS monitor. Results are strictly labeled `"Nearby-station proxy forecast"`, reporting the actual station ID, location, and great-circle distance in kilometers.
+### What VayuDrishti Does
+- **Ingests Authenticated Telemetry**: Pulls continuous physical observations from official Central Pollution Control Board (CPCB) continuous ambient air quality monitoring stations (CAAQMS) via OpenAQ v3 and atmospheric reanalysis from Open-Meteo.
+- **Validates Input Sequences**: Runs an 8-gate sequence validation pipeline ensuring continuous 24-hour antecedent history without lookahead bias or fabricated data.
+- **Generates Multi-Model Forecasts**: Predicts next-hour ($t+1$) particulate concentrations using a 2-layer temporal LSTM and a 49-feature adapted Gradient Boosted Decision Tree (LightGBM).
+- **Quantifies Predictive Uncertainty**: Computes distribution-free split-conformal prediction intervals, providing statistically guaranteed coverage bounds.
+- **Resilient Fallback Handling**: Operates under strict graceful degradation. If camera imagery or external APIs drop, models automatically switch to sensor-only mode with explicit provenance badges.
 
 ---
 
-## 3. Verified Experimental Benchmarks
+## 2. Live Application Demo
 
-### 3.1 Longitudinal Multi-Station Live Portfolio (236,289 Sequences Across 15 Stations)
+Experience the interactive Streamlit dashboard live in your browser:
 
-| Model Architecture | Telemetry Requirements | $\text{PM}_{2.5}$ MAE ($\mu\text{g/m}^3$) | $\text{PM}_{2.5}$ RMSE | $\text{PM}_{2.5}$ $R^2$ | Gain vs Persist | $\text{PM}_{10}$ MAE ($\mu\text{g/m}^3$) | $\text{PM}_{10}$ RMSE | $\text{PM}_{10}$ $R^2$ | Gain vs Persist |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1-Hour Persistence Baseline** | Telemetry at $t$ only | 6.95 | 14.49 | 0.7844 | 0.00% | 17.16 | 38.70 | 0.8089 | 0.00% |
-| **Sensor + Meteorology (Adapted LSTM)** | $\text{PM}_{2.5}, \text{PM}_{10}$ + ERA5 Weather (27 feats) | 6.80 | 13.18 | 0.8215 | +2.11% | 16.48 | 34.65 | 0.8468 | +3.96% |
-| **Sensor-Only Standalone Adapted GBDT** | Particulate Autoregression Only (49 feats) | 6.67 | 13.17 | 0.8219 | +3.97% | 16.29 | 35.24 | 0.8415 | +5.06% |
-| **Unified Adapted Severity-Gated Ensemble** | **Particulates + Weather + Severity Gate** | **6.62** | **13.04** | **0.8254** | **+4.72%** | **16.14** | **34.53** | **0.8479** | **+5.92%** |
+👉 **[Launch VayuDrishti Web Application](https://vayudrishti-airquality.streamlit.app/)**
 
-### 3.2 Historical Benchmark (404,431 Held-Out Sequences Across 90 Stations)
-- **2-Layer LSTM Forecaster:** $\text{PM}_{2.5}$ MAE **10.57 $\mu\text{g/m}^3$** ($R^2 = 0.9492$); $\text{PM}_{10}$ MAE **18.86 $\mu\text{g/m}^3$** ($R^2 = 0.9301$).
-- **CPCB NAQI Category Accuracy:** **77.04%** exact ($\text{PM}_{2.5}$) and **80.88%** ($\text{PM}_{10}$); **$>99.3\%$ adjacent-category accuracy** ($\pm 1$ bin).
-
-### 3.3 Empirical Negative Result on Opportunistic Imagery
-- **ResNet-50 Image Baseline:** $\text{PM}_{2.5}$ MAE **66.21 $\mu\text{g/m}^3$** ($R^2 = 0.1524$) on 79 held-out images.
-- **Multimodal Early Fusion on Matched Cohort ($N=60$):** Image-Only MAE 73.67 $\mu\text{g/m}^3$ vs Multimodal Fusion MAE **85.86 $\mu\text{g/m}^3$** ($R^2 = -0.5064$).  
-*Finding:* Early feature fusion degraded performance by **12.19 $\mu\text{g/m}^3$** due to lack of sub-daily timestamps amidst $166.72\ \mu\text{g/m}^3$ diurnal swings, extreme burst clustering, and $+70.74\ \mu\text{g/m}^3$ systematic label bias.
+*Hosted on Streamlit Community Cloud. Connects live to official CAAQMS telemetry with automated fallback caching.*
 
 ---
 
-## 4. Key Scientific Contributions
+## 3. Key Features
 
-### 4.1 Standalone Adapted GBDT (LightGBM)
-Features a canonical 49-variable autoregressive schema (24 lagged particulate terms, 14 rolling statistics, 4 temporal harmonics, 3 calendar variables, 4 spatial coordinates). Designed specifically for zero reliance on secondary trace gases ($\text{NO}_x, \text{CO}, \text{SO}_2, \text{O}_3$), eliminating failure modes caused by telemetry dropouts.
-
-### 4.2 Distribution-Free Split-Conformal Uncertainty Calibration
-Guarantees valid finite-sample marginal coverage across 118,145 test instances:
-- $\text{PM}_{2.5}$: **92.87%** empirical coverage at 80% nominal (width: 24.12 $\mu\text{g/m}^3$), **96.76%** at 90% nominal, and **98.38%** at 95% nominal.
-- $\text{PM}_{10}$: **93.66%** empirical coverage at 80% nominal (width: 60.25 $\mu\text{g/m}^3$), **97.23%** at 90% nominal, and **98.71%** at 95% nominal.
-
-### 4.3 Rigorous Statistical Robustness
-- **Stationary Block Bootstrap** ($B=5,000$, block length $L=24\text{h}$): Pooled $\text{PM}_{2.5}$ difference $-0.28\ \mu\text{g/m}^3$ (95% CI $[-0.30, -0.25]$, Wilcoxon $p = 4.98 \times 10^{-12}$); pooled $\text{PM}_{10}$ difference $-0.87\ \mu\text{g/m}^3$ ($p = 7.57 \times 10^{-24}$).
-- **Multiple Testing Corrections**: Passes Bonferroni FWER ($p < 0.0028$) and Benjamini-Hochberg FDR ($q < 0.05$).
-- **Hazardous Regimes**: In the *Very Poor* regime ($N=4,847$), GBDT reduces MAE by **2.48 $\mu\text{g/m}^3$** (29.14 vs 31.62 $\mu\text{g/m}^3$, $p = 3.71 \times 10^{-25}$).
-
-### 4.4 Spatial-Temporal Cross-Station Advection
-- **Mumbai Marine Corridor (17.2 km)**: Peak correlation occurs at an **advective lag of $\tau = +1\text{ hour}$** ($r = 0.5385$) driven by coastal sea breezes. Incorporating neighbor lags reduces MAE to **6.05 $\mu\text{g/m}^3$** (**$+0.86\%$ gain** over single-station GBDT).
-- **Inland Corridors (Delhi & Kolkata)**: Synchronous correlation peaks at $\tau = 0$. Local emissions dominate; spatial neighbor concatenation introduces noise without physics-informed wind gating.
+- **Real-Time Air Quality Monitoring**: Live particulate readings ($\text{PM}_{2.5}$, $\text{PM}_{10}$), criteria gases ($\text{NO}_2$, $\text{SO}_2$, $\text{CO}$, $\text{O}_3$), and meteorological conditions across major Indian stations.
+- **Official CPCB NAQI Engine**: Piecewise linear Indian National Air Quality Index calculation with dominant pollutant identification and personalized health advisories.
+- **Dual Forecasting Modes**:
+  - **Mode A (Individual Methods)**: Side-by-side inspection of Sensor-Only LSTM ($27$ features), Environmental Meteorology, ResNet-50 Vision Estimation, and 1-hour Persistence baselines.
+  - **Mode B (Unified Hybrid Ensemble)**: Severity-gated ensemble combining deep recurrent representations and tree-based gradient boosting with residual visual adjustment.
+- **Distribution-Free Uncertainty**: Conformal prediction intervals (80%, 90%, 95% confidence bands) calibrated across 118,000+ holdout instances.
+- **Strict Data Provenance**: Explicit badges distinguishing `LIVE MEASURED`, `RECENT BUFFERED`, and `HISTORICAL BENCHMARK` sequences. Zero synthetic imputation for live observations.
+- **Operational System Health**: Real-time upstream API latency tracking, cache age metrics, station buffer completeness, and append-only forecast audit logging.
 
 ---
 
-## 5. Website Architecture & Navigation
+## 4. System Architecture
 
-The upgraded application (`app.py`) features 8 dedicated modules:
-1. **🏠 Overview (Dual-Mode Summary):** Hero banner, current weather, dynamic greeting based on Asia/Kolkata timezone, and quick navigation.
-2. **🛡️ Live Air Quality:** Station-level telemetry inspection across CAAQMS stations with data freshness indicators.
-3. **📈 Individual Forecasting Methods (Mode A):** Sensor-Only LSTM, Sensor + Weather, ResNet-50 Vision, and 1-hour persistence baselines.
-4. **⚡ Unified Hybrid Forecast (Mode B):** Severity-gated ensemble combining deep recurrent sequences and LightGBM with missing-modality fallback.
-5. **⚖️ Side-by-Side Method Comparison:** Comprehensive matrix evaluating all forecasting methods simultaneously for any selected station.
-6. **🗺️ Interactive 3D Station Map:** Interactive geospatial map of 90 CPCB continuous monitoring stations with hover inspection.
-7. **📊 Model Performance & Benchmark Matrices:** Classification confusion matrices, 168-hour continuous trajectories, and multi-station/seasonal benchmark charts.
-8. **ℹ️ Data Sources & System Health:** Checkpoint integrity verification (`best_lstm_model.pt`, `adapted_gbdt_pm25.joblib`), live telemetry health, and audit registry.
+```mermaid
+flowchart TD
+    subgraph Data_Sources ["1. Data Sources"]
+        CPCB["CPCB CAAQMS Inlets"]
+        OpenAQ["OpenAQ API v3"]
+        Meteo["Open-Meteo Weather"]
+        Cam["Outdoor Camera Imagery"]
+    end
+
+    subgraph Ingestion_Validation ["2. Resilient Ingestion & Validation"]
+        Mgr["Resilient Ingestion Manager\n(Cache & Rate Limiting)"]
+        Buffer["24-Hour Rolling Buffer"]
+        Gate["8-Gate Sequence Validator\n(Temporal, Bounds, Identity)"]
+    end
+
+    subgraph Forecasting_Engines ["3. Forecasting & ML Pipelines"]
+        LSTM["2-Layer PyTorch LSTM\n(27 Temporal Features)"]
+        GBDT["Adapted LightGBM\n(49 Lagged Features)"]
+        Vision["ResNet-50 Optical Estimator\n(Haze Density Features)"]
+        Ensemble["Severity-Gated Residual Fusion\n(LSTM + GBDT + Vision Head)"]
+    end
+
+    subgraph Prediction_Services ["4. Prediction Services"]
+        Conformal["Split-Conformal Calibration\n(Uncertainty Bounds)"]
+        Audit["Forecast Execution Lifecycle\n& Audit Logger (JSONL)"]
+    end
+
+    subgraph Dashboard ["5. Streamlit Interactive Dashboard"]
+        UI["8-Section User Interface\n(Live Telemetry, Forecasts, Health)"]
+    end
+
+    CPCB --> OpenAQ
+    OpenAQ --> Mgr
+    Meteo --> Mgr
+    Cam --> Vision
+
+    Mgr --> Buffer
+    Buffer --> Gate
+
+    Gate -->|Validated 24h Tensor| LSTM
+    Gate -->|Validated 24h Tensor| GBDT
+
+    LSTM --> Ensemble
+    GBDT --> Ensemble
+    Vision --> Ensemble
+
+    Ensemble --> Conformal
+    Conformal --> Audit
+    Audit --> UI
+```
 
 ---
 
-## 6. Quick Start & Reproducibility Instructions
+## 5. Technology Stack
+
+- **Core Backend**: Python `3.10` / `3.11`
+- **Dashboard UI**: Streamlit `1.28+`, Plotly, PyDeck, Matplotlib
+- **Deep Learning**: PyTorch `2.0+`, Torchvision (ResNet-50)
+- **Machine Learning**: Scikit-learn, LightGBM, SciPy, Joblib
+- **Data Engineering**: Pandas `2.0+`, NumPy, PyTZ
+- **External Telemetry APIs**: OpenAQ REST API v3, Open-Meteo Weather Ensemble
+- **Containerization**: Docker, Docker Compose
+- **Quality Assurance**: PyTest, Streamlit `AppTest`
+
+---
+
+## 6. Installation & Quick Start
 
 ### Prerequisites
-- Python 3.10 or 3.11
-- Windows PowerShell or Bash
-- Existing virtual environment: `.venv`
+- Python `3.10` or `3.11`
+- Git
 
-### Step 1: Launch the Interactive Dashboard
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/Rushyasree/Multimodal_airquality_prediction.git
+cd Multimodal_airquality_prediction
+```
+
+### Step 2: Create & Activate Virtual Environment
+```bash
+# Windows (PowerShell)
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+# Linux / macOS (Bash)
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### Step 3: Install Dependencies
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### Step 4: Configure Environment Variables (Optional)
+Copy the example environment configuration:
+```bash
+cp .env.example .env
+```
+*(An OpenAQ API key can be added to `.env` for higher rate limits, but the application runs out-of-the-box using public endpoints and local caches).*
+
+### Step 5: Launch the Web Dashboard
 ```bash
 streamlit run app.py
 ```
-The application opens in your browser at `http://localhost:8501`.
-
-### Step 2: Run Full Automated Smoke Test (All 8 Sections)
-```bash
-python tests/test_eight_sections_smoke.py
-```
-*(Verifies data dependencies, model checkpoints, fallback mechanisms, and UI components across all 8 dashboard sections)*
-
-### Step 3: Run Phase 13 Spatial Advection Tests
-```bash
-pytest tests/test_phase13_spatial_advection.py -v
-```
-
-### Step 4: Run Hourly Autonomous Live Monitoring Cycle
-```bash
-python -m src.services.longitudinal_collector_service
-```
+Open your browser at `http://localhost:8501`.
 
 ---
 
-## 7. Academic Research Publication Package (`paper/`)
+## 7. Dashboard Navigation Guide
 
-The academic research manuscript is ready in the `paper/` directory:
-- **Master LaTeX Manuscript:** [`paper/main.tex`](paper/main.tex) (ACM / IEEE / NeurIPS standard).
-- **Markdown Companion:** [`paper/manuscript.md`](paper/manuscript.md).
-- **BibTeX Bibliography:** [`paper/references.bib`](paper/references.bib) (18 verified peer-reviewed citations).
-- **Modular Tables:** [`paper/tables/`](paper/tables/) (7 standalone `.tex` tables).
-- **High-Resolution Figures:** [`paper/figures/`](paper/figures/) (7 publication figures).
-- **Pre-Submission Checklist:** [`paper/pre_submission_checklist.md`](paper/pre_submission_checklist.md).
-- **Compilation:**
-  ```bash
-  cd paper/
-  pdflatex main.tex
-  bibtex main
-  pdflatex main.tex
-  pdflatex main.tex
-  ```
+The application features 8 dedicated operational modules:
+
+1. **🏠 Overview**: Real-time AQI hero card, current weather, health precautions, and rapid status overview.
+2. **🛡️ Live Air Quality**: Station-level telemetry inspection across CAAQMS stations with data freshness indicators.
+3. **📈 Individual Forecasting Methods**: Independent examination of Sensor-Only LSTM, Sensor + Weather, ResNet-50 Vision, and 1-hour persistence baselines.
+4. **⚡ Unified Hybrid Forecast**: Severity-gated multimodal prediction combining recurrent LSTM sequences with LightGBM and conservative visual adjustments.
+5. **⚖️ Side-by-Side Comparison**: Comprehensive evaluation comparing all forecasting methods simultaneously for any selected station.
+6. **🗺️ Interactive Station Map**: Geospatial mapping of 90 CPCB monitoring stations across India with zoom, pan, and real-time AQI pins.
+7. **📊 Model Performance & Benchmarks**: Operational verification metrics, per-class confusion matrices, and continuous timeseries evaluations.
+8. **ℹ️ Data Sources & System Health**: Real-time API latency tracking, cache age metrics, station buffer completeness, and recent forecast audit logs.
 
 ---
 
 ## 8. Repository Layout
 
 ```text
-├── app.py                                   # Operational Streamlit Web Application (8 Sections)
+├── app.py                                   # Main Streamlit application entry point
 ├── config.yaml                              # Global project hyperparameters
-├── requirements.txt                         # Dependencies
-├── README.md                                # Comprehensive documentation & guide
+├── requirements.txt                         # Pinned production dependencies
+├── Dockerfile & docker-compose.yml          # Container deployment specifications
+├── README.md                                # Main project documentation
 │
-├── src/
-│   ├── services/
-│   │   ├── spatial_advection_service.py     # Cross-station Haversine, bearing & wind advection
-│   │   ├── longitudinal_collector_service.py# Autonomous hourly live-telemetry collector
-│   │   ├── live_air_quality_service.py      # Real-time CPCB / OpenAQ telemetry ingest
-│   │   ├── sensor_forecast_service.py       # Operational LSTM & GBDT inference
-│   │   ├── image_estimation_service.py      # ResNet-50 visual PM estimation
-│   │   ├── hybrid_prediction_service.py     # Severity-gated hybrid ensemble
-│   │   └── model_comparison_service.py      # Multi-method benchmark service
-│   ├── prediction/
-│   │   ├── aqi_advisor.py                   # CPCB NAQI calculation & health precautions
-│   │   ├── lstm_forecaster.py               # 2-layer LSTM sequence forecaster
-│   │   └── image_estimator.py               # ResNet-50 optical regression
-│   └── data/
+├── src/                                     # Application source code
+│   ├── components/                          # Dashboard pages and UI layouts
+│   ├── data/                                # Resilient ingestion & rolling buffers
+│   ├── prediction/                          # Sequence validators, loaders & normalizers
+│   ├── services/                            # Forecaster services, audit logger & health
+│   └── utils/                               # Metrics, reproducibility & helpers
 │
-├── tests/
-│   ├── test_phase13_spatial_advection.py    # Spatial advection test suite (6/6 passed)
-│   ├── test_phase12_autonomous_monitoring.py# Multi-station & autonomous monitoring tests
-│   ├── test_eight_sections_smoke.py         # End-to-end smoke test for all 8 dashboard sections
-│   └── test_standalone_gbdt_inference.py    # 49-feature schema & LightGBM inference tests
+├── models/                                  # Trained ML checkpoints (Protected)
+│   ├── lstm_baseline/                       # 2-layer LSTM checkpoint & scalers
+│   ├── adapted_gbdt/                        # Adapted LightGBM model checkpoints
+│   └── image_estimator/                     # ResNet-50 vision weights
 │
-├── models/
-│   ├── adapted_gbdt/                        # Standalone Adapted GBDT checkpoints (PM2.5, PM10)
-│   ├── lstm_baseline/                       # Trained 2-layer LSTM checkpoint & scalers
-│   └── pm25vision_cnn/                      # Trained ResNet-50 checkpoint
+├── tests/                                   # Automated test suites (30 files)
+│   ├── test_operational_monitoring_and_reliability.py
+│   ├── test_live_data_provenance_and_validation.py
+│   ├── test_dashboard_navigation.py
+│   └── test_eight_sections_smoke.py
 │
-├── paper/
-│   ├── main.tex                             # Master conference manuscript source
-│   ├── manuscript.md                        # Markdown paper companion
-│   ├── references.bib                       # 18 verified BibTeX citations
-│   ├── tables/                              # 7 modular LaTeX table files
-│   ├── figures/                             # 7 high-resolution publication figures
-│   └── pre_submission_checklist.md          # Pre-submission quality audit report
+├── docs/                                    # Documentation & Guides
+│   ├── qa/                                  # Centralized QA Knowledge Base
+│   ├── archive/                             # Historical research audit archive
+│   ├── ENVIRONMENT_SETUP.md                 # Detailed multi-OS installation guide
+│   ├── TROUBLESHOOTING.md                   # Runtime anomaly diagnostic guide
+│   └── DEPLOYMENT_AND_VERIFICATION_GUIDE.md # Production deployment guide
 │
-├── experiments/
-│   ├── phase12/                             # Multi-station longitudinal live trial artifacts
-│   ├── phase13/                             # Spatial advection analysis artifacts & reports
-│   └── recent_data_audit/                   # Phase 6B–11 feasibility & audit reports
-│
-└── docs/
-    └── DEPLOYMENT_AND_VERIFICATION_GUIDE.md # Production launch & ops instructions
+├── paper/                                   # Academic conference manuscript assets
+└── presentation/                            # Project slide decks and speaker notes
 ```
+
+---
+
+## 9. Quality Assurance & Testing
+
+VayuDrishti maintains a structured QA framework:
+
+- [**QA Overview**](docs/qa/README.md): Testing principles, objectives, and test organization.
+- [**Test Strategy**](docs/qa/TEST_STRATEGY.md): Unit, integration, validation, and e2e testing levels.
+- [**Test Execution Guide**](docs/qa/TEST_EXECUTION.md): Step-by-step CLI commands and debugging steps.
+- [**QA Coverage Matrix**](docs/qa/QA_COVERAGE_MATRIX.md): Component-by-component coverage inventory.
+- [**Release Checklist**](docs/qa/RELEASE_CHECKLIST.md): Production deployment verification gates.
+- [**Bug Reporting Guide**](docs/qa/BUG_REPORTING.md): Bug classification and issue guidelines.
+
+### Quick Test Execution:
+```bash
+# Run core operational monitoring tests
+pytest tests/test_operational_monitoring_and_reliability.py -v
+
+# Run 8-section dashboard smoke test
+python tests/test_eight_sections_smoke.py
+```
+
+---
+
+## 10. Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Check existing [Issues](https://github.com/Rushyasree/Multimodal_airquality_prediction/issues) before opening a new ticket.
+2. Submit bug reports using our [Bug Report Template](.github/ISSUE_TEMPLATE/bug_report.md).
+3. Create a feature branch: `git checkout -b feature/your-feature-name`.
+4. Ensure all automated tests pass before committing.
+5. Submit a pull request using our [Pull Request Template](.github/PULL_REQUEST_TEMPLATE.md).
+
+---
+
+## 11. Data Sources & Governance
+
+- **Central Pollution Control Board (CPCB)**: Continuous Ambient Air Quality Monitoring Station (CAAQMS) ground data governed by the [Government of India Open Data License](https://data.gov.in/).
+- **OpenAQ**: Near real-time urban telemetry connector licensed under the [Open Data Commons Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/).
+- **Open-Meteo**: Surface meteorological reanalysis data licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
+
+---
+
+## 12. License
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details. Academic and operational use is welcomed with appropriate attribution.
+
+---
+
+## 13. Maintainers & Authors
+
+**Project Author & Lead:**
+- **Teliki Rushya Sree** ([@Rushyasree](https://github.com/Rushyasree))
+
+**Co-Authors:**
+- Machireddy Swathi
+- Thanuja Varakala
+- Palli Shilpa
+
+**Faculty Supervisor:**
+- Prof. Thotta Ramatulasi  
+*Department of Computer Science and Engineering, India*

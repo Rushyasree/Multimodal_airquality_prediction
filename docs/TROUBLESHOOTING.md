@@ -45,7 +45,7 @@ The environment lacks external internet access (e.g. sandboxed test runner, offl
 2. **Automatic Offline Fallback**: The service automatically returns cached or verified baseline telemetry while tagging the status with `is_live = False` and `data_source = "Fallback/Simulated Telemetry"`.
 3. To test live connectivity when internet access is restored:
    ```bash
-   python test_openaq_live.py
+   pytest tests/test_live_openaq_connectivity.py -v
    ```
 
 ---

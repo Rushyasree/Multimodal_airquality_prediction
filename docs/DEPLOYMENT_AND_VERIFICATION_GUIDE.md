@@ -88,6 +88,6 @@ The academic research manuscript is ready in the `paper/` directory:
 ---
 
 ## 4. Verification & Governance Summary
-- **Model Checkpoints**: All checkpoints (`best_lstm_model.pt`, `adapted_gbdt_pm25.joblib`, `adapted_gbdt_pm10.joblib`) remain completely untouched and verified with immutable SHA-256 hashes.
-- **Temporal Integrity**: All features and buffers are strictly causal ($t \le \text{issue\_time}$). Zero lookahead leakage, zero synthetic imputation.
-- **Test Suite**: 100% of tests pass across `test_phase13_spatial_advection.py`, `test_phase12_autonomous_monitoring.py`, and `test_eight_sections_smoke.py`.
+- **Model Checkpoints**: All checkpoints (`best_lstm_model.pt`, `adapted_gbdt_pm25.joblib`, `adapted_gbdt_pm10.joblib`, `resnet50_weights.pth`) remain completely untouched and verified with immutable SHA-256 hashes.
+- **Temporal Integrity**: All features and buffers are strictly causal ($t \le \text{issue\_time}$). Zero lookahead leakage, zero synthetic imputation, and strict 8-gate sequence validation.
+- **Comprehensive QA Suite**: 100% of tests pass across `test_operational_monitoring_and_reliability.py`, `test_live_data_provenance_and_validation.py`, `test_forecast_time_alignment.py`, `test_eight_sections_smoke.py`, and `test_dashboard_navigation.py`. See [docs/qa/](qa/README.md) for full test strategy and execution details.
