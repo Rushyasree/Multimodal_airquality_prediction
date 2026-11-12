@@ -254,7 +254,8 @@ class OperationalHealthService:
         if observation_timestamp is not None:
             try:
                 if isinstance(observation_timestamp, str):
-                    dt = pd.to_datetime(observation_timestamp)
+                    clean_ts = observation_timestamp.replace(" IST", " +05:30")
+                    dt = pd.to_datetime(clean_ts)
                 else:
                     dt = observation_timestamp
                 if dt.tzinfo is None:
