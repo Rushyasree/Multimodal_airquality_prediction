@@ -354,6 +354,18 @@ class StationRollingBuffer:
             })
         return summary
 
+    def get_sample_count(self, clock_hour: datetime, parameter: str) -> int:
+        """Returns the number of sub-hourly samples aggregated into the specified clock hour."""
+        self._rebuild_hourly_aggregates()
+        ch = datetime(clock_hour.year, clock_hour.month, clock_hour.day, clock_hour.hour, tzinfo=timezone.utc)
+        return self._hourly_sample_counts.get(ch, {}).get(parameter, 0)
+
+    def get_hourly_mean(self, clock_hour: datetime, parameter: str) -> Optional[float]:
+        """Returns the aggregated arithmetic mean for the parameter at the specified clock hour."""
+        self._rebuild_hourly_aggregates()
+        ch = datetime(clock_hour.year, clock_hour.month, clock_hour.day, clock_hour.hour, tzinfo=timezone.utc)
+        return self._hourly_cache.get(ch, {}).get(parameter)
+
     def check_readiness(
         self,
         anchor_time_utc: Optional[Union[str, datetime, pd.Timestamp]] = None,

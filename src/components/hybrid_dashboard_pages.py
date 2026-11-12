@@ -155,22 +155,25 @@ def render_unified_hybrid_page():
         # Prediction Metric Cards
         c_pm25, c_pm10, c_alpha = st.columns(3)
         with c_pm25:
+            pm25_val = f"{res['pm25']:.1f} µg/m³" if res.get('pm25') is not None else "Unavailable"
             st.metric(
                 label="Integrated PM2.5 Forecast",
-                value=f"{res['pm25']} µg/m³",
+                value=pm25_val,
                 delta=None,
             )
         with c_pm10:
+            pm10_val = f"{res['pm10']:.1f} µg/m³" if res.get('pm10') is not None else "Unavailable"
             st.metric(
                 label="Integrated PM10 Forecast",
-                value=f"{res['pm10']} µg/m³",
+                value=pm10_val,
                 delta=None,
             )
         with c_alpha:
+            alpha_val = f"{res['gating_alpha']:.4f}" if res.get('gating_alpha') is not None else "N/A"
             st.metric(
                 label="Visual Gate Weight (α)",
-                value=f"{res['gating_alpha']:.4f}",
-                delta="Active" if res['gating_alpha'] > 0.05 else "Fallback",
+                value=alpha_val,
+                delta="Active" if (res.get('gating_alpha') or 0.0) > 0.05 else "Fallback",
             )
 
         # Clean Compact Status
@@ -323,8 +326,8 @@ def render_side_by_side_comparison_page():
         """
     )
 
-    # Station Selection
-    c_st, c_info = st.columns([1.2, 2.8])
+    # Station & Data Mode Selection
+    c_st, c_mode, c_info = st.columns([1.2, 1.4, 1.4])
     with c_st:
         station_pick = st.selectbox(
             "Select Comparison Station:",
@@ -335,10 +338,19 @@ def render_side_by_side_comparison_page():
         st_id = station_pick.split()[0]
         city_name = station_pick.split("(")[1].replace(")", "")
 
-    with c_info:
-        st.write("")
+    with c_mode:
+        data_horizon_mode = st.radio(
+            "Data Ingestion Horizon:",
+            ["Historical Benchmark Holdout (Reproducible Demo)", "Live Physical Telemetry (Authentic Ingestion)"],
+            index=0,
+            key="comp_horizon_mode",
+        )
+        is_live_mode = "Live Physical" in data_horizon_mode
 
-    res = comp_srv.compare_all(station_id=st_id, city=city_name)
+    with c_info:
+        st.caption("🔬 **Data Provenance Rule (Phase 17.2):** Live mode strictly requires 24 contiguous physical monitor readings. If buffer contains < 24h of measurements, live forecasting is aborted with ZERO synthetic replacement.")
+
+    res = comp_srv.compare_all(station_id=st_id, city=city_name, live_mode=is_live_mode)
     df_comp = res["comparison_table"]
 
     seq_prov = res.get("sequence_provenance", "Synchronized 24h Station Telemetry")
@@ -346,10 +358,18 @@ def render_side_by_side_comparison_page():
     issue_time = res.get("forecast_issue_time", "N/A")
     target_time = res.get("target_time", "N/A")
     tensor_matched = res.get("tensor_matched", False)
+    sync_status = res.get("synchronization_status", "Synchronized")
+    live_input_available = res.get("live_input_available", True)
 
-    state_badge_color = "#10b981" if "LIVE" in forecast_state else "#f59e0b"
-    state_badge_bg = "rgba(16, 185, 129, 0.15)" if "LIVE" in forecast_state else "rgba(245, 158, 11, 0.15)"
-    state_badge_border = "rgba(16, 185, 129, 0.3)" if "LIVE" in forecast_state else "rgba(245, 158, 11, 0.3)"
+    if not live_input_available:
+        st.warning(
+            f"⚠️ **Live Input Unavailable:** {res.get('rejection_reason', 'Buffer contains < 24 continuous hours')}. "
+            "Forecasting requires an authentic 24-hour antecedent sequence. Zero synthetic imputation was applied."
+        )
+
+    state_badge_color = "#10b981" if "VALIDATED" in forecast_state else ("#ef4444" if "UNAVAILABLE" in forecast_state else "#f59e0b")
+    state_badge_bg = "rgba(16, 185, 129, 0.15)" if "VALIDATED" in forecast_state else ("rgba(239, 68, 68, 0.15)" if "UNAVAILABLE" in forecast_state else "rgba(245, 158, 11, 0.15)")
+    state_badge_border = "rgba(16, 185, 129, 0.3)" if "VALIDATED" in forecast_state else ("rgba(239, 68, 68, 0.3)" if "UNAVAILABLE" in forecast_state else "rgba(245, 158, 11, 0.3)")
 
     render_html(
         f"""
@@ -365,7 +385,7 @@ def render_side_by_side_comparison_page():
             </div>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
                 <span style="background: {state_badge_bg}; color: {state_badge_color}; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; border: 1px solid {state_badge_border};">{forecast_state}</span>
-                <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; border: 1px solid rgba(56, 189, 248, 0.3);">{('Tensor Digest: Verified SHA-256 Match' if tensor_matched else 'DataFrame Synchronized')}</span>
+                <span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; border: 1px solid rgba(56, 189, 248, 0.3);">{('Tensor Digest: Verified SHA-256 Match' if tensor_matched else sync_status)}</span>
             </div>
         </div>
         """
@@ -377,18 +397,20 @@ def render_side_by_side_comparison_page():
     # Plotly Grouped Bar Chart Comparison
     st.markdown("### 📊 Concentration Comparison (PM2.5 and PM10)")
 
-    methods = ["Live Ground Station", "Sensor-Only LSTM", "Image-Only ResNet-50", "Unified Hybrid Model"]
+    methods = ["Live Ground Station", "1-Hour Persistence", "Sensor-Only LSTM", "Image-Only ResNet-50", "Unified Hybrid Model"]
     pm25_vals = [
-        res["live_data"].get("pm25") or 45.0,
-        res["sensor_forecast"].get("pm25") or 42.0,
-        res["image_estimate"].get("pm25") or 55.0,
-        res["hybrid_prediction"].get("pm25") or 48.0,
+        res["live_data"].get("pm25"),
+        res.get("persistence_baseline", {}).get("pm25"),
+        res["sensor_forecast"].get("pm25"),
+        res["image_estimate"].get("pm25"),
+        res["hybrid_prediction"].get("pm25"),
     ]
     pm10_vals = [
-        res["live_data"].get("pm10") or 90.0,
-        res["sensor_forecast"].get("pm10") or 88.0,
-        0.0,  # Image model does not predict PM10
-        res["hybrid_prediction"].get("pm10") or 95.0,
+        res["live_data"].get("pm10"),
+        res.get("persistence_baseline", {}).get("pm10"),
+        res["sensor_forecast"].get("pm10"),
+        None,  # Image model does not predict PM10
+        res["hybrid_prediction"].get("pm10"),
     ]
 
     fig = go.Figure()

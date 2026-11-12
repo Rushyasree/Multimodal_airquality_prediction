@@ -18,7 +18,17 @@ os.environ.setdefault("LOKY_MAX_CPU_COUNT", "4")
 
 from src.prediction.lstm_forecaster import LSTMForecasterService
 from src.prediction.data_loader import get_verified_24h_sequence_for_station
-from src.prediction.sequence_validator import validate_forecast_sequence
+from src.prediction.sequence_validator import (
+    validate_forecast_sequence,
+    validate_live_forecast_sequence,
+    SequenceValidationResult,
+    LiveSequenceValidationResult,
+)
+from src.prediction.observation_provenance import (
+    ObservationProvenanceCategory,
+    SequenceProvenanceMeta,
+)
+from src.prediction.live_sequence_builder import LiveSequenceBuilder
 import hashlib
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
@@ -41,6 +51,8 @@ class SensorForecastService:
         self._adapted_gbdt_pm25 = None
         self._adapted_gbdt_pm10 = None
         self._adapted_checkpoints_loaded = False
+
+        self.live_builder = LiveSequenceBuilder()
 
     def _load_metrics(self):
         metrics_file = ROOT_DIR / "models/lstm_baseline/test_metrics.json"
@@ -257,6 +269,8 @@ class SensorForecastService:
         df_24h: Optional[pd.DataFrame] = None,
         model_mode: str = "lstm",
         enable_shadow: bool = False,
+        live_mode: bool = False,
+        reference_time: Optional[datetime] = None,
     ) -> Dict[str, Any]:
         """Predicts next-hour PM2.5 and PM10 from a 24-hour sensor sequence.
 
@@ -272,18 +286,110 @@ class SensorForecastService:
                 - "adapted_gbdt_only": Opt-in post-2020 standalone adapted GBDT (49 features, zero LSTM dependency)
             enable_shadow: If True, executes adapted model in non-blocking shadow mode
                 and returns payload under 'shadow_forecast' without altering primary forecast.
+            live_mode: If True, executes strict live forecasting pathway with zero synthetic replacement.
+            reference_time: Optional reference time for freshness evaluation.
         """
-        if df_24h is None:
-            df_to_use, input_freshness, is_synth = get_verified_24h_sequence_for_station(station_id)
-        else:
-            df_to_use = df_24h
-            input_freshness = f"Continuous 24h Telemetry ({station_id} Verified Ground Sensors)"
-            is_synth = False
+        is_live_request = live_mode or (df_24h is not None and getattr(df_24h, "attrs", {}).get("is_strictly_measured") is True)
 
-        val_res = validate_forecast_sequence(df_to_use, station_id=station_id, require_exact_station=False)
-        forecast_issue_time = val_res.end_time if val_res.end_time else datetime.now().strftime("%Y-%m-%d %H:00:00")
-        target_time = val_res.target_time if val_res.target_time else (datetime.now() + timedelta(hours=1)).strftime("%Y-%m-%d %H:00:00")
-        forecast_state = "LIVE FORECAST (VALIDATED INPUT)" if (val_res.valid and val_res.source_type == "LIVE_MEASURED") else "HISTORICAL DEMO FORECAST" 
+        if is_live_request:
+            if df_24h is None:
+                df_to_use, prov_meta = self.live_builder.build_live_sequence(
+                    station_id=station_id,
+                    current_system_time=reference_time,
+                )
+                if df_to_use is None:
+                    return {
+                        "status": "unavailable",
+                        "result_type": "Independent Forecast",
+                        "forecast_state": "LIVE INPUT UNAVAILABLE",
+                        "station_id": station_id,
+                        "forecast_issue_time": prov_meta.end_time or "Unavailable",
+                        "target_time": prov_meta.target_time or "Unavailable",
+                        "input_freshness": "Incomplete Live Telemetry",
+                        "sequence_provenance": f"Physical Station Inlet ({station_id})",
+                        "provenance_meta": prov_meta.to_dict(),
+                        "sequence_validation": {
+                            "valid": False,
+                            "live_forecast_eligible": False,
+                            "source_type": prov_meta.provenance_category.value,
+                            "rejection_reason": prov_meta.rejection_reason,
+                            "measured_hours_count": prov_meta.measured_hours_count,
+                            "completeness_pct": prov_meta.completeness_pct,
+                        },
+                        "live_validation": {
+                            "live_forecast_eligible": False,
+                            "rejection_reasons": [prov_meta.rejection_reason] if prov_meta.rejection_reason else ["Insufficient measured history."],
+                            "completeness_pct": prov_meta.completeness_pct,
+                            "measured_hours_count": prov_meta.measured_hours_count,
+                        },
+                        "live_forecast_eligible": False,
+                        "rejection_reasons": [prov_meta.rejection_reason] if prov_meta.rejection_reason else ["Insufficient measured history."],
+                        "rejection_reason": prov_meta.rejection_reason,
+                        "provenance": "LIVE INPUT UNAVAILABLE",
+                        "is_synthetic_input": False,
+                        "pm25": None,
+                        "pm10": None,
+                        "unit": "ug/m3",
+                        "model_version": self.model_version,
+                        "scientific_note": "Live forecast rejected: fewer than 24 contiguous measured hours available for this station.",
+                    }
+                prov_cat = prov_meta.provenance_category
+                input_freshness = "Authentic Continuous 24h Station Telemetry"
+                is_synth = False
+            else:
+                df_to_use = df_24h
+                prov_cat = df_24h.attrs.get("provenance_category", ObservationProvenanceCategory.LIVE_MEASURED)
+                input_freshness = "Supplied Live 24h Telemetry"
+                is_synth = False
+
+            live_val = validate_live_forecast_sequence(
+                df_to_use,
+                station_id=station_id,
+                reference_system_time=reference_time,
+                source_provenance_category=prov_cat,
+            )
+            if not live_val.live_forecast_eligible:
+                return {
+                    "status": "unavailable",
+                    "result_type": "Independent Forecast",
+                    "forecast_state": "LIVE INPUT UNAVAILABLE",
+                    "station_id": station_id,
+                    "forecast_issue_time": live_val.forecast_issue_time,
+                    "target_time": live_val.target_time,
+                    "input_freshness": "Validation Failed",
+                    "sequence_validation": live_val.to_dict(),
+                    "live_validation": live_val.to_dict(),
+                    "live_forecast_eligible": False,
+                    "rejection_reasons": live_val.rejection_reasons,
+                    "rejection_reason": "; ".join(live_val.rejection_reasons) if live_val.rejection_reasons else None,
+                    "provenance": "LIVE INPUT UNAVAILABLE",
+                    "completeness_pct": live_val.completeness_pct,
+                    "measured_hours_count": live_val.measured_hours_count,
+                    "is_synthetic_input": False,
+                    "pm25": None,
+                    "pm10": None,
+                    "unit": "ug/m3",
+                    "model_version": self.model_version,
+                    "scientific_note": f"Live forecast rejected: {'; '.join(live_val.rejection_reasons)}",
+                }
+
+            forecast_issue_time = live_val.end_time
+            target_time = live_val.target_time
+            forecast_state = "LIVE FORECAST — VALIDATED INPUT"
+            val_payload = live_val.to_dict()
+        else:
+            if df_24h is None:
+                df_to_use, input_freshness, is_synth = get_verified_24h_sequence_for_station(station_id)
+            else:
+                df_to_use = df_24h
+                input_freshness = f"Continuous 24h Telemetry ({station_id} Verified Ground Sensors)"
+                is_synth = False
+
+            val_res = validate_forecast_sequence(df_to_use, station_id=station_id, require_exact_station=False)
+            forecast_issue_time = val_res.end_time if val_res.end_time else datetime.now().strftime("%Y-%m-%d %H:00:00")
+            target_time = val_res.target_time if val_res.target_time else (datetime.now() + timedelta(hours=1)).strftime("%Y-%m-%d %H:00:00")
+            forecast_state = "LIVE FORECAST — VALIDATED INPUT" if (val_res.valid and val_res.source_type == "LIVE_MEASURED") else "HISTORICAL DEMO FORECAST"
+            val_payload = val_res.to_dict()
 
         # Preprocess 24h sequence array once for all downstream models
         seq_arr = self.underlying_service.preprocess_sequence(df_to_use, station_id=station_id)
@@ -416,6 +522,8 @@ class SensorForecastService:
                 pass
 
         result = {
+            "status": "ok",
+            "provenance": forecast_state,
             "result_type": "Independent Forecast",
             "forecast_state": forecast_state,
             "station_id": station_id,
@@ -423,7 +531,7 @@ class SensorForecastService:
             "forecast_horizon": "Next 1 Hour (t + 1)",
             "target_time": target_time,
             "input_freshness": input_freshness,
-            "sequence_validation": val_res.to_dict(),
+            "sequence_validation": val_payload,
             "sensor_tensor_digest": sensor_digest,
             "sensor_tensor_shape": list(seq_arr.shape),
             "is_synthetic_input": is_synth,

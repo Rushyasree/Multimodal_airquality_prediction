@@ -18,7 +18,15 @@ from experiments.unified_hybrid.accuracy_optimization.hybrid_model_optimized imp
 from src.prediction.lstm_forecaster import LSTMForecasterService
 from src.prediction.image_estimator import ImageEstimatorService
 from src.prediction.data_loader import get_verified_24h_sequence_for_station
-from src.prediction.sequence_validator import validate_forecast_sequence
+from src.prediction.sequence_validator import (
+    validate_forecast_sequence,
+    validate_live_forecast_sequence,
+)
+from src.prediction.observation_provenance import (
+    ObservationProvenanceCategory,
+    SequenceProvenanceMeta,
+)
+from src.prediction.live_sequence_builder import LiveSequenceBuilder
 import hashlib
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
@@ -40,6 +48,7 @@ class HybridPredictionService:
         # Initialize sensor forecaster service for preprocessing sequence
         self.lstm_service = LSTMForecasterService()
         self.image_estimator_service = ImageEstimatorService()
+        self.live_builder = LiveSequenceBuilder()
 
         # Initialize Optimized Residual Hybrid Architecture
         lstm_ckpt = str(ROOT_DIR / "models/lstm_baseline/best_lstm_model.pt")
@@ -87,28 +96,130 @@ class HybridPredictionService:
         df_24h: Optional[pd.DataFrame] = None,
         image_input: Optional[Union[str, Path, bytes, Image.Image]] = None,
         distance_km: float = 0.75,
+        live_mode: bool = False,
+        reference_time: Optional[datetime] = None,
     ) -> Dict[str, Any]:
         """Executes unified multimodal prediction with adaptive quality gating and fallback."""
-        # 1. Preprocess Sensor Sequence (24 x 27)
-        if df_24h is None:
-            df_to_use, input_freshness, is_synth = get_verified_24h_sequence_for_station(station_id)
+        is_live_request = live_mode or (df_24h is not None and getattr(df_24h, "attrs", {}).get("is_strictly_measured") is True)
+
+        if is_live_request:
+            if df_24h is None:
+                df_to_use, prov_meta = self.live_builder.build_live_sequence(
+                    station_id=station_id,
+                    current_system_time=reference_time,
+                )
+                if df_to_use is None:
+                    return {
+                        "status": "unavailable",
+                        "result_type": "Unified Hybrid Prediction",
+                        "forecast_state": "LIVE INPUT UNAVAILABLE",
+                        "model_version": self.model_version,
+                        "station_id": station_id,
+                        "forecast_issue_time": prov_meta.end_time or "Unavailable",
+                        "forecast_horizon": "Next 1 Hour (t + 1)",
+                        "target_time": prov_meta.target_time or "Unavailable",
+                        "sequence_validation": {
+                            "valid": False,
+                            "live_forecast_eligible": False,
+                            "source_type": prov_meta.provenance_category.value,
+                            "rejection_reason": prov_meta.rejection_reason,
+                            "measured_hours_count": prov_meta.measured_hours_count,
+                            "completeness_pct": prov_meta.completeness_pct,
+                        },
+                        "live_validation": {
+                            "live_forecast_eligible": False,
+                            "rejection_reasons": [prov_meta.rejection_reason] if prov_meta.rejection_reason else ["Insufficient measured history."],
+                            "completeness_pct": prov_meta.completeness_pct,
+                            "measured_hours_count": prov_meta.measured_hours_count,
+                        },
+                        "live_forecast_eligible": False,
+                        "rejection_reasons": [prov_meta.rejection_reason] if prov_meta.rejection_reason else ["Insufficient measured history."],
+                        "sensor_tensor_digest": None,
+                        "pm25": None,
+                        "pm10": None,
+                        "sensor_pm25": None,
+                        "sensor_pm10": None,
+                        "visual_delta_pm25": None,
+                        "visual_delta_pm10": None,
+                        "unit": "ug/m3",
+                        "input_freshness": "Incomplete Live Telemetry",
+                        "sequence_provenance": f"Physical Station Inlet ({station_id})",
+                        "is_synthetic_input": False,
+                        "modality_availability": {"sensor_telemetry": False, "weather_context": False, "visual_environment": False},
+                        "fallback_status": "live_input_unavailable",
+                        "gating_alpha": 0.0,
+                        "image_contributed": False,
+                        "scientific_note": "Live hybrid prediction rejected: authentic 24h continuous measured sequence could not be verified.",
+                    }
+                prov_cat = prov_meta.provenance_category
+                input_freshness = "Authentic Continuous 24h Station Telemetry"
+                is_synth = False
+            else:
+                df_to_use = df_24h
+                prov_cat = df_24h.attrs.get("provenance_category", ObservationProvenanceCategory.LIVE_MEASURED)
+                input_freshness = "Supplied Live 24h Telemetry"
+                is_synth = False
+
+            live_val = validate_live_forecast_sequence(
+                df_to_use,
+                station_id=station_id,
+                reference_system_time=reference_time,
+                source_provenance_category=prov_cat,
+            )
+            if not live_val.live_forecast_eligible:
+                return {
+                    "status": "unavailable",
+                    "result_type": "Unified Hybrid Prediction",
+                    "forecast_state": "LIVE INPUT UNAVAILABLE",
+                    "model_version": self.model_version,
+                    "station_id": station_id,
+                    "forecast_issue_time": live_val.forecast_issue_time,
+                    "forecast_horizon": "Next 1 Hour (t + 1)",
+                    "target_time": live_val.target_time,
+                    "sequence_validation": live_val.to_dict(),
+                    "live_validation": live_val.to_dict(),
+                    "live_forecast_eligible": False,
+                    "rejection_reasons": live_val.rejection_reasons,
+                    "sensor_tensor_digest": None,
+                    "pm25": None,
+                    "pm10": None,
+                    "sensor_pm25": None,
+                    "sensor_pm10": None,
+                    "visual_delta_pm25": None,
+                    "visual_delta_pm10": None,
+                    "unit": "ug/m3",
+                    "input_freshness": "Validation Failed",
+                    "sequence_provenance": f"Physical Station Inlet ({station_id})",
+                    "is_synthetic_input": False,
+                    "modality_availability": {"sensor_telemetry": False, "weather_context": False, "visual_environment": False},
+                    "fallback_status": "live_input_unavailable",
+                    "gating_alpha": 0.0,
+                    "image_contributed": False,
+                    "scientific_note": f"Live hybrid prediction rejected: {'; '.join(live_val.rejection_reasons)}",
+                }
+
+            forecast_issue_time = live_val.end_time
+            target_time = live_val.target_time
+            forecast_state = "LIVE FORECAST — VALIDATED INPUT"
+            val_payload = live_val.to_dict()
         else:
-            df_to_use = df_24h
-            input_freshness = f"Continuous 24h Telemetry ({station_id} Verified Ground Sensors)"
-            is_synth = False
+            if df_24h is None:
+                df_to_use, input_freshness, is_synth = get_verified_24h_sequence_for_station(station_id)
+            else:
+                df_to_use = df_24h
+                input_freshness = f"Continuous 24h Telemetry ({station_id} Verified Ground Sensors)"
+                is_synth = False
 
-        val_res = validate_forecast_sequence(df_to_use, station_id=station_id, require_exact_station=False)
-        forecast_issue_time = val_res.end_time if val_res.end_time else datetime.now().strftime("%Y-%m-%d %H:00:00")
-        target_time = val_res.target_time if val_res.target_time else (datetime.now() + timedelta(hours=1)).strftime("%Y-%m-%d %H:00:00")
-        forecast_state = "LIVE FORECAST (VALIDATED INPUT)" if (val_res.valid and val_res.source_type == "LIVE_MEASURED") else "HISTORICAL DEMO FORECAST"
+            val_res = validate_forecast_sequence(df_to_use, station_id=station_id, require_exact_station=False)
+            forecast_issue_time = val_res.end_time if val_res.end_time else datetime.now().strftime("%Y-%m-%d %H:00:00")
+            target_time = val_res.target_time if val_res.target_time else (datetime.now() + timedelta(hours=1)).strftime("%Y-%m-%d %H:00:00")
+            forecast_state = "LIVE FORECAST — VALIDATED INPUT" if (val_res.valid and val_res.source_type == "LIVE_MEASURED") else "HISTORICAL DEMO FORECAST"
+            val_payload = val_res.to_dict()
 
-        try:
-            seq_arr = self.lstm_service.preprocess_sequence(df_to_use, station_id=station_id)
-            sensor_tensor = torch.from_numpy(seq_arr).float()
-            sensor_digest = hashlib.sha256(seq_arr.tobytes()).hexdigest()
-        except Exception:
-            sensor_tensor = torch.zeros((1, 24, 27), dtype=torch.float32)
-            sensor_digest = hashlib.sha256(sensor_tensor.numpy().tobytes()).hexdigest()
+        # 1. Preprocess Sensor Sequence (24 x 27)
+        seq_arr = self.lstm_service.preprocess_sequence(df_to_use, station_id=station_id)
+        sensor_tensor = torch.from_numpy(seq_arr).float()
+        sensor_digest = hashlib.sha256(seq_arr.tobytes()).hexdigest()
 
         # 2. Process Visual Modality & Determine Fallback Status
         mask_val = 0.0
@@ -165,6 +276,7 @@ class HybridPredictionService:
         )
 
         return {
+            "status": "ok",
             "result_type": "Unified Hybrid Prediction",
             "forecast_state": forecast_state,
             "model_version": self.model_version,
@@ -172,7 +284,7 @@ class HybridPredictionService:
             "forecast_issue_time": forecast_issue_time,
             "forecast_horizon": "Next 1 Hour (t + 1)",
             "target_time": target_time,
-            "sequence_validation": val_res.to_dict(),
+            "sequence_validation": val_payload,
             "sensor_tensor_digest": sensor_digest,
             "sensor_tensor_shape": list(sensor_tensor.shape),
             "pm25": round(pm25_pred, 2),
