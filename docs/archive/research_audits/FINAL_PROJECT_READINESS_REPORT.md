@@ -114,7 +114,7 @@ The environment audit confirms full compatibility on Windows 11 with Python 3.10
 
 ### 1. PyTorch DLL Initialization Fix
 On Windows platforms, PyTorch native binaries (`c10.dll`, `torch_cpu.dll`) failed to initialize with `OSError: [WinError 1114] A dynamic link library (DLL) initialization routine failed`.  
-**Resolution**: Implemented automatic dynamic link library directory registration in [`src/__init__.py`](file:///E:/Documents/multimodal_air_quality_vscode_starter/src/__init__.py):
+**Resolution**: Implemented automatic dynamic link library directory registration in [`src/__init__.py`](../../../src/__init__.py):
 ```python
 import sys, os, importlib.util
 if sys.platform == "win32":
@@ -127,7 +127,7 @@ if sys.platform == "win32":
 
 ### 2. Streamlit Import Resolution
 When running Streamlit headlessly (`AppTest`), `src` subpackages could fail to resolve if the working directory was modified.  
-**Resolution**: Added explicit project root path anchoring at the top of [`app.py`](file:///E:/Documents/multimodal_air_quality_vscode_starter/app.py):
+**Resolution**: Added explicit project root path anchoring at the top of [`app.py`](../../../app.py):
 ```python
 _PROJECT_ROOT = Path(__file__).resolve().parent
 if str(_PROJECT_ROOT) not in sys.path:
@@ -135,7 +135,7 @@ if str(_PROJECT_ROOT) not in sys.path:
 ```
 
 ### 3. Dependency Manifest Hardening
-Audited and updated [`requirements.txt`](file:///E:/Documents/multimodal_air_quality_vscode_starter/requirements.txt) to include previously unlisted runtime dependencies:
+Audited and updated [`requirements.txt`](../../../requirements.txt) to include previously unlisted runtime dependencies:
 - `requests>=2.31,<3` (HTTP client for OpenAQ API)
 - `scipy>=1.11,<2` (Image processing and statistical filtering)
 - `pydeck>=0.8,<1` (3D geospatial deck.gl mapping)
@@ -235,7 +235,7 @@ The live telemetry service was audited against 5 primary disruption modes:
 5. **Network Disconnection / Sandboxed Mode**: Catches DNS resolution failure (`[Errno 11001] getaddrinfo failed`) and returns simulated/cached telemetry with `is_live: False`.
 
 ### Shadow Trial Safe Defaults
-The configuration file [`experiments/recent_data_audit/shadow_trial_config.json`](file:///E:/Documents/multimodal_air_quality_vscode_starter/experiments/recent_data_audit/shadow_trial_config.json) is set to `shadow_trial_enabled: false` by default, ensuring that shadow scoring and logging are strictly opt-in and cannot contaminate baseline evaluations.
+The configuration file [`experiments/recent_data_audit/shadow_trial_config.json`](../../../experiments/recent_data_audit/shadow_trial_config.json) is set to `shadow_trial_enabled: false` by default, ensuring that shadow scoring and logging are strictly opt-in and cannot contaminate baseline evaluations.
 
 ---
 

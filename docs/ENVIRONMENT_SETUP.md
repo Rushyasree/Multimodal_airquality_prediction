@@ -55,7 +55,7 @@ pip install -r requirements.txt
 
 On Windows platforms, PyTorch's native C++ runtime (`c10.dll`, `torch_cpu.dll`) requires dependent C++ runtime libraries to be explicitly resolved in user-mode applications.
 
-VayuDrishti includes an automated DLL handler in [`src/__init__.py`](file:///E:/Documents/multimodal_air_quality_vscode_starter/src/__init__.py):
+VayuDrishti includes an automated DLL handler in [`src/__init__.py`](../src/__init__.py):
 
 ```python
 import sys, os

@@ -40,8 +40,9 @@ Experience the interactive Streamlit dashboard live in your browser:
 - **Real-Time Air Quality Monitoring**: Live particulate readings ($\text{PM}_{2.5}$, $\text{PM}_{10}$), criteria gases ($\text{NO}_2$, $\text{SO}_2$, $\text{CO}$, $\text{O}_3$), and meteorological conditions across major Indian stations.
 - **Official CPCB NAQI Engine**: Piecewise linear Indian National Air Quality Index calculation with dominant pollutant identification and personalized health advisories.
 - **Dual Forecasting Modes**:
-  - **Mode A (Individual Methods)**: Side-by-side inspection of Sensor-Only LSTM ($27$ features), Environmental Meteorology, ResNet-50 Vision Estimation, and 1-hour Persistence baselines.
-  - **Mode B (Unified Hybrid Ensemble)**: Severity-gated ensemble combining deep recurrent representations and tree-based gradient boosting with residual visual adjustment.
+  - **Mode A (Individual Methods)**: Side-by-side inspection of Sensor-Only LSTM ($27$ features), Environmental Meteorology, ResNet-50 Vision Estimation *(Experimental / Research Evaluation)*, and 1-hour Persistence baselines.
+  - **Mode B (Unified Hybrid Ensemble)**: Severity-gated ensemble combining deep recurrent representations and tree-based gradient boosting with conservative residual visual adjustment *(Experimental)*.
+  - *(Note: In accordance with our empirical research findings, camera-based optical estimation is evaluated as an experimental research modality due to diurnal illumination variance. When images are absent or unaligned, the platform automatically engages zero-weight fallback ($\alpha = 0.0$) to maintain pure sensor telemetry accuracy).*
 - **Distribution-Free Uncertainty**: Conformal prediction intervals (80%, 90%, 95% confidence bands) calibrated across 118,000+ holdout instances.
 - **Strict Data Provenance**: Explicit badges distinguishing `LIVE MEASURED`, `RECENT BUFFERED`, and `HISTORICAL BENCHMARK` sequences. Zero synthetic imputation for live observations.
 - **Operational System Health**: Real-time upstream API latency tracking, cache age metrics, station buffer completeness, and append-only forecast audit logging.

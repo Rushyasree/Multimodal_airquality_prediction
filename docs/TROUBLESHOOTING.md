@@ -16,7 +16,7 @@ Error loading "...\torch\lib\c10.dll" or one of its dependencies.
 On Windows 10/11, Python 3.8+ restricts default DLL search paths. When PyTorch or Torchvision loads C++ native libraries (`c10.dll`, `torch_cpu.dll`), dependent runtime libraries are not located if the `torch/lib` directory has not been registered via Windows API `AddDllDirectory`.
 
 ### Resolution:
-VayuDrishti automatically registers the directory inside [`src/__init__.py`](file:///E:/Documents/multimodal_air_quality_vscode_starter/src/__init__.py). If executing custom scripts outside `src/`, include:
+VayuDrishti automatically registers the directory inside [`src/__init__.py`](../src/__init__.py). If executing custom scripts outside `src/`, include:
 ```python
 import os, importlib.util
 spec = importlib.util.find_spec("torch")
