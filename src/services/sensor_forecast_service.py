@@ -575,8 +575,13 @@ class SensorForecastService:
         """Runs operational forecast for next hour (t+1) with uncertainty bounds."""
         from src.prediction.data_loader import load_demo_scenarios
 
+        is_live_input = False
         if df_24h is not None:
             fc_data = df_24h
+            if "scenario_id" in df_24h.columns or getattr(df_24h, "attrs", {}).get("is_historical", False) or scenario_id is not None:
+                is_live_input = False
+            else:
+                is_live_input = bool(getattr(df_24h, "attrs", {}).get("is_live", False))
         elif scenario_id is not None:
             demo_df = load_demo_scenarios()
             matching = demo_df[demo_df["scenario_id"] == scenario_id]
@@ -585,9 +590,28 @@ class SensorForecastService:
             if matching.empty:
                 matching = demo_df[demo_df["scenario_id"] == demo_df["scenario_id"].iloc[0]]
             fc_data = matching.sort_values("Datetime").reset_index(drop=True)
+            is_live_input = False
         else:
-            demo_df = load_demo_scenarios()
-            fc_data = demo_df[demo_df["scenario_id"] == demo_df["scenario_id"].iloc[0]].sort_values("Datetime").reset_index(drop=True)
+            live_hourly = None
+            try:
+                from src.prediction.current_air_quality_service import CurrentAirQualityService
+                live_hourly = CurrentAirQualityService().get_recent_hourly_observations(station_id=station_id)
+            except Exception:
+                pass
+            if live_hourly is not None and not live_hourly.empty and len(live_hourly) >= 6:
+                fc_data = live_hourly.sort_values("Datetime").reset_index(drop=True)
+                is_live_input = True
+            else:
+                demo_df = load_demo_scenarios()
+                fc_data = demo_df[demo_df["scenario_id"] == demo_df["scenario_id"].iloc[0]].sort_values("Datetime").reset_index(drop=True)
+                is_live_input = False
+
+        def _attach_time_metadata(r: Dict[str, Any]) -> Dict[str, Any]:
+            last_dt = pd.to_datetime(fc_data["Datetime"].iloc[-1])
+            r["forecast_issue_time"] = str(fc_data["Datetime"].iloc[-1])
+            r["target_time"] = (last_dt + pd.Timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S")
+            r["is_live_telemetry"] = is_live_input
+            return r
 
         if model_mode == "adapted_gbdt_only":
             try:
@@ -607,11 +631,11 @@ class SensorForecastService:
                     "PM10_test_mae": gbdt_res["metrics"]["pm10_mae"],
                     "PM10_test_r2": gbdt_res["metrics"]["pm10_r2"],
                 }
-                return res
+                return _attach_time_metadata(res)
             except Exception as e:
                 res = self.underlying_service.predict_from_dataframe(fc_data, station_id=station_id)
                 res["fallback_reason"] = f"Adapted GBDT checkpoint unavailable ({e}); served production model."
-                return res
+                return _attach_time_metadata(res)
 
         if model_mode in ("adapted_severity_gated", "adapted_ensemble"):
             try:
@@ -631,12 +655,12 @@ class SensorForecastService:
                     "PM10_test_mae": adapted_res["metrics"]["pm10_mae"],
                     "PM10_test_r2": adapted_res["metrics"]["pm10_r2"],
                 }
-                return res
+                return _attach_time_metadata(res)
             except Exception as e:
                 # Fallback to production
                 res = self.underlying_service.predict_from_dataframe(fc_data, station_id=station_id)
                 res["fallback_reason"] = f"Adapted model checkpoint unavailable ({e}); served production model."
-                return res
+                return _attach_time_metadata(res)
 
         # Production model path
         res = self.underlying_service.predict_from_dataframe(fc_data, station_id=station_id)
@@ -649,4 +673,4 @@ class SensorForecastService:
                     "error": str(e),
                     "message": "Shadow inference failed; production forecast unaffected.",
                 }
-        return res
+        return _attach_time_metadata(res)

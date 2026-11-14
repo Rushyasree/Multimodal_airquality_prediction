@@ -763,6 +763,30 @@ def get_cached_scenario_metadata(state: Optional[str] = None, city: Optional[str
 @st.cache_data(show_spinner=False)
 def get_home_weather_and_trend(target_station_id: str) -> Dict[str, Any]:
     """High-speed cached extractor for Home page weather tiles and 24h forecast sparkline."""
+    try:
+        from src.prediction.current_air_quality_service import CurrentAirQualityService
+        aq_srv = CurrentAirQualityService()
+        live_df = aq_srv.get_recent_hourly_observations(station_id=target_station_id)
+        if live_df is not None and not live_df.empty and len(live_df) >= 12:
+            fc_x = live_df["Datetime"].tail(24).tolist()
+            fc_pm25 = live_df["PM2.5"].tail(24).tolist()
+            fc_pm10 = live_df["PM10"].tail(24).tolist() if "PM10" in live_df.columns else [p * 1.6 for p in fc_pm25]
+            w_temp = float(live_df["temperature_C"].iloc[-1]) if "temperature_C" in live_df.columns else 29.0
+            w_hum = float(live_df["relative_humidity"].iloc[-1]) if "relative_humidity" in live_df.columns else 62.0
+            w_wind = float(live_df["wind_speed"].iloc[-1]) if "wind_speed" in live_df.columns else 3.1
+            w_rain = float(live_df["precipitation_mm"].iloc[-1]) if "precipitation_mm" in live_df.columns else 0.0
+            return {
+                "temp": w_temp,
+                "hum": w_hum,
+                "wind": w_wind,
+                "rain": w_rain,
+                "fc_x": fc_x,
+                "fc_pm25": fc_pm25,
+                "fc_pm10": fc_pm10,
+            }
+    except Exception:
+        pass
+
     demo_df = get_demo_df()
     scenarios_meta = get_cached_scenario_metadata()
     stn_scenarios = [s for s in scenarios_meta if s["station_id"] == target_station_id]

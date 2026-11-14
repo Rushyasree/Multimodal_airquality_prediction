@@ -27,6 +27,27 @@ class LiveAirQualityService:
         self.ingestion_mgr = get_resilient_ingestion_manager()
         self.health_service = get_operational_health_service()
 
+    def get_recent_hourly_sequence(
+        self,
+        station_id: Optional[str] = None,
+        city: Optional[str] = None,
+        past_hours: int = 24,
+        force_refresh: bool = False,
+    ) -> Optional[Any]:
+        """Retrieves recent continuous observation sequence in Asia/Kolkata (IST)."""
+        target_city = city or "Amaravati"
+        clean_sid = str(station_id or "AP001").strip().upper()
+        if station_id:
+            match = self.catalog[self.catalog["station_id"] == station_id]
+            if not match.empty:
+                target_city = match.iloc[0]["city"]
+        return self.underlying_service.get_recent_hourly_observations(
+            station_id=clean_sid,
+            city=target_city,
+            past_hours=past_hours,
+            force_refresh=force_refresh,
+        )
+
     def get_live_observation(
         self,
         station_id: Optional[str] = None,

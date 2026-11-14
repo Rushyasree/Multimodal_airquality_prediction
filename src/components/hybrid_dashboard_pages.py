@@ -766,32 +766,121 @@ def render_individual_methods_page():
             "Predicts next-hour ($t+1$) PM2.5 and PM10 concentrations from continuous 24-hour antecedent telemetry and weather sequences using a calibrated multi-layer LSTM model."
         )
 
-        from src.prediction.data_loader import load_demo_scenarios, get_scenario_metadata_list
+        from src.prediction.data_loader import load_demo_scenarios, get_scenario_metadata_list, load_location_catalog
         from src.prediction.lstm_forecaster import prepare_forecast_display_table
+        from src.prediction.current_air_quality_service import CurrentAirQualityService
 
         try:
-            demo_df = load_demo_scenarios()
-            scenarios_meta = get_scenario_metadata_list()
-            sc_map = {f"{s['city']} — {s['station_name']} ({s['station_id']})": s["id"] for s in scenarios_meta}
-            if sc_map:
-                chosen_sc_label = st.selectbox("Select Antecedent Scenario:", list(sc_map.keys()), index=0, key="ind_lstm_sc_select")
-                chosen_sc_id = sc_map.get(chosen_sc_label)
-            else:
-                chosen_sc_label = None
-                chosen_sc_id = None
+            col_src1, col_src2 = st.columns([1.2, 1.8])
+            with col_src1:
+                data_mode = st.radio(
+                    "Telemetry Source:",
+                    options=["Live Observation Telemetry (Current • Asia/Kolkata)", "Historical CPCB Benchmark Archive"],
+                    index=0,
+                    horizontal=False,
+                    key="ind_lstm_source_mode",
+                )
 
-            chosen_meta = next((s for s in scenarios_meta if s["id"] == chosen_sc_id), None) if chosen_sc_id else None
-            if not chosen_meta or demo_df.empty:
-                st.info("ℹ️ Antecedent scenario dataset is unavailable in this environment.")
+            is_live_data = False
+            chosen_meta = None
+            stn_id = "AP001"
+            stn_city = "Amaravati"
+
+            if data_mode == "Live Observation Telemetry (Current • Asia/Kolkata)":
+                catalog = load_location_catalog()
+                stn_options = {}
+                for _, row in catalog.iterrows():
+                    lbl = f"{row['city']} — {row['station_name']} ({row['station_id']})"
+                    stn_options[lbl] = (str(row['station_id']), str(row['city']), float(row['latitude']), float(row['longitude']))
+                default_idx = 0
+                for i, (k, v) in enumerate(stn_options.items()):
+                    if v[0] == "AP001" or "Amaravati" in k:
+                        default_idx = i
+                        break
+                with col_src2:
+                    chosen_stn_label = st.selectbox(
+                        "Select Active Monitoring Station:",
+                        list(stn_options.keys()),
+                        index=default_idx,
+                        key="ind_lstm_live_stn_select",
+                    )
+                stn_id, stn_city, stn_lat, stn_lon = stn_options[chosen_stn_label]
+
+                aq_service = CurrentAirQualityService()
+                fc_data = aq_service.get_recent_hourly_observations(
+                    station_id=stn_id,
+                    city=stn_city,
+                    lat=stn_lat,
+                    lon=stn_lon,
+                    past_hours=24,
+                )
+                if fc_data is not None and not fc_data.empty:
+                    fc_data = fc_data.sort_values("Datetime").reset_index(drop=True)
+                    is_live_data = True
+                else:
+                    st.warning(f"⚠️ Live hourly telemetry is temporarily unavailable for {stn_city} ({stn_id}). Switching to verified CPCB reference sequence.")
+                    demo_df = load_demo_scenarios()
+                    scenarios_meta = get_scenario_metadata_list()
+                    sc_match = [s for s in scenarios_meta if s["station_id"] == stn_id]
+                    active_sc = sc_match[0] if sc_match else (scenarios_meta[0] if scenarios_meta else None)
+                    if active_sc:
+                        fc_data = demo_df[demo_df["scenario_id"] == active_sc["id"]].sort_values("Datetime").reset_index(drop=True)
+                    else:
+                        fc_data = pd.DataFrame()
+                    is_live_data = False
+            else:
+                demo_df = load_demo_scenarios()
+                scenarios_meta = get_scenario_metadata_list()
+                sc_map = {s["label"]: s["id"] for s in scenarios_meta}
+                with col_src2:
+                    if sc_map:
+                        chosen_sc_label = st.selectbox(
+                            "Select Historical Benchmark Scenario:",
+                            list(sc_map.keys()),
+                            index=0,
+                            key="ind_lstm_sc_select",
+                        )
+                        chosen_sc_id = sc_map.get(chosen_sc_label)
+                    else:
+                        chosen_sc_id = None
+                chosen_meta = next((s for s in scenarios_meta if s["id"] == chosen_sc_id), None) if chosen_sc_id else None
+                if not chosen_meta or demo_df.empty:
+                    st.info("ℹ️ Antecedent scenario dataset is unavailable in this environment.")
+                    return
+                fc_data = demo_df[demo_df["scenario_id"] == chosen_sc_id].sort_values("Datetime").reset_index(drop=True)
+                stn_id = chosen_meta["station_id"]
+                is_live_data = False
+
+            if fc_data is None or fc_data.empty:
+                st.info("ℹ️ Telemetry sequence is unavailable for the selected configuration.")
                 return
 
-            fc_data = demo_df[demo_df["scenario_id"] == chosen_sc_id].sort_values("Datetime").reset_index(drop=True)
-
             lstm_service = SensorForecastService()
-            fc_res = lstm_service.predict_next_hour(scenario_id=chosen_sc_id, station_id=chosen_meta["station_id"])
+            fc_res = lstm_service.predict_next_hour(df_24h=fc_data, station_id=stn_id)
 
             pm25_pred = fc_res["predicted_PM25"]
             pm10_pred = fc_res["predicted_PM10"]
+
+            last_fc_dt = pd.to_datetime(fc_data["Datetime"].iloc[-1])
+            tgt_fc_dt = last_fc_dt + pd.Timedelta(hours=1)
+            obs_start_str = str(fc_data["Datetime"].iloc[0])
+            obs_end_str = str(fc_data["Datetime"].iloc[-1])
+            tgt_str = tgt_fc_dt.strftime("%Y-%m-%d %H:%M:%S")
+
+            if is_live_data:
+                render_html(f"""
+                <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 0.55rem 0.9rem; margin: 0.5rem 0 1rem 0; font-size: 0.82rem; color: #10B981; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                    <div><strong>🟢 LIVE MONITORING TELEMETRY (Asia/Kolkata)</strong> &nbsp;•&nbsp; Observation Window: <code>{obs_start_str}</code> to <code>{obs_end_str} IST</code></div>
+                    <div>Next-Hour Forecast Horizon (t+1): <strong style="color: #38BDF8;">{tgt_str} IST</strong></div>
+                </div>
+                """)
+            else:
+                render_html(f"""
+                <div style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 8px; padding: 0.55rem 0.9rem; margin: 0.5rem 0 1rem 0; font-size: 0.82rem; color: #38BDF8; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                    <div><strong>📁 CPCB HISTORICAL BENCHMARK SEQUENCE</strong> &nbsp;•&nbsp; Archive Window: <code>{obs_start_str}</code> to <code>{obs_end_str}</code></div>
+                    <div>Benchmark Target (t+1): <strong style="color: #F8FAFC;">{tgt_str}</strong></div>
+                </div>
+                """)
 
             col_m1, col_m2 = st.columns(2)
             with col_m1:
@@ -826,22 +915,48 @@ def render_individual_methods_page():
                 """)
 
             fig_f = go.Figure()
-            fig_f.add_trace(go.Scatter(x=fc_data["Datetime"], y=fc_data["PM2.5"], mode="lines+markers", name="Observed PM2.5", line=dict(color="#38BDF8", width=2.5)))
-            fig_f.add_trace(go.Scatter(x=fc_data["Datetime"], y=fc_data["PM10"], mode="lines+markers", name="Observed PM10", line=dict(color="#71B9FF", width=2, dash="dot")))
-            
-            last_fc_dt = pd.to_datetime(fc_data["Datetime"].iloc[-1])
-            tgt_fc_dt = last_fc_dt + pd.Timedelta(hours=1)
-            fig_f.add_trace(go.Scatter(x=[tgt_fc_dt], y=[pm25_pred], mode="markers", name="Predicted PM2.5 (t+1)", marker=dict(size=12, color="#38BDF8", symbol="diamond", line=dict(width=2, color="#FFFFFF"))))
-            fig_f.add_trace(go.Scatter(x=[tgt_fc_dt], y=[pm10_pred], mode="markers", name="Predicted PM10 (t+1)", marker=dict(size=11, color="#71B9FF", symbol="square", line=dict(width=2, color="#FFFFFF"))))
-            
+            fig_f.add_trace(go.Scatter(
+                x=fc_data["Datetime"],
+                y=fc_data["PM2.5"],
+                mode="lines+markers",
+                name="Observed PM2.5",
+                line=dict(color="#38BDF8", width=2.5),
+                marker=dict(size=5, color="#38BDF8"),
+            ))
+            fig_f.add_trace(go.Scatter(
+                x=fc_data["Datetime"],
+                y=fc_data["PM10"],
+                mode="lines+markers",
+                name="Observed PM10",
+                line=dict(color="#71B9FF", width=2, dash="dot"),
+                marker=dict(size=4, color="#71B9FF"),
+            ))
+
+            fig_f.add_trace(go.Scatter(
+                x=[tgt_str],
+                y=[pm25_pred],
+                mode="markers",
+                name="Predicted PM2.5 (t+1)",
+                marker=dict(size=13, color="#38BDF8", symbol="diamond", line=dict(width=2, color="#FFFFFF")),
+            ))
+            fig_f.add_trace(go.Scatter(
+                x=[tgt_str],
+                y=[pm10_pred],
+                mode="markers",
+                name="Predicted PM10 (t+1)",
+                marker=dict(size=12, color="#71B9FF", symbol="square", line=dict(width=2, color="#FFFFFF")),
+            ))
+
+            chart_title = f"Actual vs. Predicted PM2.5 and PM10 — {stn_city} Live Telemetry" if is_live_data else f"Actual vs. Predicted PM2.5 and PM10 — CPCB Benchmark ({stn_id})"
             fig_f.update_layout(
+                title=dict(text=chart_title, font=dict(color="#F8FAFC", size=13)),
                 paper_bgcolor="#111827",
                 plot_bgcolor="#0A0E17",
                 font=dict(color="#94A3B8", family="Plus Jakarta Sans, sans-serif"),
-                margin=dict(l=40, r=20, t=30, b=40),
-                height=340,
+                margin=dict(l=40, r=20, t=40, b=40),
+                height=350,
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(color="#F8FAFC")),
-                xaxis=dict(showgrid=True, gridcolor="rgba(27, 46, 69, 0.6)"),
+                xaxis=dict(showgrid=True, gridcolor="rgba(27, 46, 69, 0.6)", title=dict(text="Observation & Forecast Timestamp (Asia/Kolkata)", font=dict(color="#94A3B8"))),
                 yaxis=dict(showgrid=True, gridcolor="rgba(27, 46, 69, 0.6)", title=dict(text="Concentration (µg/m³)", font=dict(color="#94A3B8"))),
             )
             st.plotly_chart(fig_f, use_container_width=True)
