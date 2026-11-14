@@ -21,7 +21,7 @@ A comprehensive line-by-line audit of the IEEE conference manuscript was conduct
 - [x] **Document Class:** Standard `\documentclass[conference]{IEEEtran}` with `\IEEEoverridecommandlockouts`.
 - [x] **Title & Author Block:**
   - Title: *"VayuDrishti: Robust Longitudinal Air Quality Forecasting, Distribution-Free Uncertainty Calibration, and Empirical Limits of Multimodal Sensing Across Indian Urban Environments"*
-  - Authors: Teliki Rushya Sree, Machireddy Swathi, Thanuja Varakala, Palli Shilpa, and Thotta Ramatulasi (Faculty Supervisor).
+  - Authors: Teliki Rushya Sree, Machireddy Swathi, Thanuja Varakala, Palli Shilpa, and Professor Thota Ramathulsi (Guided by: Professor Thota Ramathulsi) (Faculty Supervisor).
   - Department and correspondence emails correctly structured.
 - [x] **Abstract & Keywords:**
   - Concise, highly quantitative 300-word abstract detailing sample size ($N=236,289$), 15 stations, 11 States/UTs, GBDT gains ($+3.97\%$ and $+5.06\%$), split-conformal coverage, and empirical negative result.

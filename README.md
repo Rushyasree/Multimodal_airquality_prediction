@@ -274,6 +274,6 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 - Thanuja Varakala
 - Palli Shilpa
 
-**Faculty Supervisor:**
-- Prof. Thotta Ramatulasi  
-*Department of Computer Science and Engineering, India*
+**Faculty Supervisor & Project Guide:**
+- Professor Thota Ramathulsi  
+*Guided by Professor Thota Ramathulsi, Department of Computer Science and Engineering, India*

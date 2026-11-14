@@ -11,7 +11,7 @@ color: #0f172a
 ### Robust Longitudinal Air Quality Forecasting, Distribution-Free Uncertainty Calibration, and Empirical Limits of Multimodal Sensing Across India
 
 **Authors:** Teliki Rushya Sree, Machireddy Swathi, Thanuja Varakala, Palli Shilpa  
-**Faculty Supervisor:** Prof. Thotta Ramatulasi  
+**Guided by:** Professor Thota Ramathulsi  
 *Department of Computer Science and Engineering*
 
 ---
