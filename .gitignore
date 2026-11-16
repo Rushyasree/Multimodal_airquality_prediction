@@ -35,3 +35,4 @@ experiments/multimodal_fusion/validation_v2/checkpoints/
 # Predictions & outputs
 outputs/logs/*
 outputs/predictions/*
+paper/inspection_pages/

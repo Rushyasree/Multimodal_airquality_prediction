@@ -1,9 +1,9 @@
 # VayuDrishti: A Residual Multimodal Hybrid Framework for Air Quality Forecasting
 
-**Authors**: Teliki Rushya Sree$^1$, Machireddy Swathi$^1$, Thanuja Varakala$^1$, Palli Shilpa$^1$, and Professor Thota Ramathulsi$^2$  
-*Guided by*: Professor Thota Ramathulsi  
-$^1$ Student Authors, Department of Computer Science and Engineering  
-$^2$ Faculty Supervisor \& Project Guide, Department of Computer Science and Engineering  
+**Authors**: Teliki Rushya Sree$^1$, Machireddy Swathi$^1$, Thanuja Varakala$^1$, and Palli Shilpa$^1$  
+*Guided by*: Professor Thota Ramathulsi$^2$  
+$^1$ Student Authors, Department of SCOPE (School of Computer Science and Engineering)  
+$^2$ Faculty Supervisor \& Project Guide, Department of SCOPE  
 *[Engineering Institution / University, City, State, India]*  
 *Correspondence*: `{rushyasree.t, swathi.m, thanuja.v, shilpa.p, ramathulsi.t}@institution.edu`
 

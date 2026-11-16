@@ -234,14 +234,14 @@ def generate_ieee_manuscript():
     p_authors = doc.add_paragraph()
     p_authors.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_authors.paragraph_format.space_after = Pt(2)
-    r_auth = p_authors.add_run("Teliki Rushya Sree, Machireddy Swathi, Thanuja Varakala, Palli Shilpa, and Professor Thota Ramathulsi")
+    r_auth = p_authors.add_run("Teliki Rushya Sree, Machireddy Swathi, Thanuja Varakala, and Palli Shilpa")
     r_auth.font.name = "Times New Roman"
     r_auth.font.size = Pt(11)
 
     # Guided By
     p_guide = doc.add_paragraph()
     p_guide.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_guide.paragraph_format.space_after = Pt(3)
+    p_guide.paragraph_format.space_after = Pt(2)
     r_guide = p_guide.add_run("Guided by: Professor Thota Ramathulsi")
     r_guide.font.name = "Times New Roman"
     r_guide.font.size = Pt(10.5)
@@ -253,7 +253,7 @@ def generate_ieee_manuscript():
     p_aff = doc.add_paragraph()
     p_aff.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_aff.paragraph_format.space_after = Pt(10)
-    r_aff = p_aff.add_run("[Department and Institutional Affiliation to be specified by authors]\n[Author Contact Details / Emails to be specified by authors]")
+    r_aff = p_aff.add_run("Department of SCOPE (School of Computer Science and Engineering)\n[Author Contact Details / Emails to be specified by authors]")
     r_aff.font.name = "Times New Roman"
     r_aff.font.size = Pt(9.5)
     r_aff.italic = True

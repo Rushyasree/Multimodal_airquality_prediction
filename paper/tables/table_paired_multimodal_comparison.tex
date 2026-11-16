@@ -1,0 +1,20 @@
+% Paired Multimodal Comparison on N=97 matched test instances across 9 independent groups
+\begin{table}[t]
+\caption{Paired Evaluation on Synchronous Multimodal Cohort ($N=97$ Across 9 Independent Test Groups)}
+\label{tab:paired_comparison}
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Model Architecture} & \multicolumn{2}{c}{\textbf{$\text{PM}_{2.5}$ ($\mu\text{g/m}^3$)}} & \multicolumn{2}{c}{\textbf{$\text{PM}_{10}$ ($\mu\text{g/m}^3$)}} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+& \textbf{MAE} & \textbf{$R^2$} & \textbf{MAE} & \textbf{$R^2$} \\
+\midrule
+1-Hour Persistence Baseline & 9.04 & 0.9668 & 9.39 & 0.9818 \\
+Pretrained Sensor-Only LSTM & 9.04 & 0.9625 & 15.82 & 0.9817 \\
+\textbf{Residual Hybrid (Full, $m=1$)} & \textbf{8.98} & \textbf{0.9628} & 15.88 & 0.9817 \\
+Residual Hybrid (Fallback, $m=0$) & 9.04 & 0.9625 & 15.82 & 0.9817 \\
+Standalone Image-Only ResNet-50 & 80.57 & -0.1096 & N/A & N/A \\
+\bottomrule
+\end{tabular}
+\end{table}

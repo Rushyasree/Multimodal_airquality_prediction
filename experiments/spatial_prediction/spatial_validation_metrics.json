@@ -1,0 +1,293 @@
+{
+  "evaluation_name": "VayuDrishti_Phase12_LOSO_Spatial_Validation",
+  "sample_count": 1727,
+  "timestamps_evaluated": 60,
+  "target_stations_evaluated": 34,
+  "execution_time_seconds": 27.53,
+  "pm25": {
+    "idw_mae": 24.07,
+    "nn_mae": 30.06,
+    "mae_reduction_pct": 19.93,
+    "idw_rmse": 42.83,
+    "nn_rmse": 52.03,
+    "rmse_reduction_pct": 17.69,
+    "idw_r2": 0.7475,
+    "nn_r2": 0.6273
+  },
+  "pm10": {
+    "idw_mae": 52.76,
+    "nn_mae": 70.68,
+    "mae_reduction_pct": 25.35,
+    "idw_rmse": 82.8,
+    "nn_rmse": 110.5,
+    "rmse_reduction_pct": 25.07,
+    "idw_r2": 0.681,
+    "nn_r2": 0.4319
+  },
+  "distance_breakdown": {
+    "0-5 km": {
+      "sample_count": 1376,
+      "mean_distance_km": 2.79,
+      "idw_pm25_mae": 23.71,
+      "nn_pm25_mae": 30.86,
+      "idw_pm10_mae": 52.7,
+      "nn_pm10_mae": 69.73
+    },
+    "5-10 km": {
+      "sample_count": 239,
+      "mean_distance_km": 5.95,
+      "idw_pm25_mae": 22.67,
+      "nn_pm25_mae": 25.84,
+      "idw_pm10_mae": 48.67,
+      "nn_pm10_mae": 71.54
+    },
+    "10-20 km": {
+      "sample_count": 112,
+      "mean_distance_km": 11.77,
+      "idw_pm25_mae": 31.42,
+      "nn_pm25_mae": 29.22,
+      "idw_pm10_mae": 62.27,
+      "nn_pm10_mae": 80.49
+    }
+  },
+  "station_summary": [
+    {
+      "station_id": "DL001",
+      "sample_count": 37,
+      "mean_nearest_dist_km": 5.04,
+      "idw_pm25_mae": 17.26,
+      "nn_pm25_mae": 16.68
+    },
+    {
+      "station_id": "DL002",
+      "sample_count": 49,
+      "mean_nearest_dist_km": 3.15,
+      "idw_pm25_mae": 31.84,
+      "nn_pm25_mae": 37.75
+    },
+    {
+      "station_id": "DL003",
+      "sample_count": 55,
+      "mean_nearest_dist_km": 1.8,
+      "idw_pm25_mae": 19.95,
+      "nn_pm25_mae": 25.98
+    },
+    {
+      "station_id": "DL004",
+      "sample_count": 52,
+      "mean_nearest_dist_km": 10.27,
+      "idw_pm25_mae": 33.14,
+      "nn_pm25_mae": 29.95
+    },
+    {
+      "station_id": "DL005",
+      "sample_count": 42,
+      "mean_nearest_dist_km": 6.57,
+      "idw_pm25_mae": 27.94,
+      "nn_pm25_mae": 35.96
+    },
+    {
+      "station_id": "DL006",
+      "sample_count": 31,
+      "mean_nearest_dist_km": 3.8,
+      "idw_pm25_mae": 47.29,
+      "nn_pm25_mae": 59.47
+    },
+    {
+      "station_id": "DL007",
+      "sample_count": 55,
+      "mean_nearest_dist_km": 2.72,
+      "idw_pm25_mae": 29.95,
+      "nn_pm25_mae": 29.76
+    },
+    {
+      "station_id": "DL008",
+      "sample_count": 48,
+      "mean_nearest_dist_km": 2.29,
+      "idw_pm25_mae": 18.23,
+      "nn_pm25_mae": 21.6
+    },
+    {
+      "station_id": "DL009",
+      "sample_count": 46,
+      "mean_nearest_dist_km": 3.82,
+      "idw_pm25_mae": 9.77,
+      "nn_pm25_mae": 12.33
+    },
+    {
+      "station_id": "DL010",
+      "sample_count": 55,
+      "mean_nearest_dist_km": 4.92,
+      "idw_pm25_mae": 24.95,
+      "nn_pm25_mae": 35.17
+    },
+    {
+      "station_id": "DL012",
+      "sample_count": 57,
+      "mean_nearest_dist_km": 4.79,
+      "idw_pm25_mae": 26.02,
+      "nn_pm25_mae": 36.63
+    },
+    {
+      "station_id": "DL014",
+      "sample_count": 53,
+      "mean_nearest_dist_km": 2.16,
+      "idw_pm25_mae": 31.19,
+      "nn_pm25_mae": 37.47
+    },
+    {
+      "station_id": "DL015",
+      "sample_count": 53,
+      "mean_nearest_dist_km": 3.41,
+      "idw_pm25_mae": 36.79,
+      "nn_pm25_mae": 43.16
+    },
+    {
+      "station_id": "DL016",
+      "sample_count": 55,
+      "mean_nearest_dist_km": 1.48,
+      "idw_pm25_mae": 15.32,
+      "nn_pm25_mae": 27.38
+    },
+    {
+      "station_id": "DL017",
+      "sample_count": 55,
+      "mean_nearest_dist_km": 1.65,
+      "idw_pm25_mae": 26.82,
+      "nn_pm25_mae": 28.5
+    },
+    {
+      "station_id": "DL018",
+      "sample_count": 53,
+      "mean_nearest_dist_km": 2.02,
+      "idw_pm25_mae": 16.8,
+      "nn_pm25_mae": 30.08
+    },
+    {
+      "station_id": "DL019",
+      "sample_count": 55,
+      "mean_nearest_dist_km": 2.85,
+      "idw_pm25_mae": 22.54,
+      "nn_pm25_mae": 38.9
+    },
+    {
+      "station_id": "DL020",
+      "sample_count": 44,
+      "mean_nearest_dist_km": 5.47,
+      "idw_pm25_mae": 25.6,
+      "nn_pm25_mae": 32.43
+    },
+    {
+      "station_id": "DL022",
+      "sample_count": 52,
+      "mean_nearest_dist_km": 13.49,
+      "idw_pm25_mae": 29.89,
+      "nn_pm25_mae": 26.21
+    },
+    {
+      "station_id": "DL023",
+      "sample_count": 52,
+      "mean_nearest_dist_km": 5.94,
+      "idw_pm25_mae": 19.51,
+      "nn_pm25_mae": 23.07
+    },
+    {
+      "station_id": "DL024",
+      "sample_count": 50,
+      "mean_nearest_dist_km": 2.13,
+      "idw_pm25_mae": 29.9,
+      "nn_pm25_mae": 27.74
+    },
+    {
+      "station_id": "DL025",
+      "sample_count": 53,
+      "mean_nearest_dist_km": 2.46,
+      "idw_pm25_mae": 21.72,
+      "nn_pm25_mae": 26.0
+    },
+    {
+      "station_id": "DL026",
+      "sample_count": 52,
+      "mean_nearest_dist_km": 2.4,
+      "idw_pm25_mae": 20.1,
+      "nn_pm25_mae": 28.8
+    },
+    {
+      "station_id": "DL027",
+      "sample_count": 55,
+      "mean_nearest_dist_km": 4.0,
+      "idw_pm25_mae": 16.7,
+      "nn_pm25_mae": 33.06
+    },
+    {
+      "station_id": "DL028",
+      "sample_count": 59,
+      "mean_nearest_dist_km": 3.37,
+      "idw_pm25_mae": 24.95,
+      "nn_pm25_mae": 29.87
+    },
+    {
+      "station_id": "DL029",
+      "sample_count": 43,
+      "mean_nearest_dist_km": 2.35,
+      "idw_pm25_mae": 14.68,
+      "nn_pm25_mae": 19.8
+    },
+    {
+      "station_id": "DL030",
+      "sample_count": 54,
+      "mean_nearest_dist_km": 2.68,
+      "idw_pm25_mae": 35.6,
+      "nn_pm25_mae": 37.9
+    },
+    {
+      "station_id": "DL031",
+      "sample_count": 56,
+      "mean_nearest_dist_km": 3.53,
+      "idw_pm25_mae": 25.08,
+      "nn_pm25_mae": 30.33
+    },
+    {
+      "station_id": "DL032",
+      "sample_count": 52,
+      "mean_nearest_dist_km": 2.46,
+      "idw_pm25_mae": 17.08,
+      "nn_pm25_mae": 24.79
+    },
+    {
+      "station_id": "DL034",
+      "sample_count": 49,
+      "mean_nearest_dist_km": 3.18,
+      "idw_pm25_mae": 14.2,
+      "nn_pm25_mae": 26.86
+    },
+    {
+      "station_id": "DL035",
+      "sample_count": 55,
+      "mean_nearest_dist_km": 5.93,
+      "idw_pm25_mae": 23.48,
+      "nn_pm25_mae": 29.93
+    },
+    {
+      "station_id": "DL036",
+      "sample_count": 45,
+      "mean_nearest_dist_km": 3.37,
+      "idw_pm25_mae": 15.4,
+      "nn_pm25_mae": 16.54
+    },
+    {
+      "station_id": "DL037",
+      "sample_count": 53,
+      "mean_nearest_dist_km": 3.31,
+      "idw_pm25_mae": 27.55,
+      "nn_pm25_mae": 36.94
+    },
+    {
+      "station_id": "DL038",
+      "sample_count": 52,
+      "mean_nearest_dist_km": 1.66,
+      "idw_pm25_mae": 24.3,
+      "nn_pm25_mae": 26.47
+    }
+  ]
+}

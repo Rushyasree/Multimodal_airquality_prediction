@@ -1,0 +1,43 @@
+{
+  "audit_heuristic": {
+    "pm25_empirical_coverage_pct": 33.47,
+    "pm10_empirical_coverage_pct": 24.2,
+    "verdict": "FAIL - Severe under-coverage due to uncalibrated heuristic scaling"
+  },
+  "conformal_calibration": {
+    "nominal_coverage_target": 95.0,
+    "calibration_samples": 777,
+    "evaluation_samples": 950,
+    "q_hat_pm25": 97.24,
+    "q_hat_pm10": 186.83,
+    "gamma_distance_scaling_pm25": 0.06,
+    "gamma_distance_scaling_pm10": 0.05,
+    "evaluation_coverage_pm25_pct": 99.37,
+    "evaluation_coverage_pm10_pct": 99.16,
+    "mean_calibrated_half_width_pm25": 118.93,
+    "mean_calibrated_half_width_pm10": 221.56,
+    "distance_band_breakdown": {
+      "0-5 km (Urban Core)": {
+        "sample_count": 754,
+        "pm25_coverage_pct": 99.2,
+        "pm10_coverage_pct": 99.07,
+        "mean_interval_half_width_pm25": 113.31,
+        "mean_interval_half_width_pm10": 212.56
+      },
+      "5-10 km (Suburban)": {
+        "sample_count": 141,
+        "pm25_coverage_pct": 100.0,
+        "pm10_coverage_pct": 99.29,
+        "mean_interval_half_width_pm25": 130.48,
+        "mean_interval_half_width_pm10": 240.06
+      },
+      "10-20 km (Periphery)": {
+        "sample_count": 55,
+        "pm25_coverage_pct": 100.0,
+        "pm10_coverage_pct": 100.0,
+        "mean_interval_half_width_pm25": 166.44,
+        "mean_interval_half_width_pm10": 297.64
+      }
+    }
+  }
+}

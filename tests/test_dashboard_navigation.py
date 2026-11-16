@@ -22,6 +22,7 @@ SECTIONS = [
     "Unified Hybrid Forecast",
     "Side-by-Side Comparison",
     "Station Map",
+    "Spatial Prediction & Heatmap",
     "Model Performance",
     "Data Sources and System Health",
 ]

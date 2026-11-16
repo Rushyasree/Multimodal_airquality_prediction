@@ -1,0 +1,25 @@
+{
+  "evaluation_name": "Phase13_Spatial_Forecast_Validation",
+  "sample_count": 1564,
+  "timestamps_evaluated": 60,
+  "target_stations_evaluated": 34,
+  "execution_time_seconds": 17.69,
+  "pm25": {
+    "direct_temporal_lstm_mae": 13.61,
+    "idw_spatial_forecast_mae": 24.3,
+    "nearest_neighbor_forecast_mae": 28.83,
+    "direct_temporal_lstm_rmse": 23.24,
+    "idw_spatial_forecast_rmse": 42.57,
+    "nearest_neighbor_forecast_rmse": 50.21,
+    "idw_vs_nn_forecast_mae_gain_pct": 15.71
+  },
+  "pm10": {
+    "direct_temporal_lstm_mae": 22.19,
+    "idw_spatial_forecast_mae": 44.41,
+    "nearest_neighbor_forecast_mae": 55.31,
+    "direct_temporal_lstm_rmse": 36.86,
+    "idw_spatial_forecast_rmse": 70.93,
+    "nearest_neighbor_forecast_rmse": 87.07,
+    "idw_vs_nn_forecast_mae_gain_pct": 19.71
+  }
+}
