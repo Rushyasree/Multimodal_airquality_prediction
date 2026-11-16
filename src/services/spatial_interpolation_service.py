@@ -382,7 +382,57 @@ class SpatialInterpolationService:
         else:
             context = forecast_context
 
-        coords, pm25_vals, pm10_vals, sids = self._sanitize_station_inputs(context.records)
+        try:
+            coords, pm25_vals, pm10_vals, sids = self._sanitize_station_inputs(context.records)
+        except ValueError as e:
+            return {
+                "city_id": bbox.city_id,
+                "city_name": bbox.name,
+                "region": bbox.region,
+                "primary_state": bbox.primary_state,
+                "is_supported": False,
+                "data_quality_status": "INSUFFICIENT_COVERAGE",
+                "validation_status": "INSUFFICIENT_COVERAGE",
+                "density_category": "Insufficient",
+                "error_message": f"Insufficient monitoring coverage ({len(context.records)} monitors). Minimum required for continuous 2D spatial interpolation is {self.config.min_stations}.",
+                "stations_used_count": len(context.records),
+                "grid_resolution": grid_resolution,
+                "total_grid_points": 0,
+                "valid_grid_points": 0,
+                "coverage_percentage": 0.0,
+                "bounding_box": {
+                    "min_lat": bbox.min_lat,
+                    "max_lat": bbox.max_lat,
+                    "min_lon": bbox.min_lon,
+                    "max_lon": bbox.max_lon,
+                    "center_lat": bbox.center_lat,
+                    "center_lon": bbox.center_lon,
+                    "default_zoom": bbox.default_zoom,
+                },
+                "grid_lat": [],
+                "grid_lon": [],
+                "pm25_grid": [],
+                "pm10_grid": [],
+                "valid_mask": [],
+                "stats": {
+                    "pm25_min": 0.0,
+                    "pm25_max": 0.0,
+                    "pm25_mean": 0.0,
+                    "pm10_min": 0.0,
+                    "pm10_max": 0.0,
+                    "pm10_mean": 0.0,
+                },
+                "station_ids": [r.station_id for r in context.records],
+                "station_coords": [[r.latitude, r.longitude] for r in context.records],
+                "station_pm25": [r.predicted_pm25 for r in context.records],
+                "station_pm10": [r.predicted_pm10 for r in context.records],
+                "target_time": context.target_time,
+                "forecast_issue_time": context.issue_time,
+                "forecast_horizon": context.forecast_horizon,
+                "model_source": context.model_source,
+                "interpolation_method": f"Modified IDW (p={self.config.power:.1f})",
+            }
+
         num_stations = len(sids)
 
         # 1. Construct 2D grid coordinates
@@ -452,6 +502,12 @@ class SpatialInterpolationService:
         return {
             "city_id": bbox.city_id,
             "city_name": bbox.name,
+            "region": bbox.region,
+            "primary_state": bbox.primary_state,
+            "is_supported": True,
+            "data_quality_status": "VALIDATED_CONFORMAL" if bbox.city_id == "delhi_ncr" else "EXPLORATORY_SUFFICIENT",
+            "validation_status": bbox.validation_status,
+            "density_category": bbox.density_category,
             "grid_resolution": grid_resolution,
             "total_grid_points": M,
             "valid_grid_points": int(np.sum(valid_coverage_mask)),
