@@ -564,8 +564,10 @@ As shown in Fig.~\ref{fig:cross_corr} and Table~\ref{tab:spatial_advection}:
     \item In \textbf{Delhi} ($-2.03\%$) and \textbf{Kolkata} ($-3.00\%$), unweighted spatial concatenation degrades accuracy. In these continental corridors, hyper-local street-level emissions dominate over regional transit, injecting noise when neighbor features are concatenated without physics-informed wind gating.
 \end{itemize}
 
+\input{tables/table_spatial_prediction.tex}
+
 \subsection{Spatial Prediction Layer Validation and Non-Exchangeable Conformal Calibration}
-To rigorously validate arbitrary-location estimation beyond fixed monitoring sites, we conducted an empirical Leave-One-Station-Out (LOSO) spatial benchmark across 1,564 evaluations spanning 34 CAAQMS stations over 60 synchronized timestamps.
+To rigorously validate arbitrary-location estimation beyond fixed monitoring sites, we conducted an empirical Leave-One-Station-Out (LOSO) spatial benchmark across 1,564 evaluations spanning 34 CAAQMS stations over 60 synchronized timestamps, summarized in Table~\ref{tab:spatial_prediction}.
 
 \subsubsection{Spatial Interpolation vs. Nearest-Neighbor Forecasting}
 At unmonitored target locations, Geodesic IDW operating on neighboring station $t+1$ forecasts achieves a $\text{PM}_{2.5}$ MAE of \textbf{24.30 $\mu\text{g/m}^3$} (RMSE 42.57 $\mu\text{g/m}^3$), demonstrating a \textbf{+15.71\% relative improvement} over the nearest-neighbor baseline (MAE 28.83 $\mu\text{g/m}^3$, RMSE 50.21 $\mu\text{g/m}^3$). For $\text{PM}_{10}$, IDW achieves an MAE of \textbf{44.41 $\mu\text{g/m}^3$} (RMSE 70.93 $\mu\text{g/m}^3$) versus 55.31 $\mu\text{g/m}^3$ (RMSE 87.07 $\mu\text{g/m}^3$) for nearest neighbor, a \textbf{+19.71\% gain}. As expected, localized physical telemetry at co-located stations achieves tighter bounds (direct temporal LSTM MAE: 13.61 $\mu\text{g/m}^3$ for $\text{PM}_{2.5}$ and 22.19 $\mu\text{g/m}^3$ for $\text{PM}_{10}$), reflecting the fundamental physical information loss incurred when interpolating across complex urban topography.

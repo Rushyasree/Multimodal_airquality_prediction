@@ -1,0 +1,33 @@
+% Spatial Prediction Layer Validation and Conformal Calibration Table
+\begin{table*}[t]
+\caption{Leave-One-Station-Out (LOSO) Spatial Forecasting Benchmark, Temporal Block Bootstrapping, and Spatial Conformal Calibration ($N = 1,564$ Evaluations across 34 Stations over 60 Timestamps)}
+\label{tab:spatial_prediction}
+\centering
+\small
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Evaluation Pathway} & \multicolumn{3}{c}{\textbf{$\text{PM}_{2.5}$ ($\mu\text{g/m}^3$)}} & \multicolumn{3}{c}{\textbf{$\text{PM}_{10}$ ($\mu\text{g/m}^3$)}} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+& \textbf{MAE} & \textbf{RMSE} & \textbf{Gain over 1-NN} & \textbf{MAE} & \textbf{RMSE} & \textbf{Gain over 1-NN} \\
+\midrule
+\textit{Reference Upper Bound}: Co-located Sensor LSTM & 13.61 & 23.24 & --- & 22.19 & 36.86 & --- \\
+Nearest-Neighbor Spatial Baseline (1-NN) & 28.83 & 50.21 & \textit{Baseline} & 55.31 & 87.07 & \textit{Baseline} \\
+\textbf{VayuDrishti Geodesic IDW ($p=2.0$)} & \textbf{24.30} & \textbf{42.57} & \textbf{+15.71\%} & \textbf{44.41} & \textbf{70.93} & \textbf{+19.71\%} \\
+\midrule
+\multicolumn{7}{l}{\textbf{Temporal Block Bootstrap Results ($B=2,000$ resamples, Block Size $L=3$ timestamps, 20 effective blocks)}} \\
+\midrule
+Paired Difference ($\Delta\text{MAE} = \text{MAE}_{\text{1-NN}} - \text{MAE}_{\text{IDW}}$) & \multicolumn{3}{c}{$6.01\,\mu\text{g/m}^3$ [95\% CI: $4.23$ to $8.04$]} & \multicolumn{3}{c}{$17.82\,\mu\text{g/m}^3$ [95\% CI: $14.63$ to $21.40$]} \\
+Relative Improvement (\%) & \multicolumn{3}{c}{$+19.85\%$ [95\% CI: $16.93\%$ to $22.76\%$]} & \multicolumn{3}{c}{$+25.29\%$ [95\% CI: $23.39\%$ to $27.16\%$]} \\
+Bootstrap Hypothesis Significance & \multicolumn{3}{c}{$p < 0.001$ (\textit{Statistically Significant})} & \multicolumn{3}{c}{$p < 0.001$ (\textit{Statistically Significant})} \\
+\midrule
+\multicolumn{7}{l}{\textbf{Distance-Scaled Non-Exchangeable Spatial Conformal Calibration ($n_{\text{cal}}=777, n_{\text{eval}}=950$, Nominal Target: 95.0\%)}} \\
+\midrule
+Distance Tier & \textbf{Samples} & \textbf{$\text{PM}_{2.5}$ Half-Width} & \textbf{$\text{PM}_{2.5}$ Coverage} & \textbf{$\text{PM}_{10}$ Half-Width} & \textbf{$\text{PM}_{10}$ Coverage} & \textbf{Target Status} \\
+\midrule
+Urban Core ($0$--$5\text{ km}$) & 754 & $113.31\,\mu\text{g/m}^3$ & \textbf{99.20\%} & $212.56\,\mu\text{g/m}^3$ & \textbf{99.07\%} & Satisfied ($\ge 95\%$) \\
+Suburban Zone ($5$--$10\text{ km}$) & 141 & $130.48\,\mu\text{g/m}^3$ & \textbf{100.0\%} & $240.06\,\mu\text{g/m}^3$ & \textbf{99.29\%} & Satisfied ($\ge 95\%$) \\
+Peripheral Zone ($10$--$20\text{ km}$) & 55 & $166.44\,\mu\text{g/m}^3$ & \textbf{100.0\%} & $297.64\,\mu\text{g/m}^3$ & \textbf{100.0\%} & Satisfied ($\ge 95\%$) \\
+\textbf{Overall Empirical Coverage} & \textbf{950} & $\mathbf{118.93\,\mu\text{g/m}^3}$ & \textbf{99.37\%} & $\mathbf{221.56\,\mu\text{g/m}^3}$ & \textbf{99.16\%} & \textbf{Guaranteed} \\
+\bottomrule
+\end{tabular}
+\end{table*}
