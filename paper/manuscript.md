@@ -84,16 +84,26 @@ Haversine distance $d$ between camera and station inlet is embedded via affine p
 $$e_d = \text{ReLU}(W_d d + b_d) \in \mathbb{R}^8$$
 To estimate pollutant concentrations at unmonitored coordinates, a geostatistical spatial interpolation layer applies modified Geodesic Inverse Distance Weighting (IDW) over verified $t+1$ forecasts from neighboring stations:
 $$\hat{z}(\mathbf{x}) = \frac{\sum_{i \in \mathcal{N}(\mathbf{x})} w_i z_i}{\sum_{i \in \mathcal{N}(\mathbf{x})} w_i}, \quad w_i = (\text{Haversine}(\mathbf{x}, \mathbf{x}_i) + \epsilon)^{-p}$$
-generating continuous 2D concentration fields across major Indian urban agglomerations.
+with $p=2.0, \epsilon=0.001\text{ km}, R_{\text{max}}=45\text{ km}$, generating continuous 2D concentration fields across 31 registered Indian urban agglomerations (indexing 586 physical stations nationwide).
+
+- **Multi-City Registry**: Centralized catalog defining bounding boxes, centroids, grid resolutions, and active monitors across South (10), West (5), North (5), East (4), Central (3), and Retained (4) urban zones.
+- **Sparse-Network Safeguards ($N < 3$)**: When active physical monitors $N < 3$, continuous 2D surface rendering is strictly **suppressed** to prevent deceptive ungrounded mathematical artifacts, defaulting to transparent single-station forecasts.
+- **Four-Level Output Provenance Taxonomy**:
+  1. *Physical Observation* ($d \le 0.05\text{ km}$): Co-located physical station measurement.
+  2. *Interpolated Spatial Estimate* ($N \ge 3, d \le 45\text{ km}$): Multi-station IDW with conformal bounds.
+  3. *Station-Level Forecast (Nearest Neighbor Fallback)* ($1 \le N < 3, d \le 45\text{ km}$): Explicit single-station proximity guidance (never misrepresented as an interpolated field).
+  4. *Unavailable Estimate* ($N=0$ or $d > 45\text{ km}$): Out-of-bounds rejection. Zero silent substitution guaranteed.
+- **Spatial Clustering Metric (Clark-Evans Index)**: Evaluates $R = \bar{r}_A / \bar{r}_E$ to quantify intra-urban clustering ($R < 0.85$ indicates heavy concentration in municipal/industrial cores).
+- **Station Freshness State Machine**: Classifies observation latency into Fresh ($\le 2\text{h}$), Delayed ($2\text{--}6\text{h}$), Stale ($6\text{--}24\text{h}$), Offline ($> 24\text{h}$), and Historical Benchmark.
 
 ### E. Operational Live Pipeline & Streamlined 6-View Dashboard
-Sub-100ms inference pipeline connected to the live Streamlit dashboard (`https://vayudrishti-airquality.streamlit.app/`), consolidated into six core cohesive views:
+Sub-100ms inference pipeline connected to the live Streamlit dashboard (`https://vayudrishti-airquality.streamlit.app/`), enforcing strict sequence completeness ($\ge 80\%$ valid hourly observations over 24 hours), explicit forecast issuance vs target horizon ($t+1$) timestamps, and consolidated into six core cohesive views:
 1. **Home Overview**: Multi-modal air quality summary, live gauges, weather, 24h trends, 5-day forecasts.
-2. **Station Telemetry**: Real-time sensor readings, monitor provenance, and telemetry freshness.
-3. **AI Sequence Forecaster**: Recurrent LSTM inference, weather drivers, and persistence baselines.
-4. **Multimodal Hybrid Forecaster**: Gated sensor-vision fusion with visual feature inspection and automatic fallback.
-5. **Model Comparison**: Side-by-side empirical verification across ground stations and forecasting models.
-6. **Spatial Prediction & Heatmap**: Continuous 2D geostatistical particulate matter field rendering with conformal uncertainty intervals.
+2. **Station Telemetry**: Real-time sensor readings, monitor provenance, 5-state freshness auditing, and station inventory.
+3. **AI Sequence Forecaster**: Recurrent LSTM inference, weather drivers, sequence completeness checks, and persistence baselines.
+4. **Multimodal Hybrid Forecaster**: Gated sensor-vision fusion with visual feature inspection, transparent disclosure of experimental optical surrogate status, and automatic fallback.
+5. **Model Comparison**: Side-by-side empirical verification across ground stations and forecasting models with explicit horizon timestamps.
+6. **Spatial Prediction & Heatmap**: Continuous 2D geostatistical particulate matter field rendering across 31 cities, Clark-Evans clustering diagnostics, operational reliability tier badges, and arbitrary-coordinate point estimation with conformal uncertainty intervals.
 
 ---
 
@@ -240,6 +250,20 @@ This discrete threshold switch decouples the decision tree during extreme tails,
 - **Distance-Scaled Conformal Calibration**:
   - Distance inflation factor achieves $\ge 99.1\%$ empirical coverage across urban (0–5 km), suburban (5–10 km), and periphery (10–20 km) tiers, resolving the severe 33.47% under-coverage of uncalibrated heuristic scaling.
 
+### I. Nationwide Multi-City Station Infrastructure and Spatial Reliability Audit
+- **31-City Infrastructure Telemetry**:
+  - 349 urban monitors audited: 260 reporting valid $\text{PM}_{2.5}$, 254 reporting valid $\text{PM}_{10}$, 263 maintaining complete 24h rolling buffers.
+- **Clark-Evans Spatial Clustering Analysis ($R = \bar{r}_A / \bar{r}_E$)**:
+  - Severe clustering ($R < 0.85$) in 13 cities (Delhi $R=0.42$, Mumbai $R=0.56$, Kolkata $R=0.32$, Bengaluru $R=0.45$, Hyderabad $R=0.61$, Patna $R=0.38$), demonstrating heavy monitor grouping in city centers and peripheral sampling sparsity.
+  - Random/mixed distribution ($0.85 \le R \le 1.15$) in 5 cities (Pune $R=0.93$, Lucknow $R=1.13$).
+  - Dispersed perimeter topology ($R > 1.15$) in 7 cities (Agra $R=1.35$, Indore $R=3.12$).
+- **Operational Reliability Classification**:
+  - *Tier 1 (Scientifically Calibrated)*: Delhi NCR ($N=98$, 99.37% empirical conformal coverage).
+  - *Tier 2 (High Reliability, $N \ge 10$)*: Mumbai, Kolkata, Hyderabad, Bengaluru, Pune, Patna, Ahmedabad.
+  - *Tier 3 (Moderate Reliability, $4 \le N \le 9$)*: 14 cities.
+  - *Tier 4 (Marginal Reliability, $N = 3$)*: Kochi, Coimbatore, Kanpur.
+  - *Tier 5 (Insufficient Coverage, $N < 3$)*: Visakhapatnam (2), Tirupati (2), Bhubaneswar (2), Surat (1), Guntur (0), Ranchi (0) — active safeguards suppress continuous surfaces, falling back to transparent single-station forecasts.
+
 ---
 
 ## IX. Discussion and Limitations
@@ -248,9 +272,12 @@ This discrete threshold switch decouples the decision tree during extreme tails,
 ![Alignment Diagnostics](figures/alignment_discrepancy_distribution.png)
 Naive early fusion degraded $\text{PM}_{2.5}$ MAE by **12.19 $\mu\text{g/m}^3$** (85.86 vs 73.67 $\mu\text{g/m}^3$), validating our bounded residual design.
 
-### B. Deployment Interface
+### B. Deployment Interface and Operational Principles
 ![Dashboard Interface](figures/dashboard_monitoring_interface.png)
-Consolidating navigation into 6 core modules removed redundant telemetry clutter and improved cognitive clarity for operational air quality management.
+1. **Fallback Primacy**: Guaranteed mathematical fallback ($m=0 \implies \alpha_{\text{eff}}=0$) prevents visual corruption from compromising sensor baselines.
+2. **Zero Silent Substitution**: In sparse networks ($N < 3$), 2D surfaces are suppressed rather than synthesized, and single-station fallbacks are explicitly labeled.
+3. **Forecast Provenance Transparency**: Every forecast displays sequence completeness ($\ge 80\%$), issue timestamp, and target horizon ($t+1$).
+4. **Modality Role Disclosure**: Image models are disclosed as experimental optical surrogates, never physical monitors.
 
 ---
 
@@ -259,4 +286,5 @@ VayuDrishti establishes an operational, theoretically bounded framework for mult
 1. Residual hybrid fusion achieves guaranteed mathematical fallback to the sensor baseline when imagery is unavailable ($m=0$).
 2. Split-conformal calibration delivers finite-sample coverage guarantees ($\ge 92.8\%$ at 80\% nominal, block bootstrap $p < 10^{-12}$).
 3. Geostatistical spatial interpolation achieves +15.71% ($\text{PM}_{2.5}$) and +19.71% ($\text{PM}_{10}$) gains over nearest neighbor, with distance-scaled spatial conformal calibration delivering $\ge 99.1\%$ coverage.
-4. Streamlined 6-view operational deployment ensures high responsiveness and cognitive clarity.
+4. Multi-city expansion across 31 Indian urban agglomerations (586 stations) coupled with Clark-Evans clustering diagnostics and a 5-tier reliability taxonomy enforces safeguards in sensor-sparse environments ($N < 3$).
+5. Streamlined 6-view operational deployment ensures high responsiveness, cognitive clarity, and strict forecast provenance.

@@ -271,14 +271,14 @@ def generate_ieee_manuscript():
     r_abs_title.font.size = Pt(9)
     r_abs = p_abs.add_run(
         "Ambient particulate matter pollution (PM2.5 and PM10) across developing urban agglomerations poses an acute hazard to environmental health. "
-        "However, operational deployments face frequent sensor dropouts, meteorological volatility, and optical ambiguity in outdoor camera imagery. "
+        "However, operational deployments face frequent sensor dropouts, meteorological volatility, optical ambiguity in outdoor camera imagery, and spatial sensor sparsity. "
         "We present VayuDrishti, an operational residual multimodal hybrid framework for robust next-hour particulate matter forecasting. "
-        "VayuDrishti integrates continuous numerical telemetry with opportunistic surveillance imagery and spatial distance representations. "
-        "Rather than relying on unconstrained joint fusion, the framework structures visual features as a bounded residual correction over a reliable recurrent sensor baseline, "
-        "regulated by a learned quality-aware gating mechanism. When images are corrupted, noisy, or unavailable, the gating factor collapses to zero, "
-        "mathematically guaranteeing seamless fallback to the sensor baseline without accuracy degradation. "
-        "Evaluated across large-scale historical continuous sequences and synchronized multimodal cohorts, VayuDrishti demonstrates that opportunistic imagery "
-        "provides effective bounded residual refinements while preserving operational stability across diverse pollution regimes."
+        "Rather than relying on unconstrained joint fusion, the framework structures visual features as a bounded residual correction over a verified recurrent sensor baseline (2-layer LSTM), "
+        "regulated by a learned quality-aware gating mechanism with guaranteed mathematical fallback when imagery is corrupted or unavailable (m=0). "
+        "Across 404,431 continuous hourly sequences from 90 continuous stations, the sensor baseline achieves an MAE of 10.57 ug/m3 (R2 = 0.9492) for PM2.5 and 18.86 ug/m3 (R2 = 0.9301) for PM10. "
+        "To extend predictions across unmonitored coordinates, an integrated geostatistical spatial prediction layer using modified Geodesic Inverse Distance Weighting achieves a 15.71% (PM2.5) and 19.71% (PM10) MAE reduction over nearest-neighbor baselines across 1,564 Leave-One-Station-Out evaluations (block bootstrap p < 0.001), with distance-scaled conformal calibration delivering finite-sample coverage (>= 99.1% across urban distance bands). "
+        "Furthermore, we expand spatial modeling across 31 Indian urban agglomerations (586 physical stations nationwide), conduct an empirical spatial reliability audit using the Clark-Evans nearest neighbor ratio (R) to diagnose urban core clustering (R = 0.32-0.61 in major metros), and enforce a 5-tier operational reliability framework with automated safeguards suppressing continuous surfaces in sensor-sparse environments (N < 3). "
+        "The complete framework is operationalized through an interactive 6-view real-time deployment architecture with audited forecast provenance."
     )
     r_abs.font.name = "Times New Roman"
     r_abs.font.size = Pt(9)
@@ -292,7 +292,7 @@ def generate_ieee_manuscript():
     r_kw_pre.italic = True
     r_kw_pre.font.name = "Times New Roman"
     r_kw_pre.font.size = Pt(9)
-    r_kw = p_kw.add_run("Air quality forecasting, PM2.5, PM10, multimodal learning, residual learning, LSTM, ResNet-50, environmental monitoring, conformal prediction.")
+    r_kw = p_kw.add_run("Air quality forecasting, PM2.5, PM10, multimodal learning, residual learning, LSTM, ResNet-50, spatial interpolation, Clark-Evans index, conformal prediction.")
     r_kw.font.name = "Times New Roman"
     r_kw.font.size = Pt(9)
     
@@ -338,7 +338,10 @@ def generate_ieee_manuscript():
     add_body_p(doc, "• Gated Residual Multimodal Architecture: Fusing a frozen LSTM encoder with an optical ResNet-50 feature projector and distance embedding to compute bounded residual corrections under learned quality gating.\n"
                     "• Guaranteed Sensor Fallback: When images are absent (m=0), effective gating collapses to zero (alpha_eff = 0), guaranteeing identical fallback to the sensor baseline without degradation.\n"
                     "• Strict Pathway Separation: Delineating three distinct operational models: Sensor-based LSTM, Severity-gated LSTM–GBDT ensemble, and Residual Multimodal Hybrid.\n"
-                    "• Multi-Cohort Validation: Benchmarking on 404,431 continuous sequences, 236,289 multi-station observations, and 97 strictly paired multimodal instances.",
+                    "• Multi-Cohort Validation: Benchmarking on 404,431 continuous sequences, 236,289 multi-station observations, and 97 strictly paired multimodal instances.\n"
+                    "• Geostatistical Spatial Prediction & Conformal Calibration: Leave-one-station-out IDW spatial interpolation achieving +15.71% (PM2.5) and +19.71% (PM10) gains over nearest-neighbor baselines (p < 0.001) with distance-scaled spatial conformal coverage >= 99.1%.\n"
+                    "• Nationwide Multi-City Expansion & Spatial Reliability Taxonomy: Scaling spatial coverage across 31 Indian urban agglomerations (586 physical CAAQMS stations), introducing the Clark-Evans nearest neighbor index R to quantify intra-urban clustering (R < 0.85 in 13 cities), establishing a 5-tier operational reliability framework, and enforcing automated safeguards suppressing artificial continuous surfaces in sensor-sparse environments (N < 3).\n"
+                    "• Audited Operational Platform & Provenance Architecture: Deploying a streamlined 6-view dashboard with strict 5-state telemetry freshness tracking, 24-hour sequence completeness requirements, and zero-silent-substitution provenance guarantees.",
                     indent=False)
 
     # SECTION II: RELATED WORK
@@ -370,12 +373,14 @@ def generate_ieee_manuscript():
     add_body_p(doc, "Because surveillance cameras are rarely co-located exactly at the station sampling inlet, the physical Haversine distance d (in kilometers) between image coordinates and the station inlet is explicitly parameterized and non-linearly projected to an 8-dimensional embedding:")
     add_equation_p(doc, "e_d = ReLU(W_d d + b_d) in R^8", eq_num="1")
 
-    add_heading_2(doc, "D. Spatial Prediction Layer and Urban Heatmap")
-    add_body_p(doc, "To estimate pollutant concentrations at arbitrary unmonitored coordinates, VayuDrishti incorporates a geostatistical spatial interpolation layer executing modified Geodesic Inverse Distance Weighting (IDW) over verified t+1 neighbor forecasts with distance decay p in [1.0, 3.0], producing continuous 2D surface concentration fields across Indian urban agglomerations.")
+    add_heading_2(doc, "D. Spatial Prediction Layer, Multi-City Registry, and Operational Safeguards")
+    add_body_p(doc, "To estimate pollutant concentrations at arbitrary unmonitored coordinates, VayuDrishti incorporates a geostatistical spatial interpolation layer supported by a centralized City Registry indexing 586 physical CAAQMS stations nationwide. The engine executes modified Geodesic Inverse Distance Weighting (IDW) over verified t+1 neighbor forecasts with distance decay p = 2.0, epsilon = 0.001 km, and maximum radius R_max = 45 km, producing continuous 2D surface concentration fields across 31 registered Indian urban agglomerations.")
     add_equation_p(doc, "z_hat(x) = sum_{i in N(x)} w_i z_i / sum w_i,  w_i = (Haversine(x, x_i) + eps)^(-p)", eq_num="2")
+    add_body_p(doc, "When active physical monitors within a city bounds fall below 3 (N < 3), continuous 2D surface generation is strictly suppressed under automated safeguards to prevent deceptive ungrounded mathematical artifacts, defaulting to transparent single-station forecasts. All point queries strictly enforce a 4-level provenance taxonomy: (1) Physical Observation (d <= 0.05 km), (2) Interpolated Spatial Estimate (N >= 3, d <= 45 km), (3) Station-Level Forecast (Nearest Neighbor Fallback, 1 <= N < 3), and (4) Unavailable Estimate (N=0 or d > 45 km), guaranteeing zero silent substitution.")
+    add_body_p(doc, "Spatial point-process clustering is quantified via the Clark-Evans Nearest Neighbor Ratio (R = r_bar_A / r_bar_E) [26], where R < 0.85 denotes significant clustering in municipal/industrial cores. Telemetry streams are evaluated through a 5-tier state machine: Fresh (<= 2h), Delayed (2-6h), Stale (6-24h), Offline (> 24h), and Historical Benchmark.")
 
-    add_heading_2(doc, "E. Streamlined 6-View Dashboard Architecture")
-    add_body_p(doc, "The operational deployment platform integrates six cohesive real-time views: (1) Home Overview, (2) Station Telemetry, (3) AI Sequence Forecaster, (4) Multimodal Hybrid Forecaster, (5) Side-by-Side Model Comparison, and (6) Spatial Prediction & Urban Heatmap. Redundant standalone benchmark and telemetry cards were pruned to maximize operational responsiveness and eliminate visual clutter.")
+    add_heading_2(doc, "E. Operational Live Pipeline & Streamlined 6-View Dashboard")
+    add_body_p(doc, "The operational deployment platform integrates six cohesive real-time views: (1) Home Overview, (2) Station Telemetry, (3) AI Sequence Forecaster, (4) Multimodal Hybrid Forecaster, (5) Side-by-Side Model Comparison, and (6) Spatial Prediction & Urban Heatmap. Forecasts require >= 80% sequence completeness over the preceding 24 hours, display explicit forecast issuance vs target horizon (t+1) timestamps, and surface operational reliability tier badges and Clark-Evans clustering diagnostics directly in the UI.")
 
     # SECTION IV: SENSOR-BASED LSTM FORECASTING
     add_heading_1(doc, "IV. Sensor-Based LSTM Forecasting")
@@ -520,6 +525,11 @@ def generate_ieee_manuscript():
     add_heading_2(doc, "H. Spatial Prediction Layer Validation and Non-Exchangeable Conformal Calibration")
     add_body_p(doc, "Across a Leave-One-Station-Out (LOSO) spatial benchmark of 1,564 evaluations across 34 CAAQMS stations over 60 timestamps, Geodesic IDW achieved PM2.5 MAE of 24.30 ug/m3 vs. 28.83 ug/m3 for nearest neighbor (+15.71% relative gain, RMSE 42.57 vs. 50.21 ug/m3), and PM10 MAE of 44.41 ug/m3 vs. 55.31 ug/m3 for nearest neighbor (+19.71% gain, RMSE 70.93 vs. 87.07 ug/m3). Temporal block bootstrapping (B=2,000 resamples, block length L=3) confirmed statistical significance: mean paired MAE difference of 6.01 ug/m3 (95% CI: [4.23, 8.04], p < 0.001) for PM2.5 and 17.82 ug/m3 (95% CI: [14.63, 21.40], p < 0.001) for PM10. Non-exchangeable spatial split-conformal calibration with linear distance inflation achieved 99.37% (PM2.5) and 99.16% (PM10) empirical coverage across 950 held-out evaluation instances, guaranteeing reliability across urban core, suburban, and peripheral zones.")
 
+    add_heading_2(doc, "I. Nationwide Multi-City Station Infrastructure and Spatial Reliability Audit")
+    add_body_p(doc, "To evaluate operational scalability, an exhaustive empirical audit was executed across all 31 registered Indian urban agglomerations (encompassing 349 monitors within defined municipal bounds out of 586 stations nationwide). Live particulate telemetry confirms 260 stations (74.5%) reporting valid PM2.5 and 254 stations (72.8%) reporting valid PM10, with 263 stations (75.4%) maintaining complete 24-hour sequence buffers (>= 80% completeness).")
+    add_body_p(doc, "The Clark-Evans Nearest Neighbor Ratio (R = r_bar_A / r_bar_E) [26] reveals significant core clustering (R < 0.85) in 13 out of 31 cities, including all major metropolises: Kolkata (R=0.32), Patna (R=0.38), Delhi NCR (R=0.42), Bengaluru (R=0.45), Mumbai MMR (R=0.56), Chennai (R=0.57), and Hyderabad (R=0.61), indicating dense core monitoring but sparse peripheral coverage. Conversely, 5 cities exhibit random/mixed uniformity (0.85 <= R <= 1.15, e.g., Pune R=0.93, Lucknow R=1.13), and 7 cities exhibit dispersed perimeter topologies (R > 1.15, e.g., Agra R=1.35, Indore R=3.12).")
+    add_body_p(doc, "Based on monitor counts and spatial geometry, cities are classified into 5 operational tiers: Tier 1 (Scientifically Calibrated, Delhi NCR, N=98, 99.37% conformal coverage); Tier 2 (High Reliability, N >= 10, 7 cities: Mumbai, Kolkata, Hyderabad, Bengaluru, Pune, Patna, Ahmedabad); Tier 3 (Moderate Reliability, 4 <= N <= 9, 14 cities); Tier 4 (Marginal Reliability, N = 3, 3 cities: Kochi, Coimbatore, Kanpur); and Tier 5 (Insufficient Coverage, N < 3, 6 cities: Visakhapatnam, Tirupati, Bhubaneswar, Surat, Guntur, Ranchi). In Tier 5 cities, continuous 2D surface generation is strictly suppressed under automated safeguards, defaulting to transparent single-station forecasts with zero silent substitution.")
+
     # SECTION IX: DISCUSSION AND LIMITATIONS
     add_heading_1(doc, "IX. Discussion and Limitations")
     add_heading_2(doc, "A. Empirical Negative Result on Opportunistic Imagery")
@@ -530,7 +540,7 @@ def generate_ieee_manuscript():
                    "PM25Vision empirical alignment diagnostics: (a) Haversine distance distribution; (b) Systematic label discrepancy.")
 
     add_heading_2(doc, "B. Practical Deployment Lessons")
-    add_body_p(doc, "Operationalizing VayuDrishti demonstrated that real-world robustness depends far more on fallback guarantees, spatial non-exchangeable uncertainty calibration, and streamlined UI design than unchecked model complexity. Consolidating the interface into 6 cohesive views reduced latency and improved operational situational awareness.")
+    add_body_p(doc, "Operationalizing VayuDrishti demonstrated four key principles: (1) Fallback Primacy: mathematical fallback (m=0 => alpha_eff=0) is essential to protect sensor baselines from optical noise; (2) Zero Silent Substitution: suppressing 2D surfaces in sparse networks (N < 3) prevents misleading public health visualizations; (3) Forecast Provenance: displaying sequence completeness (>= 80%), issue time, and target horizon (t+1) cleanly separates live forecasts from historical replays; and (4) Modality Role Disclosure: image models must be transparently disclosed as experimental optical surrogates rather than physical monitors.")
 
     # Fig 18 Placed after Practical Lessons
     add_col_figure(doc, FIG_DIR / "dashboard_monitoring_interface.png", "18", 
@@ -539,7 +549,7 @@ def generate_ieee_manuscript():
     # SECTION X: CONCLUSION
     add_heading_1(doc, "X. Conclusion and Future Work")
     add_body_p(doc, "In this paper, we presented VayuDrishti, an operational residual multimodal hybrid framework for next-hour particulate matter forecasting. By establishing three distinct prediction pathways—a 2-layer LSTM baseline, a standalone severity-gated LSTM–GBDT ensemble, and a bounded Residual Multimodal Hybrid model—the system resolves the fundamental tension between visual enrichment and sensor reliability.")
-    add_body_p(doc, "Key findings confirm: (i) Across 404,431 continuous benchmark test sequences, the LSTM baseline achieves PM2.5 MAE 10.57 ug/m3 (R2 = 0.9492), while the severity-gated ensemble achieves 10.35 ug/m3 (R2 = 0.9503); (ii) Across 236,289 longitudinal multi-station sequences, Standalone Adapted GBDT outperforms persistence by up to 5.06%; (iii) On synchronous paired multimodal test instances (N=97), the residual hybrid achieves PM2.5 MAE 8.98 ug/m3 vs. 9.04 ug/m3 for the sensor baseline, while guaranteeing exact mathematical fallback when imagery is unavailable (m=0); (iv) Split-conformal calibration delivers finite-sample coverage guarantees (>= 92.8% at 80% nominal), and stationary block bootstrapping verifies statistical significance (p < 10^-12); (v) Geostatistical spatial interpolation achieves +15.71% (PM2.5) and +19.71% (PM10) gains over nearest neighbor (block bootstrap p < 0.001) with distance-scaled spatial conformal coverage >= 99.1%; and (vi) The system was operationalized via a streamlined 6-view real-time dashboard.")
+    add_body_p(doc, "Key findings confirm: (i) Across 404,431 continuous benchmark test sequences, the LSTM baseline achieves PM2.5 MAE 10.57 ug/m3 (R2 = 0.9492), while the severity-gated ensemble achieves 10.35 ug/m3 (R2 = 0.9503); (ii) Across 236,289 longitudinal multi-station sequences, Standalone Adapted GBDT outperforms persistence by up to 5.06%; (iii) On synchronous paired multimodal test instances (N=97), the residual hybrid achieves PM2.5 MAE 8.98 ug/m3 vs. 9.04 ug/m3 for the sensor baseline, while guaranteeing exact mathematical fallback when imagery is unavailable (m=0); (iv) Split-conformal calibration delivers finite-sample coverage guarantees (>= 92.8% at 80% nominal), and stationary block bootstrapping verifies statistical significance (p < 10^-12); (v) Geostatistical spatial interpolation achieves +15.71% (PM2.5) and +19.71% (PM10) gains over nearest neighbor (block bootstrap p < 0.001) with distance-scaled spatial conformal coverage >= 99.1%; (vi) Spatial modeling is expanded nationwide across 31 Indian urban agglomerations (586 physical stations), with Clark-Evans clustering diagnostics and a 5-tier reliability taxonomy enforcing safeguards in sensor-sparse environments (N < 3); and (vii) The system was operationalized via a streamlined 6-view real-time dashboard with audited forecast provenance.")
     add_body_p(doc, "Future work will deploy synchronized edge-camera sensor pods, incorporate physics-informed boundary layer wind vectors into graph attention networks, and explore adaptive online conformal prediction under continuous concept drift.")
 
     # REFERENCES
@@ -569,7 +579,8 @@ def generate_ieee_manuscript():
         "[22] A. Chakma et al., 'Image-based air quality analysis using deep convolutional neural networks,' in 2017 16th IEEE ICMLA, pp. 393–398, 2017.",
         "[23] T. Baltrušaitis, C. Ahuja, and L.-P. Morency, 'Multimodal Machine Learning: A Survey and Taxonomy,' IEEE TPAMI, vol. 41, no. 2, pp. 423–443, 2019.",
         "[24] K. Zhang, A. Thesen, D. Le, and R. Nelson, 'Multimodal Deep Learning for Fine Particulate Matter Concentration Forecasting,' IEEE Access, vol. 8, pp. 89441–89452, 2020.",
-        "[25] OpenAQ Community, 'OpenAQ: Global Real-Time Ambient Air Quality Data Platform and REST API,' OpenAQ Platform, 2023. [Online]. Available: https://openaq.org"
+        "[25] OpenAQ Community, 'OpenAQ: Global Real-Time Ambient Air Quality Data Platform and REST API,' OpenAQ Platform, 2023. [Online]. Available: https://openaq.org",
+        "[26] P. J. Clark and F. C. Evans, 'Distance to Nearest Neighbor as a Measure of Spatial Relationships in Populations,' Science, vol. 121, no. 3142, pp. 397–398, 1954."
     ]
     for r in refs:
         p_ref = doc.add_paragraph()
