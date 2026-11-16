@@ -26,6 +26,10 @@ from src.services.city_registry_service import (
     CityRegistryService,
     get_city_registry_service,
 )
+from src.services.spatial_reliability_service import (
+    SpatialReliabilityService,
+    get_spatial_reliability_service,
+)
 from src.services.spatial_interpolation_service import (
     SpatialInterpolationService,
     StationForecastRecord,
@@ -671,6 +675,101 @@ def render_spatial_heatmap_page():
         )
         st.plotly_chart(fig, use_container_width=True)
 
+    # -------------------------------------------------------------------------
+    # Phase 16: Live Station Coverage & Spatial Reliability Audit Panel
+    # -------------------------------------------------------------------------
+    reliability_srv = get_spatial_reliability_service()
+    city_audit = reliability_srv.audit_city_reliability(chosen_city_id, live_mode=False)
+
+    with st.expander(f"📡 Live Station Coverage & Spatial Reliability Audit — {bbox.name} (Phase 16)", expanded=True):
+        tier_code = city_audit["tier_code"]
+        if tier_code == "TIER_1_CALIBRATED":
+            tier_badge_color = "#10B981"
+        elif tier_code == "TIER_2_HIGH":
+            tier_badge_color = "#38BDF8"
+        elif tier_code == "TIER_3_MODERATE":
+            tier_badge_color = "#F59E0B"
+        elif tier_code == "TIER_4_MARGINAL":
+            tier_badge_color = "#FB923C"
+        else:
+            tier_badge_color = "#EF4444"
+
+        st.markdown(
+            f"""
+            <div style="background: #0A0E17; border: 1px solid #1F293D; border-radius: 10px; padding: 0.9rem 1.1rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+                <div>
+                    <div style="font-size: 0.75rem; color: #94A3B8; text-transform: uppercase; font-weight: 600;">Operational Reliability Classification</div>
+                    <div style="font-size: 1.05rem; font-weight: 700; color: #F8FAFC;">{city_audit['reliability_tier']}</div>
+                    <div style="font-size: 0.74rem; color: #64748B; margin-top: 0.2rem;">{city_audit['operational_summary']}</div>
+                </div>
+                <div style="background: rgba(15, 23, 42, 0.9); border: 1px solid {tier_badge_color}; border-radius: 8px; padding: 0.4rem 0.85rem;">
+                    <span style="font-size: 0.78rem; font-weight: 700; color: {tier_badge_color};">● {tier_code}</span>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        # 4 Telemetry Metrics
+        col_m1, col_m2, col_m3, col_m4 = st.columns(4)
+        with col_m1:
+            st.metric(
+                label="Physical Monitors",
+                value=f"{city_audit['reporting_station_count']} / {city_audit['registered_station_count']}",
+                help="Active reporting monitors vs total registered CAAQMS physical facilities in urban extent.",
+            )
+        with col_m2:
+            st.metric(
+                label="Criteria PM2.5 / PM10",
+                value=f"{city_audit['stations_with_pm25']} / {city_audit['stations_with_pm10']}",
+                help="Physical monitors equipped with active PM2.5 and PM10 criteria sensors.",
+            )
+        with col_m3:
+            st.metric(
+                label="24h Buffer Completeness",
+                value=f"{city_audit['stations_complete_24h']} / {city_audit['registered_station_count']}",
+                help="Monitors with complete, contiguous 24-hour antecedent sequence records.",
+            )
+        with col_m4:
+            st.metric(
+                label="Last Telemetry Ingestion",
+                value="Active Telemetry" if city_audit['reporting_station_count'] > 0 else "Offline / Standby",
+                help=f"Latest successful ingestion timestamp: {city_audit['last_ingestion_timestamp']}",
+            )
+
+        # Spatial Geometry Diagnostics
+        st.markdown(
+            f"""
+            <div style="background: #111827; border: 1px solid #1F293D; border-radius: 8px; padding: 0.85rem 1rem; margin-top: 0.75rem;">
+                <div style="font-size: 0.75rem; font-weight: 700; color: #38BDF8; text-transform: uppercase; margin-bottom: 0.35rem;">
+                    📐 Spatial Geometry & Clustering Diagnostics
+                </div>
+                <div style="font-size: 0.78rem; color: #CBD5E1; line-height: 1.55;">
+                    • <b>Urban Bounding Extent:</b> {city_audit['area_km2']:.0f} km² &nbsp;|&nbsp; <b>Monitoring Density:</b> <b>{city_audit['station_density_per_100km2']:.2f}</b> monitors / 100 km²<br>
+                    • <b>Mean Nearest Neighbor Distance:</b> <b>{city_audit['mean_nearest_neighbor_distance_km']:.2f} km</b><br>
+                    • <b>Clark-Evans Aggregation Index (R):</b> <b>{city_audit['clark_evans_r']:.2f}</b> — <i>{city_audit['spatial_distribution_geometry']}</i><br>
+                    • <b>Sensor Missing Data Fraction:</b> PM2.5: <b>{city_audit['missing_pm25_pct']:.1f}%</b> missing &nbsp;|&nbsp; PM10: <b>{city_audit['missing_pm10_pct']:.1f}%</b> missing
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        # Detailed Station Table
+        if city_audit["station_details"]:
+            with st.expander("📋 View Station-by-Station Telemetry & Capability Breakdown", expanded=False):
+                st_df = pd.DataFrame(city_audit["station_details"])[[
+                    "station_id", "station_name", "latitude", "longitude",
+                    "distance_to_center_km", "has_pm25", "has_pm10",
+                    "freshness_status", "complete_24h_history"
+                ]]
+                st_df.columns = [
+                    "Station ID", "Station Name", "Lat (°N)", "Lon (°E)",
+                    "Dist to Center (km)", "PM2.5", "PM10",
+                    "Freshness", "24h Sequence"
+                ]
+                st.dataframe(st_df, use_container_width=True, hide_index=True)
+
     # 3. Arbitrary Location Estimation Section
     st.markdown(
         """
@@ -809,6 +908,13 @@ def render_spatial_heatmap_page():
         ci_width10 = ci_conf10[1] - ci_conf10[0]
         ci_half10 = ci_width10 / 2.0
 
+        # Phase 16 Location Spatial Reliability Diagnostics
+        loc_diag = reliability_srv.get_location_spatial_diagnostics(
+            lat=float(user_lat),
+            lon=float(user_lon),
+            city_id=chosen_city_id,
+        )
+
         st.markdown(
             f"""
             <div style="background: #111827; border: 1px solid #1F293D; border-radius: 10px; padding: 1.15rem 1.35rem; margin-top: 1rem;">
@@ -846,15 +952,17 @@ def render_spatial_heatmap_page():
                 </div>
                 <div style="margin-top: 0.85rem; padding: 0.75rem 0.95rem; background: #0B132B; border: 1px solid #1E293B; border-radius: 8px;">
                     <div style="font-size: 0.74rem; font-weight: 700; color: #38BDF8; text-transform: uppercase; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
-                        <span>📊</span> Nearest Physical Station Baseline Comparison
+                        <span>📊</span> Spatial Reliability & Baseline Comparison Diagnostics (Phase 16)
                     </div>
                     <div style="font-size: 0.75rem; color: #CBD5E1; line-height: 1.55;">
+                        • <b>Output Classification:</b> <span style="color: #38BDF8; font-weight: 700;">{loc_diag['output_classification']}</span><br>
+                        • <b>Neighborhood Coverage:</b> {n_contrib} monitors within radius (Max Distance: <b>{loc_diag['max_contributing_distance_km'] or nearest_d:.2f} km</b> &nbsp;|&nbsp; Cluster Missing-Data Fraction: <b>{loc_diag['missing_data_fraction']*100:.1f}%</b>)<br>
                         • <b>Nearest Reference Monitor:</b> <span style="color: #F8FAFC; font-weight: 600;">{nearest_sid}</span> ({nearest_d:.2f} km geodesic distance)<br>
                         • <b>Nearest Station Forecast:</b> PM2.5 = <b>{nearest_p25:.1f}</b> µg/m³ &nbsp;|&nbsp; PM10 = <b>{nearest_p10:.1f}</b> µg/m³<br>
                         • <b>Spatial Interpolation Shift:</b> 
                         ΔPM2.5 = <b style="color: #38BDF8;">{diff_p25:+.1f} µg/m³</b>, 
                         ΔPM10 = <b style="color: #A78BFA;">{diff_p10:+.1f} µg/m³</b> 
-                        <span style="font-size: 0.70rem; color: #94A3B8;">(blending {n_contrib} neighbor stations via geodesic inverse-distance weighting)</span>
+                        <span style="font-size: 0.70rem; color: #94A3B8;">(geodesic inverse-distance weighting; no silent substitution of nearest station)</span>
                     </div>
                 </div>
             </div>
