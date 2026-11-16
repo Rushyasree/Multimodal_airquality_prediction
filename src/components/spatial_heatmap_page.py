@@ -276,10 +276,14 @@ def render_spatial_heatmap_page():
 
     fig = go.Figure()
 
-    # Continuous Surface Layer: Densitymapbox
+    # Universal Plotly version compatibility (Plotly 7+ vs Plotly 5/6)
+    DensityMapClass = getattr(go, "Densitymap", getattr(go, "Densitymapbox", None))
+    ScatterMapClass = getattr(go, "Scattermap", getattr(go, "Scattermapbox", None))
+
+    # Continuous Surface Layer
     colorscale = "Turbo" if pollutant == "PM2.5" else "Plasma"
     fig.add_trace(
-        go.Densitymapbox(
+        DensityMapClass(
             lat=flat_lats,
             lon=flat_lons,
             z=flat_vals,
@@ -317,7 +321,7 @@ def render_spatial_heatmap_page():
     ]
 
     fig.add_trace(
-        go.Scattermapbox(
+        ScatterMapClass(
             lat=st_coords[:, 0],
             lon=st_coords[:, 1],
             mode="markers+text",
@@ -335,12 +339,14 @@ def render_spatial_heatmap_page():
         )
     )
 
+    map_dict = dict(
+        style="carto-darkmatter",
+        center=dict(lat=bbox.center_lat, lon=bbox.center_lon),
+        zoom=bbox.default_zoom,
+    )
+    map_kwargs = {"map": map_dict} if hasattr(go, "Densitymap") else {"mapbox": map_dict}
+
     fig.update_layout(
-        mapbox=dict(
-            style="carto-darkmatter",
-            center=dict(lat=bbox.center_lat, lon=bbox.center_lon),
-            zoom=bbox.default_zoom,
-        ),
         paper_bgcolor="#0A0E17",
         plot_bgcolor="#0A0E17",
         margin=dict(l=0, r=0, t=10, b=0),
@@ -356,6 +362,7 @@ def render_spatial_heatmap_page():
             bordercolor="#334155",
             borderwidth=1,
         ),
+        **map_kwargs,
     )
 
     st.plotly_chart(fig, use_container_width=True)
