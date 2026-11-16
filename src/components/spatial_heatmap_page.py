@@ -286,6 +286,44 @@ def _get_station_forecast_records_for_city(
     return records
 
 
+@st.cache_data(show_spinner=False, ttl=600)
+def _compute_cached_city_grid(
+    city_id: str,
+    idw_power: float,
+    grid_res: int,
+    station_payload: Tuple[Tuple[str, float, float, float, float, str, str], ...],
+) -> Dict[str, Any]:
+    """Caches 2D urban spatial grid calculation for CPU-efficient, responsive UI rendering."""
+    records = [
+        StationForecastRecord(
+            station_id=item[0],
+            latitude=item[1],
+            longitude=item[2],
+            predicted_pm25=item[3],
+            predicted_pm10=item[4],
+            target_time=item[5],
+            issue_time=item[6],
+            forecast_horizon="Next 1 Hour (t + 1)",
+            model_source="VayuDrishti_Ensemble",
+        )
+        for item in station_payload
+    ]
+    context = ForecastContext.from_records(records)
+    config = SpatialInterpolationConfig(
+        power=idw_power,
+        min_stations=3,
+        max_distance_km=45.0,
+        max_neighbors=12,
+        exact_match_threshold_km=0.05,
+    )
+    service = SpatialInterpolationService(config=config)
+    return service.generate_city_grid(
+        city_id=city_id,
+        forecast_context=context,
+        grid_resolution=grid_res,
+    )
+
+
 def render_spatial_heatmap_page():
     """Renders the interactive Spatial Prediction & Urban Heatmap page across 31 Indian cities."""
     registry = get_city_registry_service()
@@ -488,21 +526,16 @@ def render_spatial_heatmap_page():
     # CASE B: SUFFICIENT COVERAGE (>= 3 Monitors) — 2D IDW INTERPOLATION
     # -------------------------------------------------------------------------
     else:
-        context = ForecastContext.from_records(records)
-        config = SpatialInterpolationConfig(
-            power=idw_power,
-            min_stations=3,
-            max_distance_km=45.0,
-            max_neighbors=12,
-            exact_match_threshold_km=0.05,
+        station_payload = tuple(
+            (r.station_id, r.latitude, r.longitude, r.predicted_pm25, r.predicted_pm10, r.target_time, r.issue_time or "")
+            for r in records
         )
-        service = SpatialInterpolationService(config=config)
-
         t0 = time.perf_counter()
-        grid_result = service.generate_city_grid(
+        grid_result = _compute_cached_city_grid(
             city_id=chosen_city_id,
-            forecast_context=context,
-            grid_resolution=grid_res,
+            idw_power=idw_power,
+            grid_res=grid_res,
+            station_payload=station_payload,
         )
         elapsed_ms = (time.perf_counter() - t0) * 1000.0
 
