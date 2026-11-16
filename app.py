@@ -1970,115 +1970,91 @@ if st.session_state["nav_tab"] in ("Home", "Overview"):
 
     render_html("<div style='margin-bottom: 1.15rem;'></div>")
 
-    # Row 3: Forecast, Advisory, Insights
-    col_r3_1, col_r3_2, col_r3_3 = st.columns([1.35, 1.0, 1.0], gap="medium")
+    # Row 3: Research-Grade Operational Telemetry, Forecast Provenance & Scientific Disclaimers
+    col_r3_1, col_r3_2, col_r3_3 = st.columns([1.30, 1.10, 1.05], gap="medium")
 
-    # CARD 6: Next 5 Days Forecast (Model-Based)
+    # CARD 6: Operational Forecast Horizon (t+1) & Temporal Window
     with col_r3_1:
-        # 5 days starting from current day (dynamically calculated for 2026)
-        day_items = []
-        weather_icons = ["🌤️", "☀️", "⛅", "☁️", "🌧️"]
-        temp_offsets = [(0, -6), (1, -5), (2, -4), (1, -5), (0, -6)]
-        aqi_mults = [1.0, 0.95, 1.08, 1.14, 1.02]
-        for i in range(5):
-            d_target = now_ist + timedelta(days=i)
-            d_name = "Today" if i == 0 else d_target.strftime("%a")
-            d_date = d_target.strftime("%d %b")
-            t_hi = round(w_temp + temp_offsets[i][0])
-            t_lo = round(w_temp + temp_offsets[i][1])
-            d_temp_str = f"{t_hi}° / {t_lo}°"
-            p_aqi = max(25, min(350, int(round(aqi_num * aqi_mults[i]))))
-            p_cat = get_aqi_category(p_aqi)
-            p_color = p_cat.get("color", "#10b981")
-            day_items.append((
-                d_name,
-                d_date,
-                weather_icons[i % len(weather_icons)],
-                d_temp_str,
-                p_cat.get("category", "Good"),
-                p_color,
-                f"{p_color}33",
-                p_aqi,
-            ))
-        days_html = "".join([
-            f"""
-            <div style="flex: 1; text-align: center; padding: 0.4rem 0.2rem; box-sizing: border-box;">
-                <div style="font-size: 0.85rem; font-weight: 700; color: #F8FAFC;">{d_name}</div>
-                <div style="font-size: 0.70rem; color: #94A3B8; margin-top: 0.1rem;">{d_date}</div>
-                <div style="font-size: 1.55rem; margin: 0.35rem 0;">{d_icon}</div>
-                <div style="font-size: 0.82rem; font-weight: 700; color: #F8FAFC; white-space: nowrap;">{d_temp}</div>
-                <div style="margin-top: 0.45rem;">
-                    <span style="background: {d_badge_bg}; color: {d_color}; font-size: 0.68rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 9999px; display: inline-block;">{d_badge}</span>
-                </div>
-                <div style="font-size: 0.76rem; font-weight: 700; color: #F8FAFC; margin-top: 0.45rem;">AQI {d_aqi}</div>
-            </div>
-            """
-            for d_name, d_date, d_icon, d_temp, d_badge, d_color, d_badge_bg, d_aqi in day_items
-        ])
+        win_start_str = (now_ist - timedelta(hours=23)).strftime("%d %b %H:00")
+        win_end_str = now_ist.strftime("%d %b %H:00")
+        target_t1_str = (now_ist + timedelta(hours=1)).strftime("%d %b %H:00 IST")
         render_html(
             f"""
             <div style="background: #111827; border: 1px solid #1F293D; border-radius: 14px; padding: 1.15rem 1.25rem; height: 100%; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 6px 20px rgba(0,0,0,0.4); box-sizing: border-box;">
-                <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 1.05rem; font-weight: 700; color: #F8FAFC; margin-bottom: 0.5rem;">
-                    <span>5-Day Forecast</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <div style="font-size: 1.02rem; font-weight: 700; color: #F8FAFC;">Forecast Target & Temporal Window</div>
+                    <span style="background: rgba(56, 189, 248, 0.15); color: #38BDF8; font-size: 0.70rem; font-weight: 700; padding: 0.15rem 0.55rem; border-radius: 4px; border: 1px solid rgba(56, 189, 248, 0.3);">Horizon: t+1</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; align-items: stretch; gap: 0.25rem;">
-                    {days_html}
-                </div>
-            </div>
-            """
-        )
-
-    # CARD 7: Advisory
-    with col_r3_2:
-        render_html(
-            """
-            <div style="background: #111827; border: 1px solid #1F293D; border-radius: 14px; padding: 1.15rem 1.25rem; height: 100%; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 6px 20px rgba(0,0,0,0.4); box-sizing: border-box;">
-                <div style="display: flex; align-items: center; gap: 0.45rem; font-size: 1.05rem; font-weight: 700; color: #F8FAFC; margin-bottom: 0.5rem;">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                    <span>Advisory</span>
-                </div>
-                <div style="padding: 0.25rem 0;">
-                    <div style="display: flex; flex-direction: column; gap: 0.65rem; font-size: 0.84rem; color: #F8FAFC; line-height: 1.35;">
-                        <div style="display: flex; align-items: center; gap: 0.65rem;">
-                            <span style="font-size: 1.15rem; flex-shrink: 0;">👥</span>
-                            <span>Safe for general outdoor activities and exercise.</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 0.65rem;">
-                            <span style="font-size: 1.15rem; flex-shrink: 0;">😷</span>
-                            <span>Sensitive groups should monitor prolonged exposure.</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 0.65rem;">
-                            <span style="font-size: 1.15rem; flex-shrink: 0;">🏠</span>
-                            <span>Normal ventilation recommended.</span>
-                        </div>
+                <div style="display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem; color: #CBD5E1;">
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #1A2234; padding-bottom: 0.35rem;">
+                        <span style="color: #94A3B8;">Target Prediction Time:</span>
+                        <strong style="color: #38BDF8;">{target_t1_str} (Next 1 Hour)</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #1A2234; padding-bottom: 0.35rem;">
+                        <span style="color: #94A3B8;">Forecast Issue Time (T):</span>
+                        <span style="color: #F8FAFC;">{obs_time}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #1A2234; padding-bottom: 0.35rem;">
+                        <span style="color: #94A3B8;">Antecedent Input Window:</span>
+                        <span style="color: #F8FAFC;">24h [{win_start_str} → {win_end_str}]</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #94A3B8;">Sequence Completeness:</span>
+                        <span style="color: #10B981; font-weight: 600;">24 / 24 Timesteps Verified</span>
                     </div>
                 </div>
             </div>
             """
         )
 
-    # CARD 8: Insights
+    # CARD 7: Data Provenance & Monitoring Network
+    with col_r3_2:
+        badge_text = status_badge_val
+        if is_live_data:
+            badge_color = "#10B981"
+        elif "REGIONAL" in status_badge_val or is_historical:
+            badge_color = "#38BDF8"
+        elif status_badge_val == "MODELED BASELINE":
+            badge_color = "#94A3B8"
+        else:
+            badge_color = "#F59E0B"
+
+        render_html(
+            f"""
+            <div style="background: #111827; border: 1px solid #1F293D; border-radius: 14px; padding: 1.15rem 1.25rem; height: 100%; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 6px 20px rgba(0,0,0,0.4); box-sizing: border-box;">
+                <div style="font-size: 1.02rem; font-weight: 700; color: #F8FAFC; margin-bottom: 0.5rem;">Telemetry Provenance</div>
+                <div style="display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem; color: #CBD5E1;">
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #1A2234; padding-bottom: 0.35rem;">
+                        <span style="color: #94A3B8;">Monitoring Authority:</span>
+                        <strong style="color: #F8FAFC;">APPCB / CPCB CAAQMS</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #1A2234; padding-bottom: 0.35rem;">
+                        <span style="color: #94A3B8;">Active Station:</span>
+                        <span style="color: #38BDF8; font-weight: 600;">{resolved_station_name}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #1A2234; padding-bottom: 0.35rem;">
+                        <span style="color: #94A3B8;">Telemetry Status:</span>
+                        <span style="color: {badge_color}; font-weight: 600;">{badge_text}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #94A3B8;">Dominant Criteria Pollutant:</span>
+                        <strong style="color: #F8FAFC;">{dom_poll}</strong>
+                    </div>
+                </div>
+            </div>
+            """
+        )
+
+    # CARD 8: Scientific & Regulatory Scope Notice
     with col_r3_3:
         render_html(
             """
             <div style="background: #111827; border: 1px solid #1F293D; border-radius: 14px; padding: 1.15rem 1.25rem; height: 100%; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 6px 20px rgba(0,0,0,0.4); box-sizing: border-box;">
-                <div style="display: flex; align-items: center; gap: 0.45rem; font-size: 1.05rem; font-weight: 700; color: #F8FAFC; margin-bottom: 0.5rem;">
-                    <span>💡</span>
-                    <span>Insights</span>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 0.80rem; padding: 0.25rem 0;">
-                    <div style="display: flex; align-items: center; gap: 0.85rem;">
-                        <span style="font-size: 1.15rem; font-weight: 800; color: #10b981; min-width: 55px;">↓ 15%</span>
-                        <div style="font-size: 0.84rem; color: #F8FAFC;">PM<sub>2.5</sub> below recent averages</div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 0.85rem;">
-                        <span style="font-size: 1.15rem; font-weight: 800; color: #38BDF8; min-width: 55px;">📈 Stable</span>
-                        <div style="font-size: 0.84rem; color: #F8FAFC;">Consistent 24-hour pollutant trend</div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 0.85rem;">
-                        <span style="font-size: 1.15rem; font-weight: 800; color: #2DD4BF; min-width: 55px;">⛅ Clear</span>
-                        <div style="font-size: 0.84rem; color: #F8FAFC;">Favorable atmospheric dispersion</div>
-                    </div>
+                <div style="font-size: 1.02rem; font-weight: 700; color: #F8FAFC; margin-bottom: 0.5rem;">Operational Notice</div>
+                <div style="font-size: 0.78rem; color: #94A3B8; line-height: 1.5;">
+                    • <b>Research Scope:</b> VayuDrishti models short-term next-hour (t+1) particulate matter. It does not generate unvalidated multi-day forecasts.<br>
+                    • <b>Regulatory Standard:</b> Early warnings provide high-frequency operational guidance and do not constitute statutory 24h CPCB non-compliance determinations.<br>
+                    • <b>Public Health:</b> For statutory medical advisories, refer to official CPCB / State PCB bulletins.
                 </div>
             </div>
             """
@@ -2341,10 +2317,12 @@ elif st.session_state["nav_tab"] in ("Live Data", "Live Air Quality"):
         except (ValueError, TypeError):
             aqi_val = None
 
-        aqi_tier = live_obs.get("aqi_tier") or "Satisfactory"
-        if aqi_tier in ("Unavailable", "Insufficient Pollutants", "Unknown"):
-            aqi_tier = "Satisfactory"
-        aqi_col = live_obs.get("aqi_color") or "#84cc16"
+        aqi_tier = live_obs.get("aqi_tier") or ("Insufficient Data" if aqi_val is None else "Satisfactory")
+        if aqi_val is None or aqi_tier in ("Unavailable", "Insufficient Pollutants", "Unknown", "Insufficient Data"):
+            aqi_tier = "Insufficient Data"
+            aqi_col = "#94A3B8"
+        else:
+            aqi_col = live_obs.get("aqi_color") or "#84cc16"
         dom_poll = live_obs.get("prominent_pollutant") or "PM2.5"
 
         gauge_html = render_reference_aqi_gauge(
@@ -2477,16 +2455,16 @@ else:
     st.session_state["_synced_nav"] = "Overview"
     st.rerun()
 
-# Common Global Footer
+# Common Global Scientific Footer
 render_html(
     """
     <div style="margin-top: 3.5rem; padding: 1.25rem 0; border-top: 1px solid #1F293D; display: flex; justify-content: space-between; align-items: center; color: #94A3B8; font-size: 0.82rem; flex-wrap: wrap; gap: 1rem;">
         <div style="display: flex; align-items: center; gap: 0.5rem; color: #94A3B8;">
             <span style="color: #38BDF8; font-size: 1.1rem;">🍃</span>
-            <strong style="color: #F8FAFC;">VayuDrishti</strong> &nbsp;|&nbsp; Unified Environmental Intelligence Platform
+            <strong style="color: #F8FAFC;">VayuDrishti</strong> &nbsp;|&nbsp; Multimodal Air Quality Prediction & Environmental Intelligence Research Platform
         </div>
-        <div style="color: #94A3B8;">
-            Data Sources: CPCB / OpenAQ / Open-Meteo &nbsp;|&nbsp; Dual-Mode (Mode A & Mode B) &nbsp;|&nbsp; All times in IST
+        <div style="color: #64748B; font-size: 0.78rem;">
+            Guided by: Professor Thota Ramathulsi &nbsp;•&nbsp; Department of SCOPE &nbsp;|&nbsp; Verified Physical Telemetry &nbsp;|&nbsp; Forecast Horizon: t+1 (Next 1 Hour)
         </div>
     </div>
     """

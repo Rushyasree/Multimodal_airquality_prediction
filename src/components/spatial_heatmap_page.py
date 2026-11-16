@@ -414,6 +414,11 @@ def render_spatial_heatmap_page():
         },
     }
 
+    if chosen_city_id != "delhi_ncr":
+        st.info(
+            f"ℹ️ **Regional Generalization Notice ({chosen_city_label}):** Rigorous Leave-One-Station-Out (LOSO) spatial validation (N = 1,564 evaluations, +15.71% PM2.5 / +19.71% PM10 gains) was conducted across Delhi NCR's dense 34-station CAAQMS network. Heatmap fields and coordinate estimates in {chosen_city_label} represent exploratory approximations subject to sparser monitoring topology."
+        )
+
     cur_landmarks = landmarks_by_city.get(chosen_city_id, {})
     col_preset, col_lat, col_lon, col_btn = st.columns([1.5, 1.0, 1.0, 1.0])
 
@@ -482,18 +487,29 @@ def render_spatial_heatmap_page():
         nearest_d = point_result["nearest_station_distance_km"]
         n_contrib = point_result["num_contributing_stations"]
 
-        status_colors = {
-            "HIGH_CONFIDENCE_INTERPOLATION": ("#10B981", "High Confidence Spatial Interpolation"),
-            "SPARSE_INTERPOLATION": ("#F59E0B", "Sparse Station Coverage (Elevated Uncertainty)"),
-            "EXACT_STATION_HIT": ("#38BDF8", "Exact Station Co-location (Zero Distance Error)"),
-            "UNSUPPORTED_EXTRAPOLATION": ("#EF4444", "Unsupported Extrapolation (> 45 km)"),
-        }
-        badge_color, badge_text = status_colors.get(status, ("#94A3B8", status))
+        is_delhi = (chosen_city_id == "delhi_ncr")
+        if status == "EXACT_STATION_HIT":
+            badge_color, badge_text = ("#38BDF8", "Exact Station Co-location (Zero Distance Error)")
+        elif status == "UNSUPPORTED_EXTRAPOLATION":
+            badge_color, badge_text = ("#EF4444", "Unsupported Extrapolation (> 45 km)")
+        elif is_delhi and nearest_d <= 5.0 and n_contrib >= 4:
+            badge_color, badge_text = ("#10B981", "Dense Network Interpolation (Conformal Calibrated • LOSO Validated)")
+        elif is_delhi and nearest_d <= 15.0:
+            badge_color, badge_text = ("#38BDF8", "Calibrated Spatial Interpolation (Distance-Scaled Uncertainty)")
+        elif is_delhi:
+            badge_color, badge_text = ("#F59E0B", "Sparse Station Topology (Distance > 15 km • Elevated Uncertainty)")
+        else:
+            badge_color, badge_text = ("#F59E0B", f"Exploratory Regional Estimate ({chosen_city_label} • Sparse Topology)")
 
         nearest_p25 = point_result.get("nearest_station_pm25", p25_val)
         nearest_p10 = point_result.get("nearest_station_pm10", p10_val)
         diff_p25 = p25_val - nearest_p25
         diff_p10 = p10_val - nearest_p10
+
+        ci_width25 = ci_conf25[1] - ci_conf25[0]
+        ci_half25 = ci_width25 / 2.0
+        ci_width10 = ci_conf10[1] - ci_conf10[0]
+        ci_half10 = ci_width10 / 2.0
 
         st.markdown(
             f"""
@@ -519,13 +535,15 @@ def render_spatial_heatmap_page():
                         <div style="font-size: 0.74rem; color: #94A3B8; font-weight: 600; text-transform: uppercase;">Interpolated PM2.5 (+1h)</div>
                         <div style="font-size: 1.7rem; font-weight: 800; color: #38BDF8; margin: 0.2rem 0;">{p25_val:.1f} <span style="font-size: 0.9rem; color: #94A3B8;">µg/m³</span></div>
                         <div style="font-size: 0.72rem; color: #4ADE80; font-weight: 600;">Calibrated Conformal 95% CI: <b>[{ci_conf25[0]:.1f}, {ci_conf25[1]:.1f}]</b> µg/m³</div>
-                        <div style="font-size: 0.68rem; color: #64748B;">Heuristic Proxy: [{ci25[0]:.1f}, {ci25[1]:.1f}] µg/m³ (33.5% empirical coverage)</div>
+                        <div style="font-size: 0.70rem; color: #94A3B8; margin-top: 0.15rem;">Width: ±{ci_half25:.1f} µg/m³ (Span: {ci_width25:.1f} µg/m³ • Empirical Coverage: 99.4%)</div>
+                        <div style="font-size: 0.67rem; color: #64748B; margin-top: 0.1rem;">Heuristic Proxy: [{ci25[0]:.1f}, {ci25[1]:.1f}] µg/m³ (Severe Under-coverage: 33.5% empirical)</div>
                     </div>
                     <div style="background: #0A0E17; border: 1px solid #1F293D; border-radius: 8px; padding: 0.85rem 1rem;">
                         <div style="font-size: 0.74rem; color: #94A3B8; font-weight: 600; text-transform: uppercase;">Interpolated PM10 (+1h)</div>
                         <div style="font-size: 1.7rem; font-weight: 800; color: #A78BFA; margin: 0.2rem 0;">{p10_val:.1f} <span style="font-size: 0.9rem; color: #94A3B8;">µg/m³</span></div>
                         <div style="font-size: 0.72rem; color: #4ADE80; font-weight: 600;">Calibrated Conformal 95% CI: <b>[{ci_conf10[0]:.1f}, {ci_conf10[1]:.1f}]</b> µg/m³</div>
-                        <div style="font-size: 0.68rem; color: #64748B;">Heuristic Proxy: [{ci10[0]:.1f}, {ci10[1]:.1f}] µg/m³ (24.2% empirical coverage)</div>
+                        <div style="font-size: 0.70rem; color: #94A3B8; margin-top: 0.15rem;">Width: ±{ci_half10:.1f} µg/m³ (Span: {ci_width10:.1f} µg/m³ • Empirical Coverage: 99.2%)</div>
+                        <div style="font-size: 0.67rem; color: #64748B; margin-top: 0.1rem;">Heuristic Proxy: [{ci10[0]:.1f}, {ci10[1]:.1f}] µg/m³ (Severe Under-coverage: 24.2% empirical)</div>
                     </div>
                 </div>
                 <div style="margin-top: 0.85rem; padding: 0.75rem 0.95rem; background: #0B132B; border: 1px solid #1E293B; border-radius: 8px;">

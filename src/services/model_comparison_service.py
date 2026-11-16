@@ -218,18 +218,27 @@ class ModelComparisonService:
             "LIVE MEASURED OBSERVATION" if live_res.get("source_type") == "CPCB_API" else "REGIONAL MODEL ESTIMATE"
         )
 
+        ground_method_name = "Live Physical Ground Monitor" if live_mode else "Historical Ground Truth (CAAQMS)"
+        ground_result_type = live_badge if live_mode else "HISTORICAL BENCHMARK GROUND TRUTH"
+        ground_timestamp = (
+            f"Observed: {live_res.get('observation_time', 'N/A')}"
+            if live_mode
+            else f"Recorded: {pers_time} (Verified Benchmark Record)"
+        )
+        ground_source = live_res.get("data_source", "CPCB / APPCB Monitor Inlet") if live_mode else "Historical CPCB / APPCB CAAQMS Archive"
+
         rows = [
             {
-                "Method": "Live Ground Station",
-                "Result Type": live_badge,
+                "Method": ground_method_name,
+                "Result Type": ground_result_type,
                 "PM2.5 (ug/m3)": live_res.get("pm25"),
                 "PM10 (ug/m3)": live_res.get("pm10"),
-                "Timestamp / Horizon": f"Observed: {live_res.get('observation_time', 'N/A')}",
-                "Data Source": live_res.get("data_source", "CPCB / APPCB Monitor Inlet"),
+                "Timestamp / Horizon": ground_timestamp,
+                "Data Source": ground_source,
                 "Model Version": "N/A (Physical Instrument)",
-                "Input Freshness": live_res.get("freshness_status", "Fresh"),
+                "Input Freshness": live_res.get("freshness_status", "Fresh") if live_mode else "Archival Benchmark Record",
                 "Modality Availability": "Ground Station Telemetry",
-                "Reported MAE (ug/m3)": "N/A (Ground Truth)",
+                "Reported MAE (ug/m3)": "N/A (Ground Truth Reference)",
                 "Reported R2": "N/A",
             },
             {

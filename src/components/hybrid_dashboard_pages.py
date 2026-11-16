@@ -255,24 +255,24 @@ def render_unified_hybrid_page():
                 """
             )
 
-        # 1. AQI Category & Meaning Interpretation
+        # 1. NAAQS Particulate Band (Descriptive early-warning criteria, not statutory 24h NAQI)
         if pm25_raw is not None and isinstance(pm25_raw, (int, float)):
             pm25_num = float(pm25_raw)
             if pm25_num <= 30:
-                aqi_cat, aqi_color, aqi_desc = "Good", "#10B981", "Air quality is clean and healthy. Safe for all outdoor activities."
+                aqi_cat, aqi_color, aqi_desc = "Good (≤ 30 µg/m³)", "#10B981", "Ambient fine particulate concentration within standard baseline limit."
             elif pm25_num <= 60:
-                aqi_cat, aqi_color, aqi_desc = "Satisfactory", "#84CC16", "Air quality is acceptable. Minor discomfort possible for sensitive individuals."
+                aqi_cat, aqi_color, aqi_desc = "Satisfactory (31–60 µg/m³)", "#84CC16", "Ambient PM2.5 within standard acceptable 24h threshold."
             elif pm25_num <= 90:
-                aqi_cat, aqi_color, aqi_desc = "Moderate", "#EAB308", "Air quality is moderate. Sensitive groups should reduce prolonged outdoor exertion."
+                aqi_cat, aqi_color, aqi_desc = "Moderate (61–90 µg/m³)", "#EAB308", "Elevated particulate loading relative to national baseline."
             elif pm25_num <= 120:
-                aqi_cat, aqi_color, aqi_desc = "Poor", "#F97316", "Air quality is poor. Breathing discomfort likely for people with lung/heart disease."
+                aqi_cat, aqi_color, aqi_desc = "Poor (91–120 µg/m³)", "#F97316", "High ambient particulate loading; early-warning alert."
             elif pm25_num <= 250:
-                aqi_cat, aqi_color, aqi_desc = "Very Poor", "#EF4444", "Respiratory illness likely upon prolonged exposure."
+                aqi_cat, aqi_color, aqi_desc = "Very Poor (121–250 µg/m³)", "#EF4444", "Severe particulate accumulation episode."
             else:
-                aqi_cat, aqi_color, aqi_desc = "Severe", "#881337", "Severe pollution. Healthy people affected, serious impacts on vulnerable groups."
+                aqi_cat, aqi_color, aqi_desc = "Severe (> 250 µg/m³)", "#881337", "Emergency particulate episode; hazardous atmospheric loading."
         else:
             pm25_num = None
-            aqi_cat, aqi_color, aqi_desc = "Unavailable", "#94A3B8", "No forecast data available to compute air quality index."
+            aqi_cat, aqi_color, aqi_desc = "Unavailable", "#94A3B8", "No numerical forecast data available to compute concentration band."
 
         render_html(
             f"""
@@ -280,12 +280,12 @@ def render_unified_hybrid_page():
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div style="display: flex; align-items: center; gap: 0.65rem;">
                         <span style="width: 12px; height: 12px; border-radius: 50%; background: {aqi_color}; display: inline-block;"></span>
-                        <span style="font-size: 1.15rem; font-weight: 800; color: {aqi_color};">{aqi_cat} Air Quality</span>
+                        <span style="font-size: 1.10rem; font-weight: 800; color: {aqi_color};">{aqi_cat}</span>
                     </div>
-                    <span style="background: rgba(255,255,255,0.06); color: #F8FAFC; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 6px;">Next 1-Hour Horizon</span>
+                    <span style="background: rgba(255,255,255,0.06); color: #F8FAFC; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 6px;">Horizon: t+1 (Next 1 Hour)</span>
                 </div>
-                <div style="color: #F8FAFC; font-size: 0.85rem; margin-top: 0.45rem; line-height: 1.4;">
-                    {aqi_desc}
+                <div style="color: #CBD5E1; font-size: 0.82rem; margin-top: 0.45rem; line-height: 1.4;">
+                    {aqi_desc} &nbsp;•&nbsp; <i style="color: #94A3B8;">Indicative single-hour particulate tier (not statutory 24h CPCB NAQI determination).</i>
                 </div>
             </div>
             """
@@ -302,28 +302,31 @@ def render_unified_hybrid_page():
         v_delta_color = "#10B981" if v_delta_num <= 0 else "#F59E0B"
 
         gate_pct = alpha_num * 100.0
+        is_contrib = res.get("image_contributed", False) and alpha_num > 0.001
+        cam_sub = "Optical haze correction" if is_contrib else "Visual Mask m=0 • Fallback Active"
+        gate_sub = "Learned gate weight (α)" if is_contrib else "Zero Visual Contribution • Pure Sensor Baseline"
 
         render_html(
             f"""
             <div style="background: #111827; border: 1px solid #1F293D; border-radius: 12px; padding: 1rem 1.25rem; margin-top: 0.85rem;">
                 <div style="font-size: 0.95rem; font-weight: 700; color: #F8FAFC; margin-bottom: 0.75rem;">
-                    🔍 How This Prediction Was Formed
+                    🔍 Modality Contribution & Fallback Architecture
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.65rem;">
                     <div style="background: #1A2234; border: 1px solid #1F293D; border-radius: 8px; padding: 0.65rem 0.75rem;">
-                        <div style="font-size: 0.72rem; color: #94A3B8; text-transform: uppercase;">1. Ground Sensor Trend</div>
+                        <div style="font-size: 0.72rem; color: #94A3B8; text-transform: uppercase;">1. Ground Sensor Baseline</div>
                         <div style="font-size: 1.25rem; font-weight: 800; color: #38BDF8; margin-top: 0.2rem;">{s_pm25_disp} <span style="font-size: 0.75rem; font-weight: 500; color: #94A3B8;">µg/m³</span></div>
                         <div style="font-size: 0.70rem; color: #94A3B8; margin-top: 0.2rem;">24h sequence baseline</div>
                     </div>
                     <div style="background: #1A2234; border: 1px solid #1F293D; border-radius: 8px; padding: 0.65rem 0.75rem;">
                         <div style="font-size: 0.72rem; color: #94A3B8; text-transform: uppercase;">2. Camera Image Adjustment</div>
                         <div style="font-size: 1.25rem; font-weight: 800; color: {v_delta_color}; margin-top: 0.2rem;">{v_delta_disp} <span style="font-size: 0.75rem; font-weight: 500; color: #94A3B8;">µg/m³</span></div>
-                        <div style="font-size: 0.70rem; color: #94A3B8; margin-top: 0.2rem;">Optical haze correction</div>
+                        <div style="font-size: 0.70rem; color: #94A3B8; margin-top: 0.2rem;">{cam_sub}</div>
                     </div>
                     <div style="background: #1A2234; border: 1px solid #1F293D; border-radius: 8px; padding: 0.65rem 0.75rem;">
                         <div style="font-size: 0.72rem; color: #94A3B8; text-transform: uppercase;">3. Visual Confidence Gate</div>
                         <div style="font-size: 1.25rem; font-weight: 800; color: #2DD4BF; margin-top: 0.2rem;">{gate_pct:.1f}%</div>
-                        <div style="font-size: 0.70rem; color: #94A3B8; margin-top: 0.2rem;">Learned gate weight (α)</div>
+                        <div style="font-size: 0.70rem; color: #94A3B8; margin-top: 0.2rem;">{gate_sub}</div>
                     </div>
                 </div>
             </div>
@@ -465,7 +468,8 @@ def render_side_by_side_comparison_page():
     # Plotly Grouped Bar Chart Comparison
     st.markdown("### 📊 Concentration Comparison (PM2.5 and PM10)")
 
-    methods = ["Live Ground Station", "1-Hour Persistence", "Sensor-Only LSTM", "Image-Only ResNet-50", "Unified Hybrid Model"]
+    ground_label = "Live Ground Monitor" if is_live_mode else "Historical Ground Truth"
+    methods = [ground_label, "1-Hour Persistence", "Sensor-Only LSTM", "Image-Only ResNet-50", "Unified Hybrid Model"]
     pm25_vals = [
         res["live_data"].get("pm25"),
         res.get("persistence_baseline", {}).get("pm25"),
@@ -501,12 +505,12 @@ def render_side_by_side_comparison_page():
             y=pm25_vals[0],
             line_dash="dash",
             line_color="#EF4444",
-            annotation_text=f"Live Ground PM2.5 Observation ({pm25_vals[0]:.1f} µg/m³)",
+            annotation_text=f"{ground_label} PM2.5 ({pm25_vals[0]:.1f} µg/m³)",
             annotation_position="top left",
         )
 
     fig.update_layout(
-        title="Side-by-Side Method Predictions vs. Live Ground Observation",
+        title=f"Side-by-Side Method Predictions vs. {ground_label}",
         barmode="group",
         plot_bgcolor="#0A0E17",
         paper_bgcolor="#111827",
@@ -1014,6 +1018,9 @@ def render_individual_methods_page():
         st.markdown(
             "Extracts deep visual features and optical transmission cues from outdoor photographs to estimate ambient particulate concentration."
         )
+        st.info(
+            "🔬 **Experimental Visual Estimator Disclosure:** The ResNet-50 computer vision model is an experimental optical heuristic ($R^2 \approx 0.15$), NOT an independently certified physical monitor. In operational forecasting, it serves solely as an auxiliary residual modifier over ground sensors, with automatic fallback when camera feeds are unavailable."
+        )
 
         img_service = ImageEstimationService()
         sample_imgs = img_service.get_sample_images()
@@ -1063,15 +1070,18 @@ def render_individual_methods_page():
                 </div>
                 """)
 
-                st.markdown("#### Optical Physical Features")
                 opt = res.get("optical_features", {})
-                o1, o2, o3 = st.columns(3)
-                with o1:
-                    st.metric("RMS Contrast", f"{opt.get('rms_contrast', 0.0):.3f}")
-                with o2:
-                    st.metric("Dark Channel Prior", f"{opt.get('dark_channel_mean', 0.0):.3f}")
-                with o3:
-                    st.metric("Haze Index", f"{opt.get('haze_index', 0.0):.3f}")
+                if opt and any(isinstance(v, (int, float)) and v > 0 for v in opt.values()):
+                    st.markdown("#### Optical Physical Features")
+                    o1, o2, o3 = st.columns(3)
+                    with o1:
+                        st.metric("RMS Contrast", f"{opt.get('rms_contrast', 0.0):.3f}")
+                    with o2:
+                        st.metric("Dark Channel Prior", f"{opt.get('dark_channel_mean', 0.0):.3f}")
+                    with o3:
+                        st.metric("Haze Index", f"{opt.get('haze_index', 0.0):.3f}")
+                else:
+                    st.caption("ℹ️ Optical transmission metrics will be rendered when high-resolution image features are extracted.")
             else:
                 st.info("Select or upload an outdoor photograph to compute optical PM2.5 estimation.")
 

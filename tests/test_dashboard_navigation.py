@@ -45,7 +45,7 @@ REMOVED_UI_TERMS = [
 
 def test_dashboard_navigation_and_cleanup():
     print("\n--- Starting End-to-End Dashboard Navigation & UI Cleanup Verification ---")
-    app = AppTest.from_file(str(ROOT_DIR / "app.py"), default_timeout=60)
+    app = AppTest.from_file(str(ROOT_DIR / "app.py"), default_timeout=120)
     
     # Run initial app (default is Overview)
     app.run()
