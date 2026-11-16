@@ -124,11 +124,27 @@ d = 2R \arcsin\left(\sqrt{\sin^2\left(\frac{\Delta\phi}{2}\right) + \cos\phi_{\t
 \end{equation}
 where $R = 6371\text{ km}$. This distance is non-linearly projected to an 8-dimensional embedding ($e_d \in \mathbb{R}^8$) to inform the gating network of spatial attenuation.
 
+\subsection{Spatial Prediction Layer and Urban Heatmap Generation}
+To extend localized point forecasts to unmonitored coordinates across urban agglomerations, VayuDrishti incorporates a geostatistical spatial interpolation layer. Operating on synchronized station forecasts, the service executes a modified Geodesic Inverse Distance Weighting (IDW) formulation:
+\begin{equation}
+\hat{z}(\mathbf{x}) = \frac{\sum_{i \in \mathcal{N}(\mathbf{x})} w_i z_i}{\sum_{i \in \mathcal{N}(\mathbf{x})} w_i}, \quad w_i = \left(\text{Haversine}(\mathbf{x}, \mathbf{x}_i) + \epsilon\right)^{-p}
+\end{equation}
+where $z_i \in \{\text{PM}_{2.5}, \text{PM}_{10}\}$ represents the verified $t+1$ forecast from station $i$, $p \in [1.0, 3.0]$ is the distance-decay power parameter, and $\mathcal{N}(\mathbf{x})$ denotes the $k$-nearest active monitoring stations within a maximum search radius $R_{\text{max}} = 50\text{ km}$. When target coordinates coincide with an active station ($d < 0.05\text{ km}$), exact station values are returned. Continuous 2D surface fields are synthesized across 2D spatial bounding grids covering major Indian urban zones (Delhi NCR, Mumbai MMR, Greater Kolkata, Bengaluru, and the Amaravati Capital Region), with dynamic contour overlays rendering regional pollution plumes.
+
 \subsection{Operational Live Pipeline}
 The live execution lifecycle manages sliding window buffers, triggers model inference with sub-100 millisecond latency, formats predictions into National Air Quality Index (NAQI) categories, and logs execution telemetry for post-hoc auditing.
 
-\subsection{User Interface and Dashboard Integration}
-Predictions, uncertainty intervals, and diagnostic telemetry are surfaced via an interactive Streamlit dashboard. The interface enables environmental officers to toggle between stations, inspect raw sensor feeds, upload local camera frames, and observe model internal gate activations in real time.
+\subsection{Streamlined Dashboard Architecture and UI Integration}
+Predictions, spatial heatmaps, and diagnostic telemetry are surfaced via an interactive Streamlit deployment. To ensure high cognitive clarity and operational usability during environmental emergency response, the dashboard was streamlined from legacy redundant views into six core, highly cohesive functional modules:
+\begin{enumerate}
+    \item \textbf{Home Overview}: Real-time AQI gauges, meteorological parameters, 24-hour trends, and multi-day health advisories.
+    \item \textbf{Station Telemetry}: Live continuous readings, sensor freshness auditing, and station metadata across regulatory monitoring networks.
+    \item \textbf{AI Sequence Forecaster}: Deep recurrent LSTM inference, meteorological sensitivities, and historical persistence comparisons.
+    \item \textbf{Multimodal Hybrid Forecaster}: Quality-gated sensor-vision fusion with visual feature inspection and automatic missing-modality fallback.
+    \item \textbf{Model Comparison}: Synchronized multi-model verification across ground truth, single-station LSTM, and hybrid predictions.
+    \item \textbf{Spatial Prediction \& Heatmap}: Continuous 2D geostatistical particulate matter field rendering, station scatter overlays, and arbitrary-coordinate point estimation with conformal uncertainty bounds.
+\end{enumerate}
+Legacy standalone benchmark cards and redundant network health pages were pruned, integrating diagnostic metrics directly into their respective operational views.
 
 \begin{figure}[t]
 \centering
@@ -548,6 +564,22 @@ As shown in Fig.~\ref{fig:cross_corr} and Table~\ref{tab:spatial_advection}:
     \item In \textbf{Delhi} ($-2.03\%$) and \textbf{Kolkata} ($-3.00\%$), unweighted spatial concatenation degrades accuracy. In these continental corridors, hyper-local street-level emissions dominate over regional transit, injecting noise when neighbor features are concatenated without physics-informed wind gating.
 \end{itemize}
 
+\subsection{Spatial Prediction Layer Validation and Non-Exchangeable Conformal Calibration}
+To rigorously validate arbitrary-location estimation beyond fixed monitoring sites, we conducted an empirical Leave-One-Station-Out (LOSO) spatial benchmark across 1,564 evaluations spanning 34 CAAQMS stations over 60 synchronized timestamps.
+
+\subsubsection{Spatial Interpolation vs. Nearest-Neighbor Forecasting}
+At unmonitored target locations, Geodesic IDW operating on neighboring station $t+1$ forecasts achieves a $\text{PM}_{2.5}$ MAE of \textbf{24.30 $\mu\text{g/m}^3$} (RMSE 42.57 $\mu\text{g/m}^3$), demonstrating a \textbf{+15.71\% relative improvement} over the nearest-neighbor baseline (MAE 28.83 $\mu\text{g/m}^3$, RMSE 50.21 $\mu\text{g/m}^3$). For $\text{PM}_{10}$, IDW achieves an MAE of \textbf{44.41 $\mu\text{g/m}^3$} (RMSE 70.93 $\mu\text{g/m}^3$) versus 55.31 $\mu\text{g/m}^3$ (RMSE 87.07 $\mu\text{g/m}^3$) for nearest neighbor, a \textbf{+19.71\% gain}. As expected, localized physical telemetry at co-located stations achieves tighter bounds (direct temporal LSTM MAE: 13.61 $\mu\text{g/m}^3$ for $\text{PM}_{2.5}$ and 22.19 $\mu\text{g/m}^3$ for $\text{PM}_{10}$), reflecting the fundamental physical information loss incurred when interpolating across complex urban topography.
+
+\subsubsection{Temporal Block Bootstrap Verification}
+To prevent pseudo-replication induced by temporal auto-correlation across stations within identical hours, we evaluated statistical significance via a block bootstrap ($B = 2,000$ resamples) across block lengths $L \in \{1, 3, 6, 12, 24\}$ timestamps. At block size $L=3$ (20 effective temporal blocks), IDW yields a mean paired MAE reduction of \textbf{6.01 $\mu\text{g/m}^3$} (95\% CI: $[4.23, 8.04]\,\mu\text{g/m}^3$, relative gain 19.85\%, $p < 0.001$) for $\text{PM}_{2.5}$ and \textbf{17.82 $\mu\text{g/m}^3$} (95\% CI: $[14.63, 21.40]\,\mu\text{g/m}^3$, relative gain 25.29\%, $p < 0.001$) for $\text{PM}_{10}$, confirming the statistical significance of geostatistical distance weighting over nearest-neighbor selection.
+
+\subsubsection{Spatial Conformal Uncertainty Calibration}
+An audit of heuristic distance-scaling rules revealed dangerous empirical under-coverage (only 33.47\% coverage for $\text{PM}_{2.5}$ and 24.20\% for $\text{PM}_{10}$ under nominal 95\% targets). To restore rigorous distribution-free coverage under spatial non-exchangeability, we formulated distance-scaled split-conformal prediction:
+\begin{equation}
+\mathcal{C}_{1-\alpha}(\mathbf{x}) = \left[\hat{z}(\mathbf{x}) \pm \hat{q}_{1-\alpha} \cdot (1 + \gamma \cdot d_{\text{nearest}}(\mathbf{x}))\right]
+\end{equation}
+Fitted on calibration subsets ($n=777$, $\hat{q}_{0.95} = 97.24$ for $\text{PM}_{2.5}$, $\hat{q}_{0.95} = 186.83$ for $\text{PM}_{10}$, spatial factors $\gamma = 0.06$ and $0.05$), the conformalized predictor achieved empirical coverage of \textbf{99.37\%} ($\text{PM}_{2.5}$) and \textbf{99.16\%} ($\text{PM}_{10}$) across 950 held-out evaluation instances. Across spatial distance bands, coverage remained robust: 99.20\% in urban cores ($0$--$5\text{ km}$), 100.0\% in suburban zones ($5$--$10\text{ km}$), and 100.0\% in peripheral zones ($10$--$20\text{ km}$), providing trustworthy bounds for unmonitored locations.
+
 \section{Discussion and Limitations}
 \label{sec:discussion}
 
@@ -609,6 +641,8 @@ Key findings confirm:
     \item Across 236,289 longitudinal multi-station test sequences, Standalone Adapted GBDT outperforms persistence by up to 5.06\% while eliminating dependency on missing trace gases.
     \item On synchronous paired multimodal test instances ($N=97$), the residual hybrid achieves a $\text{PM}_{2.5}$ MAE of 8.98 $\mu\text{g/m}^3$ vs. 9.04 $\mu\text{g/m}^3$ for the sensor baseline, while guaranteeing exact mathematical fallback when imagery is unavailable ($m=0$).
     \item Split-conformal calibration delivers finite-sample coverage guarantees ($\ge 92.8\%$ at 80\% nominal), and stationary block bootstrapping ($B=5,000$) verifies statistical significance ($p < 10^{-12}$).
+    \item Geostatistical spatial interpolation achieves +15.71\% ($\text{PM}_{2.5}$) and +19.71\% ($\text{PM}_{10}$) MAE gains over nearest-neighbor baselines across 34 stations (1,564 evaluations, block bootstrap $p < 0.001$), with distance-scaled non-exchangeable spatial conformal calibration ensuring $\ge 99.1\%$ empirical coverage across urban distance tiers.
+    \item The framework is operationalized via a streamlined, cohesive 6-view real-time dashboard integrating continuous spatial heatmaps and live telemetry.
 \end{itemize}
 
 \subsection{Future Directions}

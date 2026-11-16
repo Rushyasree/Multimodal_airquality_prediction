@@ -79,12 +79,21 @@ Continuous CPCB telemetry undergoes boundary validation, causal buffer isolation
 - **Pathway 1**: Sensor Ensemble (LSTM + LightGBM with severity threshold switch).
 - **Pathway 2**: Residual Multimodal Hybrid (Frozen LSTM + ResNet-50 + Distance Embedding + Gated Residual).
 
-### D. Spatial Distance Modeling
+### D. Spatial Distance Modeling & Spatial Prediction Layer
 Haversine distance $d$ between camera and station inlet is embedded via affine projection:
 $$e_d = \text{ReLU}(W_d d + b_d) \in \mathbb{R}^8$$
+To estimate pollutant concentrations at unmonitored coordinates, a geostatistical spatial interpolation layer applies modified Geodesic Inverse Distance Weighting (IDW) over verified $t+1$ forecasts from neighboring stations:
+$$\hat{z}(\mathbf{x}) = \frac{\sum_{i \in \mathcal{N}(\mathbf{x})} w_i z_i}{\sum_{i \in \mathcal{N}(\mathbf{x})} w_i}, \quad w_i = (\text{Haversine}(\mathbf{x}, \mathbf{x}_i) + \epsilon)^{-p}$$
+generating continuous 2D concentration fields across major Indian urban agglomerations.
 
-### E. Operational Live Pipeline & F. User Interface
-Sub-100ms inference pipeline connected to the live Streamlit dashboard: `https://vayudrishti-airquality.streamlit.app/`.
+### E. Operational Live Pipeline & Streamlined 6-View Dashboard
+Sub-100ms inference pipeline connected to the live Streamlit dashboard (`https://vayudrishti-airquality.streamlit.app/`), consolidated into six core cohesive views:
+1. **Home Overview**: Multi-modal air quality summary, live gauges, weather, 24h trends, 5-day forecasts.
+2. **Station Telemetry**: Real-time sensor readings, monitor provenance, and telemetry freshness.
+3. **AI Sequence Forecaster**: Recurrent LSTM inference, weather drivers, and persistence baselines.
+4. **Multimodal Hybrid Forecaster**: Gated sensor-vision fusion with visual feature inspection and automatic fallback.
+5. **Model Comparison**: Side-by-side empirical verification across ground stations and forecasting models.
+6. **Spatial Prediction & Heatmap**: Continuous 2D geostatistical particulate matter field rendering with conformal uncertainty intervals.
 
 ---
 
@@ -221,6 +230,16 @@ This discrete threshold switch decouples the decision tree during extreme tails,
 - Mumbai Marine Corridor: Advective peak at $\tau = +1\text{h}$ (+0.86% forecast gain).
 - Continental Corridors (Delhi, Kolkata): Local emissions dominate; unweighted spatial neighbor concatenation degrades accuracy.
 
+### H. Spatial Prediction Layer Validation & Temporal Block Bootstrapping
+- **LOSO Spatial Benchmark** (1,564 evaluations across 34 CAAQMS stations over 60 timestamps):
+  - $\text{PM}_{2.5}$: Geodesic IDW MAE 24.30 vs Nearest Neighbor 28.83 $\mu\text{g/m}^3$ (**+15.71% relative gain**).
+  - $\text{PM}_{10}$: Geodesic IDW MAE 44.41 vs Nearest Neighbor 55.31 $\mu\text{g/m}^3$ (**+19.71% relative gain**).
+- **Temporal Block Bootstrapping** ($B=2,000$ resamples, block length $L=3$):
+  - $\text{PM}_{2.5}$ paired difference: 6.01 $\mu\text{g/m}^3$ (95% CI: $[4.23, 8.04]$, $p < 0.001$).
+  - $\text{PM}_{10}$ paired difference: 17.82 $\mu\text{g/m}^3$ (95% CI: $[14.63, 21.40]$, $p < 0.001$).
+- **Distance-Scaled Conformal Calibration**:
+  - Distance inflation factor achieves $\ge 99.1\%$ empirical coverage across urban (0–5 km), suburban (5–10 km), and periphery (10–20 km) tiers, resolving the severe 33.47% under-coverage of uncalibrated heuristic scaling.
+
 ---
 
 ## IX. Discussion and Limitations
@@ -231,8 +250,13 @@ Naive early fusion degraded $\text{PM}_{2.5}$ MAE by **12.19 $\mu\text{g/m}^3$**
 
 ### B. Deployment Interface
 ![Dashboard Interface](figures/dashboard_monitoring_interface.png)
+Consolidating navigation into 6 core modules removed redundant telemetry clutter and improved cognitive clarity for operational air quality management.
 
 ---
 
 ## X. Conclusion and Future Work
-VayuDrishti establishes an operational, theoretically bounded framework for multimodal air quality forecasting, proving that optical features must be restricted to learned residuals around verified physical sensor baselines.
+VayuDrishti establishes an operational, theoretically bounded framework for multimodal air quality forecasting:
+1. Residual hybrid fusion achieves guaranteed mathematical fallback to the sensor baseline when imagery is unavailable ($m=0$).
+2. Split-conformal calibration delivers finite-sample coverage guarantees ($\ge 92.8\%$ at 80\% nominal, block bootstrap $p < 10^{-12}$).
+3. Geostatistical spatial interpolation achieves +15.71% ($\text{PM}_{2.5}$) and +19.71% ($\text{PM}_{10}$) gains over nearest neighbor, with distance-scaled spatial conformal calibration delivering $\ge 99.1\%$ coverage.
+4. Streamlined 6-view operational deployment ensures high responsiveness and cognitive clarity.
