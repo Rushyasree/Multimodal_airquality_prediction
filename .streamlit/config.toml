@@ -10,3 +10,4 @@ font = "sans serif"
 headless = true
 enableCORS = false
 enableXsrfProtection = false
+# Cloud Container Deployment Trigger: v2.1-6page-cleanup
