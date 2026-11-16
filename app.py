@@ -117,9 +117,6 @@ from src.components.hybrid_dashboard_pages import (
     render_individual_methods_page,
     render_unified_hybrid_page,
     render_side_by_side_comparison_page,
-    render_station_map_page,
-    render_model_performance_page,
-    render_data_sources_system_health_page,
 )
 
 # Page configuration & renderer
@@ -1076,36 +1073,39 @@ NAV_ALIASES = {
     "Unified Hybrid Forecast": "Unified Hybrid Forecast",
     "Side-by-Side Comparison": "Side-by-Side Comparison",
     "Comparison": "Side-by-Side Comparison",
-    "Station Map": "Station Map",
-    "Map": "Station Map",
     "Spatial": "Spatial Prediction & Heatmap",
     "Spatial Prediction": "Spatial Prediction & Heatmap",
     "Spatial Heatmap": "Spatial Prediction & Heatmap",
     "Spatial Prediction & Heatmap": "Spatial Prediction & Heatmap",
     "Heatmap": "Spatial Prediction & Heatmap",
     "Urban Heatmap": "Spatial Prediction & Heatmap",
-    "Historical Trends": "Model Performance",
-    "Trends & Models": "Model Performance",
-    "Air Danger Advisor": "Model Performance",
-    "Trends": "Model Performance",
-    "Model Performance": "Model Performance",
-    "Performance": "Model Performance",
-    "About": "Data Sources and System Health",
-    "Data Sources and System Health": "Data Sources and System Health",
-    "System Health": "Data Sources and System Health",
+    # Legacy fallbacks for removed sections: safely route to Overview
+    "Station Map": "Overview",
+    "Map": "Overview",
+    "Monitoring Map": "Overview",
+    "National CPCB & APPCB Network": "Overview",
+    "Historical Trends": "Overview",
+    "Trends & Models": "Overview",
+    "Air Danger Advisor": "Overview",
+    "Trends": "Overview",
+    "Model Performance": "Overview",
+    "Performance": "Overview",
+    "Accuracy & Benchmarks": "Overview",
+    "About": "Overview",
+    "Data Sources and System Health": "Overview",
+    "System Health": "Overview",
 }
 
 # Session State
 if "nav" in st.query_params:
     _raw_nav = st.query_params.get("nav")
-    _url_nav = NAV_ALIASES.get(_raw_nav, _raw_nav)
-    if _url_nav in NAV_ALIASES.values():
-        st.session_state["nav_tab"] = _url_nav
-        st.session_state["top_navbar_radio"] = _url_nav
-        st.session_state["_synced_nav"] = _url_nav
+    _url_nav = NAV_ALIASES.get(_raw_nav, "Overview")
+    st.session_state["nav_tab"] = _url_nav
+    st.session_state["top_navbar_radio"] = _url_nav
+    st.session_state["_synced_nav"] = _url_nav
 
 if "nav_tab" not in st.session_state:
-    st.session_state["nav_tab"] = "Home"
+    st.session_state["nav_tab"] = "Overview"
 
 if "top_navbar_radio" not in st.session_state:
     st.session_state["top_navbar_radio"] = st.session_state["nav_tab"]
@@ -1370,23 +1370,25 @@ def render_scenic_feature_card() -> str:
 # Navigation
 # Header & Navigation
 # Sync navigation state across navbar and sidebar
-current_nav = st.session_state.get("nav_tab", "Overview")
-current_nav = NAV_ALIASES.get(current_nav, "Overview")
-st.session_state["nav_tab"] = current_nav
-st.session_state["top_navbar_radio"] = current_nav
-st.session_state["_synced_nav"] = current_nav
-
-top_nav_pages = [
+ALLOWED_PAGES = [
     "Overview",
     "Live Air Quality",
     "Individual Forecasting Methods",
     "Unified Hybrid Forecast",
     "Side-by-Side Comparison",
-    "Station Map",
     "Spatial Prediction & Heatmap",
-    "Model Performance",
-    "Data Sources and System Health",
 ]
+
+current_nav = st.session_state.get("nav_tab", "Overview")
+current_nav = NAV_ALIASES.get(current_nav, "Overview")
+if current_nav not in ALLOWED_PAGES:
+    current_nav = "Overview"
+
+st.session_state["nav_tab"] = current_nav
+st.session_state["top_navbar_radio"] = current_nav
+st.session_state["_synced_nav"] = current_nav
+
+top_nav_pages = ALLOWED_PAGES
 
 # Top desktop navigation bar
 top_col_brand, top_col_nav = st.columns([0.95, 3.05], gap="small")
@@ -1421,10 +1423,7 @@ with top_col_nav:
         "Individual Forecasting Methods": "🔬 LSTM Forecaster",
         "Unified Hybrid Forecast": "⚡ Hybrid AI",
         "Side-by-Side Comparison": "⚖️ Compare",
-        "Station Map": "🗺️ Map",
         "Spatial Prediction & Heatmap": "🌐 Heatmap",
-        "Model Performance": "🏆 Accuracy",
-        "Data Sources and System Health": "🛡️ Health",
     }
     selected_page = st.radio(
         "Navigation",
@@ -1459,10 +1458,7 @@ with st.sidebar:
         ("Individual Forecasting Methods", "🔬", "AI Sequence Forecaster", "LSTM & Weather Models"),
         ("Unified Hybrid Forecast", "⚡", "Multimodal Hybrid", "Sensor + Photo Vision Fusion"),
         ("Side-by-Side Comparison", "⚖️", "Model Comparison", "Side-by-Side Verification"),
-        ("Station Map", "🗺️", "Monitoring Map", "National CPCB & APPCB Network"),
         ("Spatial Prediction & Heatmap", "🌐", "Spatial Heatmap", "2D Urban PM2.5/PM10 Grid"),
-        ("Model Performance", "🏆", "Accuracy & Benchmarks", "Operational Validation & Metrics"),
-        ("Data Sources and System Health", "🛡️", "System Health", "Data Feeds & Telemetry Status"),
     ]
     for p_id, p_icon, p_title, p_sub in pages:
         is_active = (current_nav == p_id)
@@ -2461,13 +2457,7 @@ elif st.session_state["nav_tab"] in ("Side-by-Side Comparison", "Comparison"):
     render_side_by_side_comparison_page()
     logger.info("FINISH: Render Page: Side-by-Side Comparison | elapsed=%.4fs", time.perf_counter() - _t_page_start)
 
-elif st.session_state["nav_tab"] in ("Station Map", "Map"):
-    _t_page_start = time.perf_counter()
-    logger.info("START: Render Page: Station Map")
-    render_station_map_page()
-    logger.info("FINISH: Render Page: Station Map | elapsed=%.4fs", time.perf_counter() - _t_page_start)
-
-elif st.session_state["nav_tab"] in ("Spatial Prediction & Heatmap", "Spatial Heatmap", "Heatmap"):
+elif st.session_state["nav_tab"] in ("Spatial Prediction & Heatmap", "Spatial Heatmap", "Heatmap", "Spatial", "Urban Heatmap"):
     _t_page_start = time.perf_counter()
     logger.info("START: Render Page: Spatial Prediction & Heatmap")
     try:
@@ -2479,17 +2469,13 @@ elif st.session_state["nav_tab"] in ("Spatial Prediction & Heatmap", "Spatial He
     else:
         logger.info("FINISH: Render Page: Spatial Prediction & Heatmap | elapsed=%.4fs", time.perf_counter() - _t_page_start)
 
-elif st.session_state["nav_tab"] in ("Model Performance", "Historical Trends", "Trends & Models", "Air Danger Advisor", "Trends"):
-    _t_page_start = time.perf_counter()
-    logger.info("START: Render Page: Model Performance")
-    render_model_performance_page()
-    logger.info("FINISH: Render Page: Model Performance | elapsed=%.4fs", time.perf_counter() - _t_page_start)
-
-elif st.session_state["nav_tab"] in ("Data Sources and System Health", "About", "System Health"):
-    _t_page_start = time.perf_counter()
-    logger.info("START: Render Page: Data Sources and System Health")
-    render_data_sources_system_health_page()
-    logger.info("FINISH: Render Page: Data Sources and System Health | elapsed=%.4fs", time.perf_counter() - _t_page_start)
+else:
+    # Safe fallback for any unrecognized or legacy navigation state
+    logger.info("Redirecting unhandled nav_tab '%s' to Overview", st.session_state.get("nav_tab"))
+    st.session_state["nav_tab"] = "Overview"
+    st.session_state["top_navbar_radio"] = "Overview"
+    st.session_state["_synced_nav"] = "Overview"
+    st.rerun()
 
 # Common Global Footer
 render_html(
