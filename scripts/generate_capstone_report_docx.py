@@ -187,7 +187,7 @@ def generate_capstone_report():
     # --------------------------------------------------------------------------
     # 1. TITLE PAGE
     # --------------------------------------------------------------------------
-    add_title(doc, "VAYUDRISHTI: A RESIDUAL MULTIMODAL HYBRID FRAMEWORK FOR AMBIENT PARTICULATE MATTER FORECASTING AND SPATIAL RELIABILITY AUDITING", size=16, bold=True, space_after=14)
+    add_title(doc, "VAYUDRISHTI: A RESIDUAL MULTIMODAL HYBRID FRAMEWORK FOR AIR QUALITY FORECASTING", size=16, bold=True, space_after=14)
     add_title(doc, "A CAPSTONE PROJECT REPORT", size=13, bold=True, space_after=10)
     add_title(doc, "Submitted in partial fulfillment of the requirement for the award of the Degree of", size=11, bold=False, space_after=4)
     add_title(doc, "BACHELOR OF TECHNOLOGY", size=13, bold=True, space_after=2)
@@ -201,10 +201,10 @@ def generate_capstone_report():
     p_auth.paragraph_format.line_spacing = 1.2
     p_auth.paragraph_format.space_after = Pt(14)
     authors = [
-        ("TELIKI RUSHYA SREE", "21BCE7892"),
-        ("MACHIREDDY SWATHI", "21BCE8145"),
-        ("THANUJA VARAKALA", "21BCE7931"),
-        ("PALLI SHILPA", "21BCE8054")
+        ("TELIKI RUSHYA SREE", "23BCE9562"),
+        ("MACHIREDDY SWATHI", "23BCE9566"),
+        ("THANUJA VARAKALA", "23BCE9608"),
+        ("PALLI SHILPA", "23BCE9567")
     ]
     for name, reg in authors:
         r1 = p_auth.add_run(f"{name} ({reg})\n")
@@ -213,7 +213,7 @@ def generate_capstone_report():
         r1.font.size = Pt(11)
 
     add_title(doc, "Under the Guidance of", size=11, bold=False, space_after=2)
-    add_title(doc, "DR. THOTA RAMATHULSI", size=13, bold=True, space_after=2)
+    add_title(doc, "PROF. THOTA RAMATHULSI", size=13, bold=True, space_after=2)
     add_title(doc, "Department of SCOPE", size=11, bold=False, space_after=16)
 
     add_title(doc, "SCHOOL OF COMPUTER SCIENCE AND ENGINEERING (SCOPE)", size=12, bold=True, space_after=2)
@@ -229,8 +229,8 @@ def generate_capstone_report():
     add_title(doc, "CERTIFICATE", size=16, bold=True, space_after=18)
     
     add_body_p(doc, 
-        "This is to certify that the Capstone Project report titled “VAYUDRISHTI: A RESIDUAL MULTIMODAL HYBRID FRAMEWORK FOR AMBIENT PARTICULATE MATTER FORECASTING AND SPATIAL RELIABILITY AUDITING” "
-        "that is being submitted by TELIKI RUSHYA SREE (21BCE7892), MACHIREDDY SWATHI (21BCE8145), THANUJA VARAKALA (21BCE7931), and PALLI SHILPA (21BCE8054) "
+        "This is to certify that the Capstone Project report titled “VAYUDRISHTI: A RESIDUAL MULTIMODAL HYBRID FRAMEWORK FOR AIR QUALITY FORECASTING” "
+        "that is being submitted by TELIKI RUSHYA SREE (23BCE9562), MACHIREDDY SWATHI (23BCE9566), THANUJA VARAKALA (23BCE9608), and PALLI SHILPA (23BCE9567) "
         "in partial fulfillment of the requirements for the award of Bachelor of Technology in Computer Science and Engineering, is a record of bonafide work done under my guidance. "
         "The contents of this Project report, in full or in parts, have neither been taken from any other source nor have been submitted to any other Institute or University for award of any degree or diploma and the same is certified.",
         indent=True, line_spacing=1.5
@@ -239,7 +239,7 @@ def generate_capstone_report():
     p_guide = doc.add_paragraph()
     p_guide.paragraph_format.space_before = Pt(36)
     p_guide.paragraph_format.space_after = Pt(24)
-    r_g1 = p_guide.add_run("Dr. Thota Ramathulsi\n")
+    r_g1 = p_guide.add_run("Prof. Thota Ramathulsi\n")
     r_g1.bold = True
     r_g1.font.name = "Times New Roman"
     r_g1.font.size = Pt(11)
@@ -269,14 +269,14 @@ def generate_capstone_report():
     # --------------------------------------------------------------------------
     add_title(doc, "ACKNOWLEDGEMENTS", size=16, bold=True, space_after=16)
 
-    add_body_p(doc, "We express our sincere gratitude and profound respect to our project guide, Dr. Thota Ramathulsi, Department of SCOPE, for her invaluable guidance, constructive critique, and constant encouragement throughout the formulation and execution of this Capstone Project. Her scientific rigor and keen insights into environmental modeling and deep learning architectures have played a pivotal role in shaping this research.")
+    add_body_p(doc, "We express our sincere gratitude and profound respect to our project guide, Prof. Thota Ramathulsi, Department of SCOPE, for her invaluable guidance, constructive critique, and constant encouragement throughout the formulation and execution of this Capstone Project. Her scientific rigor and keen insights into environmental modeling and deep learning architectures have played a pivotal role in shaping this research.")
     add_body_p(doc, "We extend our deep appreciation to the Management of VIT-AP University, the Vice-Chancellor, the Registrar, and the Dean of the School of Computer Science and Engineering (SCOPE) for providing state-of-the-art computational infrastructure, laboratory facilities, and an encouraging research environment.")
     add_body_p(doc, "We would also like to thank the Program Chair, B.Tech Computer Science and Engineering, faculty members, and technical staff of the School of Computer Science and Engineering for their direct and indirect support throughout the duration of this work.")
     add_body_p(doc, "Finally, we express our heartfelt thanks to our parents, family members, and friends whose unconditional love, patience, and encouragement have been a perpetual source of strength during our academic journey.")
 
     p_sig = doc.add_paragraph()
     p_sig.paragraph_format.space_before = Pt(24)
-    r_sig = p_sig.add_run("TELIKI RUSHYA SREE (21BCE7892)\nMACHIREDDY SWATHI (21BCE8145)\nTHANUJA VARAKALA (21BCE7931)\nPALLI SHILPA (21BCE8054)")
+    r_sig = p_sig.add_run("TELIKI RUSHYA SREE (23BCE9562)\nMACHIREDDY SWATHI (23BCE9566)\nTHANUJA VARAKALA (23BCE9608)\nPALLI SHILPA (23BCE9567)")
     r_sig.bold = True
     r_sig.font.name = "Times New Roman"
     r_sig.font.size = Pt(11)
@@ -922,10 +922,10 @@ def generate_capstone_report():
     add_title(doc, "BIODATA OF PROJECT MEMBERS", size=16, bold=True, space_after=16)
 
     bio_members = [
-        ("TELIKI RUSHYA SREE", "21BCE7892", "rushyasree.teliki2021@vitap.ac.in", "+91 94943 21876", "School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237"),
-        ("MACHIREDDY SWATHI", "21BCE8145", "swathi.machireddy2021@vitap.ac.in", "+91 93902 45812", "School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237"),
-        ("THANUJA VARAKALA", "21BCE7931", "thanuja.varakala2021@vitap.ac.in", "+91 98481 67234", "School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237"),
-        ("PALLI SHILPA", "21BCE8054", "shilpa.palli2021@vitap.ac.in", "+91 89785 12093", "School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237")
+        ("TELIKI RUSHYA SREE", "23BCE9562", "rushyasree.teliki2023@vitap.ac.in", "+91 94943 21876", "School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237"),
+        ("MACHIREDDY SWATHI", "23BCE9566", "swathi.machireddy2023@vitap.ac.in", "+91 93902 45812", "School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237"),
+        ("THANUJA VARAKALA", "23BCE9608", "thanuja.varakala2023@vitap.ac.in", "+91 98481 67234", "School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237"),
+        ("PALLI SHILPA", "23BCE9567", "shilpa.palli2023@vitap.ac.in", "+91 89785 12093", "School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237")
     ]
 
     for name, reg, email, phone, addr in bio_members:

@@ -1,17 +1,17 @@
-# VAYUDRISHTI: A RESIDUAL MULTIMODAL HYBRID FRAMEWORK FOR AMBIENT PARTICULATE MATTER FORECASTING AND SPATIAL RELIABILITY AUDITING
+# VAYUDRISHTI: A RESIDUAL MULTIMODAL HYBRID FRAMEWORK FOR AIR QUALITY FORECASTING
 
 **A CAPSTONE PROJECT REPORT**  
 *Submitted in partial fulfillment of the requirement for the award of the Degree of*  
 **BACHELOR OF TECHNOLOGY IN COMPUTER SCIENCE AND ENGINEERING**  
 
 **by**  
-- **TELIKI RUSHYA SREE** (Reg. No: 21BCE7892)  
-- **MACHIREDDY SWATHI** (Reg. No: 21BCE8145)  
-- **THANUJA VARAKALA** (Reg. No: 21BCE7931)  
-- **PALLI SHILPA** (Reg. No: 21BCE8054)  
+- **TELIKI RUSHYA SREE** (Reg. No: 23BCE9562)  
+- **MACHIREDDY SWATHI** (Reg. No: 23BCE9566)  
+- **THANUJA VARAKALA** (Reg. No: 23BCE9608)  
+- **PALLI SHILPA** (Reg. No: 23BCE9567)  
 
 **Under the Guidance of**  
-**DR. THOTA RAMATHULSI**  
+**PROF. THOTA RAMATHULSI**  
 *Department of SCOPE*  
 
 **SCHOOL OF COMPUTER SCIENCE AND ENGINEERING (SCOPE)**  
@@ -23,11 +23,11 @@
 
 ## CERTIFICATE
 
-This is to certify that the Capstone Project report titled **“VAYUDRISHTI: A RESIDUAL MULTIMODAL HYBRID FRAMEWORK FOR AMBIENT PARTICULATE MATTER FORECASTING AND SPATIAL RELIABILITY AUDITING”** that is being submitted by **TELIKI RUSHYA SREE (21BCE7892)**, **MACHIREDDY SWATHI (21BCE8145)**, **THANUJA VARAKALA (21BCE7931)**, and **PALLI SHILPA (21BCE8054)** in partial fulfillment of the requirements for the award of Bachelor of Technology in Computer Science and Engineering, is a record of bonafide work done under my guidance. The contents of this Project report, in full or in parts, have neither been taken from any other source nor have been submitted to any other Institute or University for award of any degree or diploma and the same is certified.
+This is to certify that the Capstone Project report titled **“VAYUDRISHTI: A RESIDUAL MULTIMODAL HYBRID FRAMEWORK FOR AIR QUALITY FORECASTING”** that is being submitted by **TELIKI RUSHYA SREE (23BCE9562)**, **MACHIREDDY SWATHI (23BCE9566)**, **THANUJA VARAKALA (23BCE9608)**, and **PALLI SHILPA (23BCE9567)** in partial fulfillment of the requirements for the award of Bachelor of Technology in Computer Science and Engineering, is a record of bonafide work done under my guidance. The contents of this Project report, in full or in parts, have neither been taken from any other source nor have been submitted to any other Institute or University for award of any degree or diploma and the same is certified.
 
 <br>
 
-**Dr. Thota Ramathulsi**  
+**Prof. Thota Ramathulsi**  
 Project Guide  
 Department of SCOPE, VIT-AP University  
 
@@ -50,7 +50,7 @@ Department of SCOPE, VIT-AP University
 
 ## ACKNOWLEDGEMENTS
 
-We express our sincere gratitude and profound respect to our project guide, **Dr. Thota Ramathulsi**, Department of SCOPE, for her invaluable guidance, constructive critique, and constant encouragement throughout the formulation and execution of this Capstone Project. Her scientific rigor and keen insights into environmental modeling and deep learning architectures have played a pivotal role in shaping this research.
+We express our sincere gratitude and profound respect to our project guide, **Prof. Thota Ramathulsi**, Department of SCOPE, for her invaluable guidance, constructive critique, and constant encouragement throughout the formulation and execution of this Capstone Project. Her scientific rigor and keen insights into environmental modeling and deep learning architectures have played a pivotal role in shaping this research.
 
 We extend our deep appreciation to the Management of **VIT-AP University**, the Vice-Chancellor, the Registrar, and the Dean of the School of Computer Science and Engineering (SCOPE) for providing state-of-the-art computational infrastructure, laboratory facilities, and an encouraging research environment.
 
@@ -58,10 +58,10 @@ We would also like to thank the Program Chair, B.Tech Computer Science and Engin
 
 Finally, we express our heartfelt thanks to our parents, family members, and friends whose unconditional love, patience, and encouragement have been a perpetual source of strength during our academic journey.
 
-**TELIKI RUSHYA SREE (21BCE7892)**  
-**MACHIREDDY SWATHI (21BCE8145)**  
-**THANUJA VARAKALA (21BCE7931)**  
-**PALLI SHILPA (21BCE8054)**  
+**TELIKI RUSHYA SREE (23BCE9562)**  
+**MACHIREDDY SWATHI (23BCE9566)**  
+**THANUJA VARAKALA (23BCE9608)**  
+**PALLI SHILPA (23BCE9567)**  
 
 ---
 
@@ -531,31 +531,31 @@ def calculate_clark_evans_index(coords, area_km2):
 ## BIODATA OF PROJECT MEMBERS
 
 **TELIKI RUSHYA SREE**  
-- **Registration No.**: 21BCE7892  
+- **Registration No.**: 23BCE9562  
 - **Degree & Branch**: B.Tech Computer Science and Engineering  
 - **Mobile Number**: +91 94943 21876  
-- **Email ID**: rushyasree.teliki2021@vitap.ac.in  
+- **Email ID**: rushyasree.teliki2023@vitap.ac.in  
 - **Permanent Address**: School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237  
 
 **MACHIREDDY SWATHI**  
-- **Registration No.**: 21BCE8145  
+- **Registration No.**: 23BCE9566  
 - **Degree & Branch**: B.Tech Computer Science and Engineering  
 - **Mobile Number**: +91 93902 45812  
-- **Email ID**: swathi.machireddy2021@vitap.ac.in  
+- **Email ID**: swathi.machireddy2023@vitap.ac.in  
 - **Permanent Address**: School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237  
 
 **THANUJA VARAKALA**  
-- **Registration No.**: 21BCE7931  
+- **Registration No.**: 23BCE9608  
 - **Degree & Branch**: B.Tech Computer Science and Engineering  
 - **Mobile Number**: +91 98481 67234  
-- **Email ID**: thanuja.varakala2021@vitap.ac.in  
+- **Email ID**: thanuja.varakala2023@vitap.ac.in  
 - **Permanent Address**: School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237  
 
 **PALLI SHILPA**  
-- **Registration No.**: 21BCE8054  
+- **Registration No.**: 23BCE9567  
 - **Degree & Branch**: B.Tech Computer Science and Engineering  
 - **Mobile Number**: +91 89785 12093  
-- **Email ID**: shilpa.palli2021@vitap.ac.in  
+- **Email ID**: shilpa.palli2023@vitap.ac.in  
 - **Permanent Address**: School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237  
 
 > **NOTE:** It is **MANDATORY** for students to attach all Presentation Slides, Source Codes, Model Weights/Artifacts, and a 5–10 minute demonstration video of the VayuDrishti dashboard digitally in a Compact Disk (CD). Stick the Compact Disk (CD) inside the final page envelope of the Capstone Project report after binding.
