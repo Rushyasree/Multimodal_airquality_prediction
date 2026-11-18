@@ -533,29 +533,29 @@ def calculate_clark_evans_index(coords, area_km2):
 **TELIKI RUSHYA SREE**  
 - **Registration No.**: 23BCE9562  
 - **Degree & Branch**: B.Tech Computer Science and Engineering  
-- **Mobile Number**: +91 94943 21876  
-- **Email ID**: rushyasree.teliki2023@vitap.ac.in  
+- **Mobile Number**: +91 9440699393  
+- **Email ID**: rushya.23bce9562@vitapstudent.ac.in  
 - **Permanent Address**: School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237  
 
 **MACHIREDDY SWATHI**  
 - **Registration No.**: 23BCE9566  
 - **Degree & Branch**: B.Tech Computer Science and Engineering  
-- **Mobile Number**: +91 93902 45812  
-- **Email ID**: swathi.machireddy2023@vitap.ac.in  
+- **Mobile Number**: +91 93985 25854  
+- **Email ID**: swathi.23bce9566@vitapstudent.ac.in  
 - **Permanent Address**: School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237  
 
 **THANUJA VARAKALA**  
 - **Registration No.**: 23BCE9608  
 - **Degree & Branch**: B.Tech Computer Science and Engineering  
-- **Mobile Number**: +91 98481 67234  
-- **Email ID**: thanuja.varakala2023@vitap.ac.in  
+- **Mobile Number**: +91 82977 08071  
+- **Email ID**: Thanuja.23bce9608@vitapstudent.ac.in  
 - **Permanent Address**: School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237  
 
 **PALLI SHILPA**  
 - **Registration No.**: 23BCE9567  
 - **Degree & Branch**: B.Tech Computer Science and Engineering  
-- **Mobile Number**: +91 89785 12093  
-- **Email ID**: shilpa.palli2023@vitap.ac.in  
+- **Mobile Number**: +91 93814 88746  
+- **Email ID**: shilpa.23bce9567@vitapstudent.ac.in  
 - **Permanent Address**: School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237  
 
 > **NOTE:** It is **MANDATORY** for students to attach all Presentation Slides, Source Codes, Model Weights/Artifacts, and a 5–10 minute demonstration video of the VayuDrishti dashboard digitally in a Compact Disk (CD). Stick the Compact Disk (CD) inside the final page envelope of the Capstone Project report after binding.

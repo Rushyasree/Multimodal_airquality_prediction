@@ -922,10 +922,10 @@ def generate_capstone_report():
     add_title(doc, "BIODATA OF PROJECT MEMBERS", size=16, bold=True, space_after=16)
 
     bio_members = [
-        ("TELIKI RUSHYA SREE", "23BCE9562", "rushyasree.teliki2023@vitap.ac.in", "+91 94943 21876", "School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237"),
-        ("MACHIREDDY SWATHI", "23BCE9566", "swathi.machireddy2023@vitap.ac.in", "+91 93902 45812", "School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237"),
-        ("THANUJA VARAKALA", "23BCE9608", "thanuja.varakala2023@vitap.ac.in", "+91 98481 67234", "School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237"),
-        ("PALLI SHILPA", "23BCE9567", "shilpa.palli2023@vitap.ac.in", "+91 89785 12093", "School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237")
+        ("TELIKI RUSHYA SREE", "23BCE9562", "rushya.23bce9562@vitapstudent.ac.in", "+91 9440699393", "School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237"),
+        ("MACHIREDDY SWATHI", "23BCE9566", "swathi.23bce9566@vitapstudent.ac.in", "+91 93985 25854", "School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237"),
+        ("THANUJA VARAKALA", "23BCE9608", "Thanuja.23bce9608@vitapstudent.ac.in", "+91 82977 08071", "School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237"),
+        ("PALLI SHILPA", "23BCE9567", "shilpa.23bce9567@vitapstudent.ac.in", "+91 93814 88746", "School of Computer Science and Engineering, VIT-AP University, Amaravati, Andhra Pradesh - 522237")
     ]
 
     for name, reg, email, phone, addr in bio_members:
