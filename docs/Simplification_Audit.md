@@ -147,3 +147,41 @@ The simplified presentation file **`VayuDrishti_Final_Review_Simple_Language.ppt
 - **Embedded Diagrams:** High-resolution architecture flowchart (`fig_arch_overall.png`), dashboard screenshot (`dashboard_monitoring_interface.png`), and empirical scatterplot (`actual_vs_predicted.png`) are all intact.
 - **Speaker Scripts:** Every slide includes a clear, natural, spoken script in the PowerPoint speaker notes pane.
 - **Academic Defensibility:** All formulas, thresholds ($45\text{ km}$, $\pm 25\ \mu\text{g/m}^3$), Clark-Evans ratios, and performance metrics are mathematically consistent with the capstone project report and research paper.
+
+---
+
+## 8. Executive Visual Design & Layout Overhaul Audit
+
+In response to design inspection feedback, a comprehensive visual redesign was executed across all 16 slides to eliminate amateurish, childlike presentation artifacts (such as cartoonish pastel rounded bubbles, centered card titles with floating left-aligned bullets, bulky colored container boxes on the title slide, and graphic overlaps on the conclusion slide) and replace them with an executive, institutional research defense standard matching the official university template (Capstone_PPT_Template.pptx).
+
+### 8.1 Key Aesthetic & Layout Enhancements
+
+| Slide Element | Previous Amateur Design Flaw | Final Executive Research Standard |
+|---|---|---|
+| **Title Slide (Slide 1)** | Bulky light-blue rectangular container boxes around text. | Clean typographic layout matching official template: 22pt maroon review title, 22pt navy title, 11.5pt italic teal subtitle, red supervisor callout, clean student roster, and bold red/navy SCOPE institutional footer. |
+| **Card Geometry** | Cartoonish rounded rectangles with pastel fill colors (#F0FDF4, #EFF6FF). | Crisp, sharp executive cards (pure white #FFFFFF, subtle #E2E8F0 border, and 3pt colored top-accent stripe: Navy #182B49, Teal #0284C7, Green #0D9488, Purple #7C3AED). |
+| **Title Alignment** | Centered card titles above left-aligned bullet text, creating awkward visual imbalance. | Strictly left-aligned card titles (PP_ALIGN.LEFT) with clean 1pt accent underline rule, establishing a solid vertical reading axis. |
+| **Vertical Text Flow** | Text frames anchored to middle (MSO_ANCHOR.MIDDLE), causing text to float in the center with awkward gaps. | Text frames strictly anchored to top (MSO_ANCHOR.TOP) with balanced 0.15 in internal margins and controlled inter-bullet spacing. |
+| **Header Typography** | Paragraph-level text assignment without explicit run font sizing caused PPT to render small, faint headers. | Explicit run-level font properties on template text boxes: Category header at 24pt bold Times New Roman (#572314), Main slide title at 16.5pt bold Gill Sans MT (#182B49). |
+| **Conclusion Slide (Slide 16)** | Content boxes placed directly over the template's central cursive fountain-pen graphic. | Clean two-band layout: top summary strip (	op=0.75 in, height=0.85 in) sits safely above the artwork (	op=1.94 in), central pen graphic remains completely unobstructed, and bottom navy Q&A bar anchors the base. |
+| **Metrics & Parity Plots (Slide 13)** | Unframed raw tables and misaligned plots. | Formatted comparison table with deep navy header row, alternating white and light-blue zebra rows, right-aligned numeric metrics, framed scatter plot, and twin bottom insight cards. |
+
+### 8.2 Image Verification & Verification Artifacts
+
+All 16 slides were exported to high-resolution 1920x1080 PNG images via Microsoft PowerPoint COM automation (presentation/slide_images/slide_01.png through slide_16.png) and visually audited against the official template reference images (presentation/template_images/template_slide_01.png through 	emplate_slide_16.png):
+- **Slide 01:** Title & Team Roster (Uncluttered, professional, no bulky boxes).
+- **Slide 02:** Table of Contents (Crisp dual-card structural split).
+- **Slide 03:** Project Overview (3-mode operational breakdown with bottom principle banner).
+- **Slide 04:** Problem Statement (4-card urban monitoring challenge grid).
+- **Slide 05:** Project Objectives (4 quantifiable research goals).
+- **Slide 06:** Literature Review (Clear structured benchmark table against 5 existing approaches).
+- **Slide 07:** Key Contributions (Dual-card breakdown of vision gating and spatial reliability).
+- **Slide 08:** System Architecture (Split layout: 3 data stages + embedded architecture diagram).
+- **Slide 09:** Web Dashboard (Left feature index + embedded Streamlit screenshot).
+- **Slide 10:** Key Algorithms (4 mathematical methods: IDW, Clark-Evans, Conformal, Tech Stack).
+- **Slide 11:** Datasets & Features (Dual-card feature comparison: LSTM 27 vs LightGBM 49).
+- **Slide 12:** Experimental Setup & Safeguards (Dual cards: Training parameters & 45 km / 5-tier safeguards).
+- **Slide 13:** Experimental Results (Model benchmark table + scatter plot + LOSO / 14-day live audit cards).
+- **Slide 14:** Key Findings & Future Work (Dual cards: 4 empirical findings & 4 future directions).
+- **Slide 15:** Key References (Clean academic citation list).
+- **Slide 16:** Conclusion & Viva Defense (Unobstructed central artwork, top project summary strip, bottom Q&A bar).
