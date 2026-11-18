@@ -76,7 +76,7 @@ The audit identified and resolved several critical areas:
 ## 4. Remaining Author Confirmations
 
 The following minor items are flagged for final author verification prior to binding and submission:
-1. **SDP ID Confirmation:** The SDP identifier placeholder `[Insert SDP ID]` appears on the Title Page and Certificate. The student team should insert their assigned university SDP project ID.
+1. **CAPSTONE ID Confirmation:** The SDP identifier placeholder `F5815A89` appears on the Title Page and Certificate. The student team should insert their assigned university SDP project ID.
 2. **Compact Disk (CD) Attachment:** In accordance with the mandatory institutional note on the Biodata page, verify that the bound hard copy contains the digital submission CD affixed inside the back cover envelope, containing all Python source codes, model weight checkpoints, presentation slides, and the 5–10 minute dashboard demonstration video.
 3. **Streamlit Cloud Active Deployment:** Verify that the public deployment URL (`https://vayudrishti-airquality.streamlit.app/`) remains awake and accessible during the scheduled examination turn.
 

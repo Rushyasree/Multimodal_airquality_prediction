@@ -4,7 +4,7 @@
 **University:** School of Computer Science and Engineering (SCOPE), VIT-AP University, Amaravati  
 **Degree:** B.Tech Computer Science and Engineering  
 **Supervised by:** Prof. Thota Ramathulsi, Department of SCOPE  
-**SDP ID:** [Insert SDP ID]  
+**CAPSTONE ID:** F5815A89  
 **Project Team Members:**  
 1. TELIKI RUSHYA SREE (23BCE9562)  
 2. MACHIREDDY SWATHI (23BCE9566)  
@@ -29,7 +29,7 @@ Department of Software and Systems Engineering, School of Computer Science and E
 ```
 
 ```
-SDP ID: [Insert SDP ID]
+CAPSTONE ID: F5815A89
 Name of the Student(s) with Regd. No.:
 
 

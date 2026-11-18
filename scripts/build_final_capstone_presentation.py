@@ -274,7 +274,7 @@ def build_presentation():
             tf.margin_top = Inches(0.1)
             
             p0 = tf.paragraphs[0]
-            p0.text = "Project Team Members (SDP ID: [Insert SDP ID])"
+            p0.text = "Project Team Members (CAPSTONE ID: F5815A89)"
             p0.font.name = FONT_SUBHEADING
             p0.font.size = Pt(11)
             p0.font.bold = True

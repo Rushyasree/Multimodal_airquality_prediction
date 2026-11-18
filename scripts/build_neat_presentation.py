@@ -328,9 +328,9 @@ def build_presentation():
                 
         elif shape.name == 'CustomShape 3':
             shape.left = Inches(0.4)
-            shape.top = Inches(3.15)
-            shape.width = Inches(5.2)
-            shape.height = Inches(2.1)
+            shape.top = Inches(3.08)
+            shape.width = Inches(5.4)
+            shape.height = Inches(2.15)
             shape.fill.background()
             shape.line.fill.background()
             
@@ -341,24 +341,25 @@ def build_presentation():
             
             p0 = tf.paragraphs[0]
             p0.text = ""
-            r_sdp = p0.add_run()
-            r_sdp.text = "SDP ID: "
-            r_sdp.font.name = FONT_HEADING
-            r_sdp.font.size = Pt(12)
-            r_sdp.font.bold = True
-            r_sdp.font.color.rgb = C_RED
+            r_cap = p0.add_run()
+            r_cap.text = "CAPSTONE ID: "
+            r_cap.font.name = FONT_HEADING
+            r_cap.font.size = Pt(12)
+            r_cap.font.bold = True
+            r_cap.font.color.rgb = C_RED
             
             r_id = p0.add_run()
-            r_id.text = "[Insert SDP ID]"
+            r_id.text = "F5815A89"
             r_id.font.name = FONT_SANS
             r_id.font.size = Pt(12)
-            r_id.font.color.rgb = C_TEXT_MUTED
-            p0.space_after = Pt(6)
+            r_id.font.bold = True
+            r_id.font.color.rgb = C_NAVY
+            p0.space_after = Pt(8)
             
             p1 = tf.paragraphs[1] if len(tf.paragraphs) > 1 else tf.add_paragraph()
             p1.text = "Project Team Members:"
             p1.font.name = FONT_HEADING
-            p1.font.size = Pt(12)
+            p1.font.size = Pt(11.5)
             p1.font.bold = True
             p1.font.color.rgb = C_NAVY
             p1.space_after = Pt(4)
@@ -371,19 +372,33 @@ def build_presentation():
             ]
             for idx, (s_name, s_reg) in enumerate(students):
                 p = tf.paragraphs[idx+2] if len(tf.paragraphs) > idx+2 else tf.add_paragraph()
-                p.text = f"•  {s_name}  ({s_reg})"
-                p.font.name = FONT_SANS
-                p.font.size = Pt(10.5)
-                p.font.color.rgb = C_TEXT_MAIN
-                p.space_after = Pt(2)
+                p.text = ""
+                r_bullet = p.add_run()
+                r_bullet.text = "•  "
+                r_bullet.font.bold = True
+                r_bullet.font.color.rgb = C_RED
+                
+                r_name = p.add_run()
+                r_name.text = f"{s_name}  "
+                r_name.font.name = FONT_SANS
+                r_name.font.size = Pt(10)
+                r_name.font.bold = True
+                r_name.font.color.rgb = C_TEXT_MAIN
+                
+                r_reg = p.add_run()
+                r_reg.text = f"({s_reg})"
+                r_reg.font.name = FONT_SANS
+                r_reg.font.size = Pt(9.5)
+                r_reg.font.color.rgb = C_TEAL
+                p.space_after = Pt(2.5)
             while len(tf.paragraphs) > len(students) + 2:
                 p_extra = tf.paragraphs[-1]
                 p_extra._p.getparent().remove(p_extra._p)
                 
         elif shape.name == 'CustomShape 4':
-            shape.left = Inches(6.4)
-            shape.top = Inches(3.4)
-            shape.width = Inches(3.2)
+            shape.left = Inches(6.2)
+            shape.top = Inches(3.20)
+            shape.width = Inches(3.4)
             shape.height = Inches(1.8)
             shape.fill.background()
             shape.line.fill.background()
@@ -399,25 +414,37 @@ def build_presentation():
             p0.font.size = Pt(26)
             p0.font.bold = True
             p0.font.color.rgb = C_RED
-            p0.space_after = Pt(2)
+            p0.space_after = Pt(1)
             
             p1 = tf.paragraphs[1] if len(tf.paragraphs) > 1 else tf.add_paragraph()
-            p1.text = "VIT-AP University,"
-            p1.font.name = FONT_HEADING
-            p1.font.size = Pt(18)
-            p1.font.bold = True
-            p1.font.color.rgb = C_NAVY
+            p1.text = "School of Computer Science and Engineering"
+            p1.font.name = FONT_SANS
+            p1.font.size = Pt(9.5)
+            p1.font.color.rgb = C_TEXT_MUTED
+            p1.space_after = Pt(4)
             
             p2 = tf.paragraphs[2] if len(tf.paragraphs) > 2 else tf.add_paragraph()
-            p2.text = "Amaravati, India"
+            p2.text = "VIT-AP University,"
             p2.font.name = FONT_HEADING
-            p2.font.size = Pt(18)
+            p2.font.size = Pt(17)
             p2.font.bold = True
             p2.font.color.rgb = C_NAVY
             
-            while len(tf.paragraphs) > 3:
+            p3 = tf.paragraphs[3] if len(tf.paragraphs) > 3 else tf.add_paragraph()
+            p3.text = "Amaravati - 522237, AP, India"
+            p3.font.name = FONT_SANS
+            p3.font.size = Pt(10.5)
+            p3.font.color.rgb = C_TEXT_MUTED
+            
+            while len(tf.paragraphs) > 4:
                 p_extra = tf.paragraphs[-1]
                 p_extra._p.getparent().remove(p_extra._p)
+
+    # Add a thin stylish horizontal accent line below the title block
+    line = s1.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.4), Inches(2.14), Inches(8.8), Inches(0.015))
+    line.fill.solid()
+    line.fill.fore_color.rgb = RGBColor(226, 232, 240) # Slate 200
+    line.line.fill.background()
 
     s1_notes = (
         "Good morning respected panel members and our guide, Prof. Thota Ramathulsi. "
@@ -1090,7 +1117,7 @@ def build_presentation():
     r3.font.size = Pt(10)
     r3.font.color.rgb = C_TEAL
     r4 = p_s2.add_run()
-    r4.text = "GitHub: github.com/trush/vayu-drishti   |   Live Web App: multimodal-air-quality-c38w.streamlit.app   |   Platform: Intel Core i7 CPU (No GPU)"
+    r4.text = "Capstone ID: F5815A89   |   GitHub: github.com/trush/vayu-drishti   |   Live Web App: multimodal-air-quality-c38w.streamlit.app   |   Platform: Intel Core i7 CPU"
     r4.font.name = FONT_SANS
     r4.font.size = Pt(9.2)
     r4.font.color.rgb = C_TEXT_MAIN
