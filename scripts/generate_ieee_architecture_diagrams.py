@@ -126,24 +126,24 @@ def generate_fig_arch_overall():
              facecolor=C_CARD_BG, edgecolor=C_BLUE_BD)
     draw_arrow(ax, (1.32, 2.49), (1.60, 2.49))
 
-    draw_box(ax, (1.60, 1.44), 1.25, 0.54, "ResNet-50 Projector", "Backbone → 32D",
+    draw_box(ax, (1.60, 1.44), 1.25, 0.54, "ResNet-50 Projector", "Backbone → e_v (32D)",
              facecolor=C_CARD_BG, edgecolor=C_PURP_BD)
     draw_arrow(ax, (1.32, 1.71), (1.60, 1.71))
 
-    draw_box(ax, (1.60, 0.66), 1.25, 0.54, "Distance Embedding", "Linear + ReLU → 8D",
+    draw_box(ax, (1.60, 0.66), 1.25, 0.54, "Distance Embedding", "Linear + ReLU → e_d (8D)",
              facecolor=C_CARD_BG, edgecolor=C_AMBR_BD)
     draw_arrow(ax, (1.32, 0.93), (1.60, 0.93))
 
     # Col 3: Baseline & Tri-Modal Fusion (x = 3.17 to 4.47, w = 1.30)
     draw_box(ax, (3.17, 2.22), 1.30, 0.54, "Sensor Baseline", "y_sensor = [PM2.5, PM10]",
              facecolor=C_BLUE_BG, edgecolor=C_BLUE_BD)
-    draw_arrow(ax, (2.85, 2.49), (3.17, 2.49), label="Baseline", label_pos=0.5, label_offset=(0, 0.07))
+    draw_arrow(ax, (2.85, 2.49), (3.17, 2.49))
 
     draw_box(ax, (3.17, 0.66), 1.30, 1.32, "Feature Fusion", "[h_s || m·e_v || e_d]\n104D Fused Vector",
              facecolor=C_CARD_BG, edgecolor=C_DARK, lw=1.1)
-    draw_arrow(ax, (2.85, 2.30), (3.17, 1.65), label="h_s (64D)", label_pos=0.45, label_offset=(-0.05, 0.07))
-    draw_arrow(ax, (2.85, 1.71), (3.17, 1.32), label="e_v (32D)", label_pos=0.45, label_offset=(0, 0.07))
-    draw_arrow(ax, (2.85, 0.93), (3.17, 0.98), label="e_d (8D)", label_pos=0.45, label_offset=(0, 0.07))
+    draw_arrow(ax, (2.85, 2.30), (3.17, 1.65))
+    draw_arrow(ax, (2.85, 1.71), (3.17, 1.32))
+    draw_arrow(ax, (2.85, 0.93), (3.17, 0.98))
 
     # Col 4: Dual Heads (x = 4.77 to 5.92, w = 1.15)
     draw_box(ax, (4.77, 1.44), 1.15, 0.54, "Learned Gate", "α_eff = m · α_raw",
@@ -155,15 +155,15 @@ def generate_fig_arch_overall():
     draw_arrow(ax, (4.47, 1.14), (4.77, 0.93))
 
     # Col 5: Gated Residual & Final Forecast (x = 5.92 to 7.04)
-    draw_box(ax, (6.12, 0.85), 0.92, 0.72, "Gated Residual", "δ = α_eff · Δ\n(Zero when m=0)",
-             facecolor=C_ROSE_BG, edgecolor=C_ROSE_BD, title_size=7.2, sub_size=5.8)
-    draw_arrow(ax, (5.92, 1.71), (6.12, 1.35))
-    draw_arrow(ax, (5.92, 0.93), (6.12, 1.05))
+    draw_box(ax, (6.15, 0.80), 0.96, 0.76, "Gated Residual", "δ = α_eff · Δ\n(Zero when m=0)",
+             facecolor=C_ROSE_BG, edgecolor=C_ROSE_BD, title_size=6.8, sub_size=5.6)
+    draw_arrow(ax, (5.92, 1.71), (6.15, 1.35))
+    draw_arrow(ax, (5.92, 0.93), (6.15, 0.98))
 
     draw_box(ax, (5.92, 2.22), 1.12, 0.54, "PM2.5 / PM10 Forecast", "y_hybrid = max(0, y_s + δ)",
              facecolor=C_GRN_BG, edgecolor=C_GRN_BD)
     draw_arrow(ax, (4.47, 2.49), (5.92, 2.49), label="y_sensor", label_pos=0.5, label_offset=(0, 0.07))
-    draw_arrow(ax, (6.58, 1.57), (6.58, 2.22), label="+ δ", label_pos=0.5, label_offset=(0.18, 0))
+    draw_arrow(ax, (6.63, 1.56), (6.63, 2.22), label="+ δ", label_pos=0.5, label_offset=(0.18, 0))
 
     # Bottom Fallback Banner
     draw_box(ax, (0.18, 0.10), 6.86, 0.40,
