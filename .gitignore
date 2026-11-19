@@ -1,21 +1,75 @@
-# Python & virtual environment
-.venv/
-venv/
-env/
+# ==============================================================================
+# VayuDrishti — Production Git Ignore Policy
+# ==============================================================================
+
+# Python & Environment
 __pycache__/
 *.py[cod]
 *$py.class
-*.ipynb_checkpoints/
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 .env
+.venv/
+venv/
+env/
+ENV/
+*.ipynb_checkpoints/
 
-# Testing & logs
+# Operating System & IDE Caches
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+*$*
+*.swp
+*.swo
+*~
+.idea/
+
+# Testing, Profiling & Coverage
 .pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
 *.log
 *.tmp
 scratch/
 backup/
 
-# Raw and heavy datasets (> 100MB / non-runtime)
+# Academic Deliverables, Drafts & Slide Decks (Kept out of core software repository)
+*.docx
+*.pptx
+*.pdf
+*.zip
+*.synctex.gz
+paper/
+presentation/
+docs/*.docx
+docs/*.pptx
+docs/*.pdf
+docs/*.zip
+PHASE*.md
+readiness_test_results.csv
+
+# Large Datasets & Raw Dumps (> 50MB / Non-runtime)
 data/raw/
 data/processed/model_sequences/*.npy
 data/processed/sequences/
@@ -25,14 +79,14 @@ data/processed/recent_air_quality_cleaned.csv
 *.npy
 *.npz
 
-# Large experimental checkpoints (> 50MB)
+# Non-runtime / Heavy Training Checkpoints (> 50MB)
 experiments/**/checkpoints/best_fusion_model.pt
 experiments/**/checkpoints/best_image_model.pt
 experiments/**/checkpoints/best_unified_hybrid_model.pt
 experiments/recent_data_audit/*.csv
 experiments/multimodal_fusion/validation_v2/checkpoints/
+models/ablation/multiseed/
 
-# Predictions & outputs
+# Predictions & Temporary Logging
 outputs/logs/*
 outputs/predictions/*
-paper/inspection_pages/
