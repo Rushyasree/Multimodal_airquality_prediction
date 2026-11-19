@@ -462,41 +462,67 @@ def render_side_by_side_comparison_page():
         """
     )
 
-    st.markdown("### 📋 Side-by-Side Methodology Comparison Table")
+    st.markdown("### 🔬 Primary Forecaster Decomposition: LSTM + GBDT Hybrid")
+    st.markdown(
+        "The **LSTM + GBDT Combined Hybrid Forecaster** is the primary forecasting engine in VayuDrishti. "
+        "Below is the exact decomposition of individual model contributions and the final combined prediction alongside reference baselines:"
+    )
+    if "hybrid_breakdown_table" in res and not res["hybrid_breakdown_table"].empty:
+        st.dataframe(res["hybrid_breakdown_table"], use_container_width=True, hide_index=True)
+
+    st.markdown("### 📋 Comprehensive Side-by-Side Methodology Comparison Table")
     st.dataframe(df_comp, use_container_width=True, hide_index=True)
 
     # Plotly Grouped Bar Chart Comparison
-    st.markdown("### 📊 Concentration Comparison (PM2.5 and PM10)")
+    st.markdown("### 📊 Concentration Comparison Across Methods (PM2.5 and PM10)")
 
     ground_label = "Live Ground Monitor" if is_live_mode else "Historical Ground Truth"
-    methods = [ground_label, "1-Hour Persistence", "Sensor-Only LSTM", "Image-Only ResNet-50", "Unified Hybrid Model"]
+    methods = [
+        ground_label,
+        "1-Hour Persistence",
+        "Sensor-Only LSTM",
+        "GBDT / LightGBM",
+        "★ LSTM + GBDT Hybrid",
+        "Image-Only (Experimental)",
+    ]
+
+    lstm_fc = res.get("lstm_forecast", {})
+    gbdt_fc = res.get("gbdt_forecast", {})
+    hybrid_fc = res.get("hybrid_forecast", {})
+
     pm25_vals = [
         res["live_data"].get("pm25"),
         res.get("persistence_baseline", {}).get("pm25"),
-        res["sensor_forecast"].get("pm25"),
+        lstm_fc.get("pm25"),
+        gbdt_fc.get("pm25"),
+        hybrid_fc.get("pm25"),
         res["image_estimate"].get("pm25"),
-        res["hybrid_prediction"].get("pm25"),
     ]
     pm10_vals = [
         res["live_data"].get("pm10"),
         res.get("persistence_baseline", {}).get("pm10"),
-        res["sensor_forecast"].get("pm10"),
+        lstm_fc.get("pm10"),
+        gbdt_fc.get("pm10"),
+        hybrid_fc.get("pm10"),
         None,  # Image model does not predict PM10
-        res["hybrid_prediction"].get("pm10"),
     ]
+
+    # Distinct bar colors highlighting the primary hybrid model
+    colors_pm25 = ["#94A3B8", "#64748B", "#60A5FA", "#F59E0B", "#38BDF8", "#A855F7"]
+    colors_pm10 = ["#CBD5E1", "#94A3B8", "#93C5FD", "#FBBF24", "#71B9FF", "rgba(0,0,0,0)"]
 
     fig = go.Figure()
     fig.add_trace(go.Bar(
         x=methods,
         y=pm25_vals,
         name="PM2.5 (µg/m³)",
-        marker_color="#38BDF8",
+        marker_color=colors_pm25,
     ))
     fig.add_trace(go.Bar(
         x=methods,
         y=pm10_vals,
         name="PM10 (µg/m³)",
-        marker_color="#94A3B8",
+        marker_color=colors_pm10,
     ))
 
     # Add ground-truth reference line
@@ -758,16 +784,18 @@ def render_individual_methods_page():
     )
 
     tab1, tab2, tab3, tab4 = st.tabs([
-        "Method 1: Sensor-Only LSTM",
+        "Method 1: Primary LSTM + GBDT Hybrid Forecaster",
         "Method 2: Weather & Environmental Context",
-        "Method 3: Image-Based Estimation",
+        "Method 3: Image-Based Estimation (Experimental)",
         "Method 4: Baseline & Persistence Comparison"
     ])
 
     with tab1:
-        st.markdown("### ☁️ Method 1: Sensor-Only LSTM Forecast")
+        st.markdown("### 🔬 Method 1: Primary LSTM + GBDT Hybrid Forecaster (AI Sequence Forecaster)")
         st.markdown(
-            "Predicts next-hour ($t+1$) PM2.5 and PM10 concentrations from continuous 24-hour antecedent telemetry and weather sequences using a calibrated multi-layer LSTM model."
+            "Predicts next-hour ($t+1$) PM2.5 and PM10 concentrations by fusing a 24-hour multivariate LSTM sequence model "
+            "(27 continuous channels) with an adapted Gradient Boosted Decision Tree (49 canonical tabular features) "
+            "using validated severity-gated dynamic blending."
         )
 
         from src.prediction.data_loader import load_demo_scenarios, get_scenario_metadata_list, load_location_catalog
@@ -860,10 +888,21 @@ def render_individual_methods_page():
                 return
 
             lstm_service = SensorForecastService()
-            fc_res = lstm_service.predict_next_hour(df_24h=fc_data, station_id=stn_id)
+            fc_res = lstm_service.predict_next_hour(df_24h=fc_data, station_id=stn_id, model_mode="hybrid")
 
             pm25_pred = fc_res["predicted_PM25"]
             pm10_pred = fc_res["predicted_PM10"]
+            lstm_pm25 = fc_res.get("lstm_PM25", pm25_pred)
+            lstm_pm10 = fc_res.get("lstm_PM10", pm10_pred)
+            gbdt_pm25 = fc_res.get("gbdt_PM25", pm25_pred)
+            gbdt_pm10 = fc_res.get("gbdt_PM10", pm10_pred)
+            pers_pm25 = fc_res.get("persistence_PM25", 0.0)
+            pers_pm10 = fc_res.get("persistence_PM10", 0.0)
+            weights = fc_res.get("ensemble_weights", {})
+            w25_lstm = weights.get("w_pm25_lstm", 0.40)
+            w25_gbdt = weights.get("w_pm25_gbdt", 0.60)
+            w10_lstm = weights.get("w_pm10_lstm", 0.45)
+            w10_gbdt = weights.get("w_pm10_gbdt", 0.55)
 
             last_fc_dt = pd.to_datetime(fc_data["Datetime"].iloc[-1])
             tgt_fc_dt = last_fc_dt + pd.Timedelta(hours=1)
@@ -890,33 +929,44 @@ def render_individual_methods_page():
             with col_m1:
                 render_html(f"""
                 <div class="vayu-panel">
-                    <div style="font-size: 0.78rem; font-weight: 700; color: #38BDF8; text-transform: uppercase; letter-spacing: 0.05em;">PREDICTED PM2.5 (NEXT 1 HOUR • t+1)</div>
+                    <div style="font-size: 0.78rem; font-weight: 700; color: #38BDF8; text-transform: uppercase; letter-spacing: 0.05em;">LSTM + GBDT HYBRID PM2.5 (NEXT 1 HOUR • t+1 • PRIMARY FORECAST)</div>
                     <div style="font-size: 2.5rem; font-weight: 800; color: #F8FAFC; margin: 0.35rem 0; line-height: 1;">
                         {pm25_pred:.1f} <span style="font-size: 0.95rem; font-weight: 500; color: #94A3B8;">µg/m³</span>
                     </div>
                     <div style="font-size: 0.82rem; color: #94A3B8; margin-top: 0.5rem;">
                         80% Empirical Uncertainty: <code style="background: #1A2234; border: 1px solid #1F293D; color: #38BDF8; padding: 0.15rem 0.4rem; border-radius: 4px;">[{fc_res['uncertainty_intervals']['PM2.5_lower_80']:.1f} – {fc_res['uncertainty_intervals']['PM2.5_upper_80']:.1f} µg/m³]</code>
                     </div>
-                    <div style="font-size: 0.80rem; color: #71B9FF; margin-top: 0.4rem;">
-                        Delta vs Last Observation: {fc_res.get('delta_PM25', 0.0):+.1f} µg/m³ (Baseline: {fc_res.get('persistence_PM25', 0.0):.1f} µg/m³)
+                    <div style="font-size: 0.80rem; color: #38BDF8; margin-top: 0.4rem; font-weight: 600;">
+                        Ensemble Blend: {w25_lstm*100:.0f}% LSTM ({lstm_pm25:.1f}) + {w25_gbdt*100:.0f}% GBDT ({gbdt_pm25:.1f} µg/m³)
+                    </div>
+                    <div style="font-size: 0.78rem; color: #71B9FF; margin-top: 0.3rem;">
+                        Delta vs Last Observation: {pm25_pred - pers_pm25:+.1f} µg/m³ (Baseline: {pers_pm25:.1f} µg/m³)
                     </div>
                 </div>
                 """)
             with col_m2:
                 render_html(f"""
                 <div class="vayu-panel">
-                    <div style="font-size: 0.78rem; font-weight: 700; color: #71B9FF; text-transform: uppercase; letter-spacing: 0.05em;">PREDICTED PM10 (NEXT 1 HOUR • t+1)</div>
+                    <div style="font-size: 0.78rem; font-weight: 700; color: #71B9FF; text-transform: uppercase; letter-spacing: 0.05em;">LSTM + GBDT HYBRID PM10 (NEXT 1 HOUR • t+1 • PRIMARY FORECAST)</div>
                     <div style="font-size: 2.5rem; font-weight: 800; color: #F8FAFC; margin: 0.35rem 0; line-height: 1;">
                         {pm10_pred:.1f} <span style="font-size: 0.95rem; font-weight: 500; color: #94A3B8;">µg/m³</span>
                     </div>
                     <div style="font-size: 0.82rem; color: #94A3B8; margin-top: 0.5rem;">
                         80% Empirical Uncertainty: <code style="background: #1A2234; border: 1px solid #1F293D; color: #71B9FF; padding: 0.15rem 0.4rem; border-radius: 4px;">[{fc_res['uncertainty_intervals']['PM10_lower_80']:.1f} – {fc_res['uncertainty_intervals']['PM10_upper_80']:.1f} µg/m³]</code>
                     </div>
-                    <div style="font-size: 0.80rem; color: #71B9FF; margin-top: 0.4rem;">
-                        Delta vs Last Observation: {fc_res.get('delta_PM10', 0.0):+.1f} µg/m³ (Baseline: {fc_res.get('persistence_PM10', 0.0):.1f} µg/m³)
+                    <div style="font-size: 0.80rem; color: #71B9FF; margin-top: 0.4rem; font-weight: 600;">
+                        Ensemble Blend: {w10_lstm*100:.0f}% LSTM ({lstm_pm10:.1f}) + {w10_gbdt*100:.0f}% GBDT ({gbdt_pm10:.1f} µg/m³)
+                    </div>
+                    <div style="font-size: 0.78rem; color: #71B9FF; margin-top: 0.3rem;">
+                        Delta vs Last Observation: {pm10_pred - pers_pm10:+.1f} µg/m³ (Baseline: {pers_pm10:.1f} µg/m³)
                     </div>
                 </div>
                 """)
+
+            st.markdown("#### 📋 Model Comparison: Individual vs. Combined Hybrid Forecast")
+            comp_table_data = fc_res.get("comparison_table", [])
+            if comp_table_data:
+                st.dataframe(pd.DataFrame(comp_table_data), use_container_width=True, hide_index=True)
 
             fig_f = go.Figure()
             fig_f.add_trace(go.Scatter(
@@ -936,29 +986,61 @@ def render_individual_methods_page():
                 marker=dict(size=4, color="#71B9FF"),
             ))
 
+            # Individual model markers
+            fig_f.add_trace(go.Scatter(
+                x=[tgt_str],
+                y=[lstm_pm25],
+                mode="markers",
+                name="LSTM PM2.5 (27 feats)",
+                marker=dict(size=9, color="#60A5FA", symbol="circle"),
+            ))
+            fig_f.add_trace(go.Scatter(
+                x=[tgt_str],
+                y=[gbdt_pm25],
+                mode="markers",
+                name="GBDT PM2.5 (49 feats)",
+                marker=dict(size=9, color="#F59E0B", symbol="square"),
+            ))
+
+            # Primary Combined Hybrid Forecast
             fig_f.add_trace(go.Scatter(
                 x=[tgt_str],
                 y=[pm25_pred],
                 mode="markers",
-                name="Predicted PM2.5 (t+1)",
-                marker=dict(size=13, color="#38BDF8", symbol="diamond", line=dict(width=2, color="#FFFFFF")),
+                name="★ LSTM + GBDT Hybrid PM2.5 (Combined)",
+                marker=dict(size=14, color="#38BDF8", symbol="diamond", line=dict(width=2.5, color="#FFFFFF")),
+            ))
+
+            fig_f.add_trace(go.Scatter(
+                x=[tgt_str],
+                y=[lstm_pm10],
+                mode="markers",
+                name="LSTM PM10 (27 feats)",
+                marker=dict(size=9, color="#93C5FD", symbol="circle-open"),
+            ))
+            fig_f.add_trace(go.Scatter(
+                x=[tgt_str],
+                y=[gbdt_pm10],
+                mode="markers",
+                name="GBDT PM10 (49 feats)",
+                marker=dict(size=9, color="#FBBF24", symbol="square-open"),
             ))
             fig_f.add_trace(go.Scatter(
                 x=[tgt_str],
                 y=[pm10_pred],
                 mode="markers",
-                name="Predicted PM10 (t+1)",
-                marker=dict(size=12, color="#71B9FF", symbol="square", line=dict(width=2, color="#FFFFFF")),
+                name="★ LSTM + GBDT Hybrid PM10 (Combined)",
+                marker=dict(size=13, color="#71B9FF", symbol="diamond", line=dict(width=2.5, color="#FFFFFF")),
             ))
 
-            chart_title = f"Actual vs. Predicted PM2.5 and PM10 — {stn_city} Live Telemetry" if is_live_data else f"Actual vs. Predicted PM2.5 and PM10 — CPCB Benchmark ({stn_id})"
+            chart_title = f"Actual Telemetry vs. Models & Hybrid Forecast — {stn_city} Live Telemetry" if is_live_data else f"Actual Telemetry vs. Models & Hybrid Forecast — CPCB Benchmark ({stn_id})"
             fig_f.update_layout(
                 title=dict(text=chart_title, font=dict(color="#F8FAFC", size=13)),
                 paper_bgcolor="#111827",
                 plot_bgcolor="#0A0E17",
                 font=dict(color="#94A3B8", family="Plus Jakarta Sans, sans-serif"),
                 margin=dict(l=40, r=20, t=40, b=40),
-                height=350,
+                height=370,
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(color="#F8FAFC")),
                 xaxis=dict(showgrid=True, gridcolor="rgba(27, 46, 69, 0.6)", title=dict(text="Observation & Forecast Timestamp (Asia/Kolkata)", font=dict(color="#94A3B8"))),
                 yaxis=dict(showgrid=True, gridcolor="rgba(27, 46, 69, 0.6)", title=dict(text="Concentration (µg/m³)", font=dict(color="#94A3B8"))),
@@ -969,7 +1051,7 @@ def render_individual_methods_page():
                 display_fc_table = prepare_forecast_display_table(fc_data)
                 st.dataframe(display_fc_table, use_container_width=True, hide_index=True)
         except Exception as e:
-            st.error(f"Error executing LSTM scenario forecast: {e}")
+            st.error(f"Error executing LSTM + GBDT hybrid forecast: {e}")
 
     with tab2:
         st.markdown("### 🌦️ Method 2: Weather & Environmental Context")

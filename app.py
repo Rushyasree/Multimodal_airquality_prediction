@@ -1455,7 +1455,7 @@ with st.sidebar:
     pages = [
         ("Overview", "🏠", "Home Dashboard", "Live Air Quality & Weather"),
         ("Live Air Quality", "📡", "Station Telemetry", "Real-Time Sensor Readings"),
-        ("Individual Forecasting Methods", "🔬", "AI Sequence Forecaster", "LSTM & Weather Models"),
+        ("Individual Forecasting Methods", "🔬", "AI Sequence Forecaster", "Primary LSTM + GBDT Hybrid"),
         ("Unified Hybrid Forecast", "⚡", "Multimodal Hybrid", "Sensor + Photo Vision Fusion"),
         ("Side-by-Side Comparison", "⚖️", "Model Comparison", "Side-by-Side Verification"),
         ("Spatial Prediction & Heatmap", "🌐", "Spatial Heatmap", "2D Urban PM2.5/PM10 Grid"),

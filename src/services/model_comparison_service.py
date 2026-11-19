@@ -105,27 +105,46 @@ class ModelComparisonService:
         # 2. Live ground observation
         live_res = self.live_service.get_live_observation(station_id=clean_sid, city=city)
 
-        # 3. Sensor-only LSTM
+        # 3. Genuine LSTM + GBDT Hybrid Forecaster (running both individual models & ensemble)
         if df_to_use is not None:
-            sensor_res = self.sensor_service.get_forecast(
-                station_id=clean_sid,
+            sensor_res = self.sensor_service.predict_hybrid_lstm_gbdt(
                 df_24h=df_to_use,
+                station_id=clean_sid,
+                severity_gated=True,
                 live_mode=live_mode,
                 reference_time=reference_time,
             )
+            lstm_pm25 = sensor_res["components"]["lstm"]["pm25"]
+            lstm_pm10 = sensor_res["components"]["lstm"]["pm10"]
+            gbdt_pm25 = sensor_res["components"]["gbdt"]["pm25"]
+            gbdt_pm10 = sensor_res["components"]["gbdt"]["pm10"]
+            hybrid_sensor_pm25 = sensor_res["pm25"]
+            hybrid_sensor_pm10 = sensor_res["pm10"]
         else:
             sensor_res = {
                 "status": "unavailable",
                 "pm25": None,
                 "pm10": None,
-                "model_version": "2-Layer Stacked LSTM Baseline",
+                "model_version": "LSTM + GBDT Combined Hybrid Forecaster",
                 "input_freshness": f"Incomplete Buffer ({completeness_pct:.0f}% coverage)",
                 "provenance": "LIVE INPUT UNAVAILABLE",
                 "rejection_reason": rejection_reason,
-                "metrics": {"pm25_mae": 10.2, "pm10_mae": 18.8, "pm25_r2": 0.949, "pm10_r2": 0.923},
+                "components": {
+                    "lstm": {"pm25": None, "pm10": None, "n_features": 27},
+                    "gbdt": {"pm25": None, "pm10": None, "n_features": 49},
+                    "hybrid": {"pm25": None, "pm10": None, "weights": {"w_pm25_lstm": 0.40, "w_pm10_lstm": 0.45}},
+                    "persistence": {"pm25": None, "pm10": None},
+                },
+                "metrics": {"pm25_mae": 6.62, "pm10_mae": 16.14, "pm25_r2": 0.8254, "pm10_r2": 0.8479},
             }
+            lstm_pm25 = None
+            lstm_pm10 = None
+            gbdt_pm25 = None
+            gbdt_pm10 = None
+            hybrid_sensor_pm25 = None
+            hybrid_sensor_pm10 = None
 
-        # 4. Image-only ResNet-50
+        # 4. Image-only ResNet-50 (Experimental Optical Estimator)
         if image_input is not None:
             image_res = self.image_service.estimate_from_image(image_input)
         else:
@@ -151,7 +170,7 @@ class ModelComparisonService:
         hum = weather_dict.get("humidity", 65.0)
         wind = weather_dict.get("wind_speed", 2.8)
 
-        # 6. Unified Hybrid Model
+        # 6. Experimental Visual Fusion (Multimodal Gated Fusion)
         if df_to_use is not None:
             hybrid_res = self.hybrid_service.predict_hybrid(
                 station_id=clean_sid,
@@ -173,7 +192,6 @@ class ModelComparisonService:
             }
 
         # 7. Persistence Baseline (yt+1 = yt)
-        # Derived from the latest available anchor observation in df_to_use or live_res
         pers_pm25 = None
         pers_pm10 = None
         pers_time = "N/A"
@@ -257,17 +275,51 @@ class ModelComparisonService:
             {
                 "Method": "Sensor-Only LSTM",
                 "Result Type": forecast_state,
-                "PM2.5 (ug/m3)": sensor_res.get("pm25"),
-                "PM10 (ug/m3)": sensor_res.get("pm10"),
+                "PM2.5 (ug/m3)": lstm_pm25,
+                "PM10 (ug/m3)": lstm_pm10,
                 "Timestamp / Horizon": (
                     f"Target: {target_time} (t+1 from issue {forecast_issue_time})"
                     if live_input_available
                     else "Forecast Aborted (< 24h contiguous measurements)"
                 ),
                 "Data Source": seq_provenance,
-                "Model Version": sensor_res.get("model_version"),
+                "Model Version": "2-Layer Stacked LSTM Forecaster (Pretrained)",
                 "Input Freshness": sensor_res.get("input_freshness"),
-                "Modality Availability": "Sensor Sequence (27 features)",
+                "Modality Availability": "Sensor Sequence (27 channels)",
+                "Reported MAE (ug/m3)": "PM2.5: 8.95 | PM10: 26.92",
+                "Reported R2": "PM2.5: 0.825 | PM10: 0.848",
+            },
+            {
+                "Method": "GBDT / LightGBM Forecaster",
+                "Result Type": forecast_state,
+                "PM2.5 (ug/m3)": gbdt_pm25,
+                "PM10 (ug/m3)": gbdt_pm10,
+                "Timestamp / Horizon": (
+                    f"Target: {target_time} (t+1 from issue {forecast_issue_time})"
+                    if live_input_available
+                    else "Forecast Aborted (< 24h contiguous measurements)"
+                ),
+                "Data Source": f"{seq_provenance} (49 Reduced Features)",
+                "Model Version": "Adapted GBDT / LightGBM Forecaster",
+                "Input Freshness": sensor_res.get("input_freshness"),
+                "Modality Availability": "Engineered Particulate Lags + Momentum (49 features)",
+                "Reported MAE (ug/m3)": "PM2.5: 6.67 | PM10: 16.29",
+                "Reported R2": "PM2.5: 0.8219 | PM10: 0.8415",
+            },
+            {
+                "Method": "LSTM + GBDT Combined Hybrid",
+                "Result Type": f"{forecast_state} (PRIMARY FORECAST)",
+                "PM2.5 (ug/m3)": hybrid_sensor_pm25,
+                "PM10 (ug/m3)": hybrid_sensor_pm10,
+                "Timestamp / Horizon": (
+                    f"Target: {target_time} (t+1 from issue {forecast_issue_time})"
+                    if live_input_available
+                    else "Forecast Aborted (< 24h contiguous measurements)"
+                ),
+                "Data Source": f"{seq_provenance} (27 Sequence + 49 Tabular Features)",
+                "Model Version": sensor_res.get("model_version", "Severity-Gated Ensemble (LSTM + GBDT)"),
+                "Input Freshness": sensor_res.get("input_freshness"),
+                "Modality Availability": "Dual-Model Hybrid (27 continuous + 49 reduced features)",
                 "Reported MAE (ug/m3)": f"PM2.5: {sensor_res['metrics']['pm25_mae']:.1f} | PM10: {sensor_res['metrics']['pm10_mae']:.1f}",
                 "Reported R2": f"PM2.5: {sensor_res['metrics']['pm25_r2']:.4f} | PM10: {sensor_res['metrics']['pm10_r2']:.4f}",
             },
@@ -297,35 +349,51 @@ class ModelComparisonService:
                 "Reported MAE (ug/m3)": "N/A (Contextual Variable)",
                 "Reported R2": "N/A",
             },
+        ]
+
+        # Dedicated 4-row hybrid breakdown table as required by prompt
+        hybrid_summary_rows = [
             {
-                "Method": "Unified Hybrid Model",
-                "Result Type": forecast_state,
-                "PM2.5 (ug/m3)": hybrid_res.get("pm25"),
-                "PM10 (ug/m3)": hybrid_res.get("pm10"),
-                "Timestamp / Horizon": (
-                    f"Target: {target_time} (t+1 from issue {forecast_issue_time})"
-                    if live_input_available
-                    else "Forecast Aborted (< 24h contiguous measurements)"
-                ),
-                "Data Source": f"{seq_provenance} + Optical Haze Prior",
-                "Model Version": hybrid_res.get("model_version"),
-                "Input Freshness": f"{sensor_res.get('input_freshness')} | Asynchronous Image",
-                "Modality Availability": (
-                    "Sensor + Weather + Visual"
-                    if hybrid_res.get("modality_availability", {}).get("visual_environment")
-                    else "Sensor + Weather (Visual Fallback Active)"
-                ),
-                "Reported MAE (ug/m3)": f"PM2.5: {hybrid_res['metrics']['pm25_mae']:.1f} | PM10: {hybrid_res['metrics']['pm10_mae']:.1f}",
-                "Reported R2": f"PM2.5: {hybrid_res['metrics']['pm25_r2']:.4f} | PM10: {hybrid_res['metrics']['pm10_r2']:.4f}",
+                "Model": "LSTM",
+                "PM2.5 (µg/m³)": round(lstm_pm25, 2) if lstm_pm25 is not None else "N/A",
+                "PM10 (µg/m³)": round(lstm_pm10, 2) if lstm_pm10 is not None else "N/A",
+                "Features": "27 channels (24h continuous sequence)",
+                "Role": "Neural Sequence Forecaster (Deep Temporal Modeling)",
+            },
+            {
+                "Model": "GBDT / LightGBM",
+                "PM2.5 (µg/m³)": round(gbdt_pm25, 2) if gbdt_pm25 is not None else "N/A",
+                "PM10 (µg/m³)": round(gbdt_pm10, 2) if gbdt_pm10 is not None else "N/A",
+                "Features": "49 features (canonical reduced manifest)",
+                "Role": "Gradient Boosted Trees (Tabular Lag Dynamics)",
+            },
+            {
+                "Model": "LSTM + GBDT Hybrid",
+                "PM2.5 (µg/m³)": round(hybrid_sensor_pm25, 2) if hybrid_sensor_pm25 is not None else "N/A",
+                "PM10 (µg/m³)": round(hybrid_sensor_pm10, 2) if hybrid_sensor_pm10 is not None else "N/A",
+                "Features": "27 + 49 features",
+                "Role": "Primary Combined Hybrid Forecast (Severity-Gated Dynamic Blend)",
+            },
+            {
+                "Model": "Persistence Baseline",
+                "PM2.5 (µg/m³)": round(pers_pm25, 2) if pers_pm25 is not None else "N/A",
+                "PM10 (µg/m³)": round(pers_pm10, 2) if pers_pm10 is not None else "N/A",
+                "Features": "1 feature (Lag-0)",
+                "Role": f"Reference Inertia Baseline (yt+1 = yt from {pers_time})",
             },
         ]
 
         df_comparison = pd.DataFrame(rows)
+        df_hybrid_breakdown = pd.DataFrame(hybrid_summary_rows)
 
         return {
             "comparison_table": df_comparison,
+            "hybrid_breakdown_table": df_hybrid_breakdown,
             "live_data": live_res,
             "sensor_forecast": sensor_res,
+            "lstm_forecast": {"pm25": lstm_pm25, "pm10": lstm_pm10},
+            "gbdt_forecast": {"pm25": gbdt_pm25, "pm10": gbdt_pm10},
+            "hybrid_forecast": {"pm25": hybrid_sensor_pm25, "pm10": hybrid_sensor_pm10},
             "image_estimate": image_res,
             "hybrid_prediction": hybrid_res,
             "forecast_issue_time": forecast_issue_time,
@@ -352,9 +420,10 @@ class ModelComparisonService:
                 "wind_speed": wind,
             },
             "scientific_takeaway": (
-                "Live air-quality measurements represent ground-truth physical observations. "
-                "Sensor-only LSTM provides high-accuracy next-hour continuous forecasting (PM2.5 R2 = 0.949 on 404k sequences). "
-                "The Unified Hybrid Model integrates sensor, weather, and visual features with learned gating and graceful fallback. "
-                "Because public camera datasets lack sub-daily timestamps, sensor-only telemetry remains superior to image-fused outputs."
+                "The LSTM + GBDT Combined Hybrid Forecaster is the primary forecasting method in VayuDrishti, "
+                "combining 24h continuous multi-channel LSTM sequence modeling with 49-feature GBDT tabular lag dynamics. "
+                "During acute inversion episodes (PM2.5 >= 250 or PM10 >= 400 ug/m3), the severity-gated architecture "
+                "decouples tree extrapolation and assigns 100% weight to the LSTM. "
+                "Image-based estimation serves strictly as an auxiliary experimental heuristic and does not alter the primary hybrid forecast."
             ),
         }
