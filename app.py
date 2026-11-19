@@ -8,12 +8,30 @@ Built to precisely match the visual layout, color scheme, typography,
 and component architecture of the VayuDrishti reference design.
 """
 
-import logging
+import os
 import sys
+from pathlib import Path
+
+# On Windows, ensure PyTorch's bundled DLLs (c10.dll, libiomp5md.dll, torch_cpu.dll) are located
+# before NumPy or other BLAS libraries claim the process namespace.
+if sys.platform == "win32":
+    try:
+        import site
+        for sp in site.getsitepackages():
+            torch_lib = os.path.join(sp, "torch", "lib")
+            if os.path.exists(torch_lib):
+                os.add_dll_directory(torch_lib)
+    except Exception:
+        pass
+    try:
+        import torch  # Pre-load PyTorch DLLs safely on Windows
+    except Exception:
+        pass
+
+import logging
 import time
 from contextlib import contextmanager
 from typing import Optional, List, Dict, Any, Tuple, Union
-from pathlib import Path
 
 
 _PROJECT_ROOT = Path(__file__).resolve().parent
