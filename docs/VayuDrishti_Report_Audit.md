@@ -52,7 +52,7 @@ The repaired document contains exactly 45 physical pages structured into two dis
 | Chapter / Component | Physical Pages | Arabic Page Range | Exact Sections Covered |
 |---|---|---|---|
 | **Chapter 1: Introduction** | Pages 11–14 | pp. 1–4 | 1.1 Background & Motivation<br>1.2 Problem Statement<br>1.3 Objectives of the Project<br>1.4 Project Scope and Boundaries<br>1.5 Key Contributions<br>1.6 Organization of the Report |
-| **Chapter 2: System Architecture & Methodology** | Pages 15–22 | pp. 5–12 | 2.1 Multimodal Ingestion Pipeline<br>2.2 Computer Vision Pipeline (ResNet-50)<br>2.3 Deep Sequence Modeling (Bi-LSTM)<br>2.4 Tabular Gradient Boosting (LightGBM)<br>2.5 Residual-Corrected Blending Architecture<br>2.6 Spatial Interpolation (IDW Engine)<br>2.7 Data Freshness & Sensor Reliability Gate<br>2.8 Uncertainty Quantification (Conformal Prediction) |
+| **Chapter 2: System Architecture & Methodology** | Pages 15–22 | pp. 5–12 | 2.1 Multimodal Ingestion Pipeline<br>2.2 Computer Vision Pipeline (ResNet-50)<br>2.3 Deep Sequence Modeling (2-Layer Stacked LSTM)<br>2.4 Tabular Gradient Boosting (LightGBM)<br>2.5 Residual-Corrected Blending Architecture<br>2.6 Spatial Interpolation (IDW Engine)<br>2.7 Data Freshness & Sensor Reliability Gate<br>2.8 Uncertainty Quantification (Conformal Prediction) |
 | **Chapter 3: Dataset Curation & Preprocessing** | Pages 23–26 | pp. 13–16 | 3.1 Historical Telemetry Ingestion (CPCB)<br>3.2 Live Telemetry Scraping & Ingestion<br>3.3 Ground-Level Imagery Dataset (PM25Vision)<br>3.4 Synchronous Cross-Modal Dataset Assembly<br>3.5 Feature Engineering Pipeline<br>3.6 Data Cleansing & Missing Value Imputation |
 | **Chapter 4: Experimental Results & Analysis** | Pages 27–37 | pp. 17–27 | 4.1 Evaluation Setup & Metrics<br>4.2 Benchmark Model Comparisons<br>4.3 Ablation Studies (Sensor Modalities)<br>4.4 Spatial Interpolation Validation<br>4.5 Conformal Prediction Coverage & Uncertainty<br>4.6 Interpretability & Feature Attribution (SHAP)<br>4.7 Live Deployment & Operational Latency |
 | **Chapter 5: Conclusion & Future Scope** | Pages 38–39 | pp. 28–29 | 5.1 Concluding Remarks<br>5.2 Summary of Major Achievements<br>5.3 Operational Limitations & Failure Modes<br>5.4 Future Research Directions<br>5.5 Final Project Contribution Statement |
@@ -74,7 +74,7 @@ Every empirical claim and numerical constant in the report was audited against t
 - **Live Deployment Paired Test Corpus:** Exactly **418 live evaluation pairs** harvested across 4 active operational stations over 7 consecutive days.
 
 ### 3.2 Feature Dimensions & Model Inputs
-- **Bi-LSTM Sequence Model:** Ingests a sliding temporal window of 24 time steps $\times$ **27 normalized numerical features** (pollutant concentrations, meteorological variables, temporal sine/cosine harmonics, and rolling trends).
+- **2-Layer Stacked LSTM Sequence Model:** Ingests a sliding temporal window of 24 time steps $\times$ **27 normalized numerical features** (pollutant concentrations, meteorological variables, temporal sine/cosine harmonics, and rolling trends). (Note: Checkpoints verify unidirectional architecture with hidden_size=64).
 - **LightGBM Tabular Booster:** Ingests **49 engineered features**, comprising 27 base features plus 22 multi-scale rolling statistics (1h, 3h, 6h, 12h, 24h rolling means, standard deviations, min/max spreads, and rate-of-change ratios).
 
 ### 3.3 Live Deployment Statistical Audit
@@ -102,7 +102,7 @@ Every empirical claim and numerical constant in the report was audited against t
 - **Inference Hardware:** CPU-only deployment on Intel Core i7-11800H @ 2.30 GHz (8 cores, 16 threads, 16 GB DDR4 RAM), without discrete GPU acceleration.
 - **Inference Latency Profile:**
   - Computer Vision (ResNet-50 feature extraction on $224 \times 224$ image): **42.1 ms**
-  - Sequence Modeling (Bi-LSTM on $24 \times 27$ tensor): **8.6 ms**
+  - Sequence Modeling (2-Layer Stacked LSTM on $24 \times 27$ tensor): **8.6 ms**
   - Tabular Gradient Boosting (LightGBM on 49 features): **3.2 ms**
   - Blending & Split Conformal Bounds: **1.8 ms**
   - End-to-End Pipeline Latency: **55.7 ms** per query (well under the 200 ms SLA).

@@ -532,7 +532,7 @@ class SensorForecastService:
                     "pm25": round(lstm_pm25, 2),
                     "pm10": round(lstm_pm10, 2),
                     "n_features": 27,
-                    "architecture": "2-Layer Bi-LSTM Sequence Model (24h Window)",
+                    "architecture": "2-Layer Stacked Unidirectional LSTM (24h Window)",
                 },
                 "gbdt": {
                     "pm25": round(gbdt_pm25, 2),

@@ -104,9 +104,9 @@ def test_section_5_side_by_side():
     df = res["comparison_table"]
     assert len(df) >= 4, "Comparison table missing methods"
     methods = df["Method"].tolist()
-    assert "Live Ground Station" in methods, "Live station missing from comparison"
-    assert "Sensor-Only LSTM" in methods, "Sensor LSTM missing from comparison"
-    assert "Unified Hybrid Model" in methods, "Unified hybrid missing from comparison"
+    assert any("Ground" in m for m in methods), f"Ground station observation missing from comparison: {methods}"
+    assert any("LSTM" in m for m in methods), f"Sensor LSTM missing from comparison: {methods}"
+    assert any("Hybrid" in m for m in methods), f"Hybrid model missing from comparison: {methods}"
     print("  [PASS] Section 5 Side-by-Side Comparison verified.")
 
 

@@ -27,7 +27,7 @@ A complete visual audit was performed across all **17 figures** embedded in the 
 | **Fig. 2.1** | End-to-end VayuDrishti Tri-Modal Architecture | `paper/figures/fig_arch_overall.png` | $2700 \times 1350$ px | 300 DPI / Vector PDF/SVG | **Verified** |
 | **Fig. 2.2** | Automated Multimodal Preprocessing Pipeline | `paper/figures/fig_arch_preprocessing.png` | $2700 \times 1050$ px | 300 DPI / Vector PDF/SVG | **Verified** |
 | **Fig. 2.3** | Deep Computer Vision Pipeline (ResNet-50) | `paper/figures/fig_arch_resnet.png` | $2700 \times 1050$ px | 300 DPI / Vector PDF/SVG | **Verified** |
-| **Fig. 2.4** | Deep Bidirectional LSTM Sequence Model | `paper/figures/fig_arch_lstm.png` | $2700 \times 1050$ px | 300 DPI / Vector PDF/SVG | **Verified** |
+| **Fig. 2.4** | Deep 2-Layer Stacked LSTM Sequence Model | `paper/figures/fig_arch_lstm.png` | $2700 \times 1050$ px | 300 DPI / Vector PDF/SVG | **Verified** |
 | **Fig. 2.5** | Multi-Stream Cross-Modal Attention Fusion | `paper/figures/fig_arch_fusion.png` | $2700 \times 1200$ px | 300 DPI / Vector PDF/SVG | **Verified** |
 | **Fig. 2.6** | Residual-Corrected Blending Architecture | `paper/figures/fig_arch_residual_hybrid.png` | $2700 \times 1200$ px | 300 DPI / Vector PDF/SVG | **Verified** |
 | **Fig. 2.7** | Spatial Interpolation Engine (IDW) | `paper/figures/fig_arch_idw_spatial.png` | $3000 \times 1200$ px | 300 DPI / Vector PDF/SVG | **REDESIGNED & VERIFIED** |
