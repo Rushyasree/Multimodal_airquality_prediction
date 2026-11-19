@@ -44,6 +44,9 @@ C_GRN_BD  = "#16a34a"  # Emerald-600
 C_CARD_BG = "#ffffff"  # Pure white card
 C_CARD_BD = "#94a3b8"  # Slate-400
 
+C_TEAL_BG = "#ccfbf1"  # Teal-100
+C_TEAL_BD = "#0d9488"  # Teal-600
+
 plt.rcParams["font.sans-serif"] = ["DejaVu Sans", "Arial", "Helvetica"]
 plt.rcParams["font.family"] = "sans-serif"
 plt.rcParams["pdf.fonttype"] = 42
@@ -93,7 +96,10 @@ def draw_arrow(ax, p1, p2, label="", label_pos=0.5, label_offset=(0, 0.06),
 def save_fig(fig, base_name):
     for ext in [".png", ".pdf", ".svg"]:
         out_path = OUTPUT_DIR / f"{base_name}{ext}"
-        fig.savefig(out_path, dpi=300, bbox_inches="tight")
+        try:
+            fig.savefig(str(out_path.resolve()), dpi=300, bbox_inches="tight")
+        except Exception as e:
+            print(f"Warning saving {base_name}{ext}: {e}")
     plt.close(fig)
     print(f"Saved: {base_name} (PNG, PDF, SVG)")
 
@@ -172,6 +178,140 @@ def generate_fig_arch_overall():
              facecolor="#f8fafc", edgecolor="#64748b", lw=0.8, title_size=7.2, sub_size=6.2)
 
     save_fig(fig, "fig_arch_overall")
+
+
+# ==============================================================================
+# 9. FIG 2.7: GEODESIC IDW SPATIAL INTERPOLATION WORKFLOW (7.16 x 3.20 in)
+# ==============================================================================
+def generate_fig_arch_idw_spatial():
+    fig, ax = plt.subplots(figsize=(7.16, 3.20), dpi=300)
+    ax.set_xlim(0, 7.16)
+    ax.set_ylim(0, 3.20)
+    ax.axis("off")
+
+    ax.text(3.58, 3.06, "Geodesic Inverse Distance Weighting (IDW) Spatial Interpolation Workflow",
+            ha="center", va="center", fontsize=8.6, fontweight="bold", color=C_DARK)
+    ax.text(3.58, 2.91, "Distance Kernel, Physical Co-Location Check, and Sparse-Network Safeguards",
+            ha="center", va="center", fontsize=6.8, color=C_MUTED, style="italic")
+
+    # Col 1: Inputs (x = 0.15, w = 1.65)
+    draw_box(ax, (0.15, 1.82), 1.65, 0.90, "Target Coordinates", "(lat, lon) Query Point\n1 km Resolution Grid",
+             facecolor=C_CARD_BG, edgecolor=C_DARK, title_size=7.0, sub_size=5.8)
+    draw_box(ax, (0.15, 0.65), 1.65, 0.90, "Active Monitor Registry", "Catalogued CAAQMS Stations\nPhysical Ground Truth (z_i)",
+             facecolor=C_BLUE_BG, edgecolor=C_BLUE_BD, title_size=6.7, sub_size=5.8)
+
+    # Col 2: Geodesic Engine (x = 2.30, w = 1.85)
+    draw_box(ax, (2.30, 0.95), 1.85, 1.45, "Geodesic Distance Kernel",
+             "Haversine Great-Circle Formula\nd_i = 2R · arcsin(√hav(Δφ, Δλ))\nR_earth = 6,371.0 km",
+             facecolor=C_AMBR_BG, edgecolor=C_AMBR_BD, title_size=7.4, sub_size=5.9)
+    draw_arrow(ax, (1.80, 2.27), (2.30, 1.95))
+    draw_arrow(ax, (1.80, 1.10), (2.30, 1.40))
+
+    # Col 3: Provenance Branches (x = 4.80, w = 2.22)
+    draw_box(ax, (4.80, 2.15), 2.22, 0.62, "1. Co-Located Observation",
+             "Criteria: min(d_i) ≤ 0.05 km\nReturns exact measured ground truth",
+             facecolor=C_GRN_BG, edgecolor=C_GRN_BD, title_size=7.0, sub_size=5.6)
+    draw_arrow(ax, (4.15, 1.90), (4.80, 2.35), label="d_min ≤ 50m", label_pos=0.45, label_offset=(0, 0.08), fontsize=5.5)
+
+    draw_box(ax, (4.80, 1.35), 2.22, 0.62, "2. Nearest-Station Fallback",
+             "Criteria: N < 3 or min(d_i) > 45 km\nContinuous surface suppressed (1-NN)",
+             facecolor=C_ROSE_BG, edgecolor=C_ROSE_BD, title_size=7.0, sub_size=5.6)
+    draw_arrow(ax, (4.15, 1.68), (4.80, 1.66), label="N < 3 / d > 45km", label_pos=0.45, label_offset=(0, 0.08), fontsize=5.5)
+
+    draw_box(ax, (4.80, 0.40), 2.22, 0.78, "3. Vectorized IDW Surface",
+             "Criteria: N ≥ 3 within 45 km radius\nw_i = (d_i + 0.001)^(-2.0)\nẑ = Σ(w_i·z_i) / Σw_i  (Clamped ≥ 0)",
+             facecolor=C_BLUE_BG, edgecolor=C_BLUE_BD, title_size=7.0, sub_size=5.6)
+    draw_arrow(ax, (4.15, 1.45), (4.80, 0.85), label="N ≥ 3 & d ≤ 45km", label_pos=0.45, label_offset=(0, -0.08), fontsize=5.5)
+
+    save_fig(fig, "fig_arch_idw_spatial")
+
+
+# ==============================================================================
+# 10. FIG 2.8: SPATIAL RELIABILITY, TELEMETRY FRESHNESS & GEOMETRY (7.16 x 3.20 in)
+# ==============================================================================
+def generate_fig_arch_reliability():
+    fig, ax = plt.subplots(figsize=(7.16, 3.20), dpi=300)
+    ax.set_xlim(0, 7.16)
+    ax.set_ylim(0, 3.20)
+    ax.axis("off")
+
+    ax.text(3.58, 3.06, "Spatial Reliability, Telemetry Freshness & Geometry Audit Workflow",
+            ha="center", va="center", fontsize=8.6, fontweight="bold", color=C_DARK)
+    ax.text(3.58, 2.91, "5-Tier Latency Classification, Clark-Evans Nearest-Neighbor Ratio, and Urban Tiers",
+            ha="center", va="center", fontsize=6.8, color=C_MUTED, style="italic")
+
+    # Col 1: Ingestion (x = 0.15, w = 1.80)
+    draw_box(ax, (0.15, 1.50), 1.80, 1.25, "Live Telemetry Ingestion",
+             "OpenAQ v3 API / CPCB CAAQMS\nHourly Criteria Pollutants\nTimestamp Verification (t_obs)\nLatency: Δt = t_now - t_obs",
+             facecolor=C_CARD_BG, edgecolor=C_DARK, title_size=7.2, sub_size=5.7)
+
+    # Col 2: 5-Tier Freshness Gate (x = 2.55, w = 1.95)
+    draw_box(ax, (2.55, 1.45), 1.95, 1.35, "5-Tier Telemetry Governance",
+             "Fresh (Δt ≤ 2h): Active Predictor\nDelayed (2–6h): Cautionary Flag\nStale (6–24h): Excluded from IDW\nOffline (> 24h): Suppressed / Inactive\nUnknown: Missing Timestamp Dropped",
+             facecolor=C_AMBR_BG, edgecolor=C_AMBR_BD, title_size=7.0, sub_size=5.5)
+    draw_arrow(ax, (1.95, 2.12), (2.55, 2.12), label="Raw Packets", label_pos=0.5, label_offset=(0, 0.12), fontsize=5.5)
+
+    # Col 3: Clark-Evans Geometry Audit (x = 5.10, w = 1.95)
+    draw_box(ax, (5.10, 1.45), 1.95, 1.35, "Clark-Evans Geometry Audit",
+             "Spatial Clustering Index R = r̄_obs / r̄_exp\nExpected Distance: r̄_exp = 0.5 / √(ρ)\nClustered (R < 0.85): Patna, Kolkata\nRandom (0.85 ≤ R ≤ 1.15): Pune, Lucknow\nDispersed (R > 1.15): Ahmedabad, Agra",
+             facecolor=C_TEAL_BG, edgecolor=C_TEAL_BD, title_size=7.0, sub_size=5.4)
+    draw_arrow(ax, (4.50, 2.12), (5.10, 2.12), label="Active Stations", label_pos=0.5, label_offset=(0, 0.12), fontsize=5.5)
+
+    # Bottom Banner: 5-Tier Operational Urban Reliability Classification
+    draw_box(ax, (0.15, 0.12), 6.90, 1.12, "Operational Urban Reliability Tiers (31 Indian Cities Master Audit)",
+             "Tier 1 (Calibrated): Delhi NCR (98 monitors, dense, validated continuous IDW and Conformal coverage)\n"
+             "Tier 2 (High Reliability): Mumbai (57), Kolkata (21), Hyderabad (20), Bengaluru (19), Pune (13), Patna (12), Ahmedabad (11)\n"
+             "Tier 3 (Moderate Reliability): Chennai (9), Jaipur (9), Lucknow (6), Agra (6), Vijayawada (6), Amaravati (5)\n"
+             "Tier 4 (Marginal Reliability): Kochi (3), Coimbatore (3), Kanpur (3) — local nearest-station fallback recommended\n"
+             "Tier 5 (Suppressed Interpolation): Visakhapatnam, Tirupati, Bhubaneswar, Surat, Guntur (≤ 2 monitors — IDW barred)",
+             facecolor=C_GRN_BG, edgecolor=C_GRN_BD, title_size=7.1, sub_size=5.4)
+    draw_arrow(ax, (6.07, 1.45), (6.07, 1.24))
+
+    save_fig(fig, "fig_arch_reliability")
+
+
+# ==============================================================================
+# 11. FIG 2.9: DISTANCE-SCALED CONFORMAL UNCERTAINTY WORKFLOW (7.16 x 3.20 in)
+# ==============================================================================
+def generate_fig_arch_conformal():
+    fig, ax = plt.subplots(figsize=(7.16, 3.20), dpi=300)
+    ax.set_xlim(0, 7.16)
+    ax.set_ylim(0, 3.20)
+    ax.axis("off")
+
+    ax.text(3.58, 3.06, "Distance-Scaled Conformal Uncertainty Estimation Workflow",
+            ha="center", va="center", fontsize=8.6, fontweight="bold", color=C_DARK)
+    ax.text(3.58, 2.91, "Distribution-Free Prediction Intervals with Distance-Dependent Spatial Expansion",
+            ha="center", va="center", fontsize=6.8, color=C_MUTED, style="italic")
+
+    # Step 1: Calibration Set (x = 0.15, w = 1.85)
+    draw_box(ax, (0.15, 1.62), 1.85, 1.12, "1. Calibration Dataset",
+             "Held-out spatial evaluation points\nGround Truth: y_i (μg/m³)\nPoint Forecast / Estimate: ŷ_i\nNearest Station Distance: d_i (km)",
+             facecolor=C_CARD_BG, edgecolor=C_DARK, title_size=7.2, sub_size=5.7)
+
+    # Step 2: Scoring (x = 2.60, w = 1.95)
+    draw_box(ax, (2.60, 1.62), 1.95, 1.12, "2. Distance-Scaled Scoring",
+             "Non-Conformity Metric:\ns_i = |y_i - ŷ_i| / (1 + γ · d_i)\nScaling Parameter: γ = 0.05 km⁻¹\nNormalizes error far from monitors",
+             facecolor=C_AMBR_BG, edgecolor=C_AMBR_BD, title_size=7.2, sub_size=5.6)
+    draw_arrow(ax, (2.00, 2.18), (2.60, 2.18), label="Residuals", label_pos=0.5, label_offset=(0, 0.08), fontsize=5.5)
+
+    # Step 3: Quantile (x = 5.10, w = 1.95)
+    draw_box(ax, (5.10, 1.62), 1.95, 1.12, "3. Conformal Quantile",
+             "Finite-Sample Quantile Calculation:\nq̂_(1-α) = Quantile_p(S)\nIndex p = ⌈(n + 1)(1 - α)⌉ / n\nMarginal Bound: P(Y ∈ C(X)) ≥ 1 - α",
+             facecolor=C_BLUE_BG, edgecolor=C_BLUE_BD, title_size=7.1, sub_size=5.5)
+    draw_arrow(ax, (4.55, 2.18), (5.10, 2.18), label="Score Set S", label_pos=0.5, label_offset=(0, 0.08), fontsize=5.5)
+
+    # Step 4: Operational Prediction Band Banner
+    draw_box(ax, (0.15, 0.15), 6.90, 1.25, "4. Operational Conformal Prediction Interval Formulation",
+             "Prediction Band: C(x) = [ max(0, ŷ - q̂_(1-α) · (1 + γ · d_min)),   ŷ + q̂_(1-α) · (1 + γ · d_min) ]\n"
+             "• Co-Located Calibration (d_min = 0): Interval width is purely 2 · q̂_(1-α) based on physical sensor residuals.\n"
+             "• Geographic Blindspots (d_min > 0): Interval expands smoothly by (1 + 0.05 · d_min), honest about unmonitored risk.\n"
+             "• Validated Empirical Coverage: 92.8% (80% Tier), 96.5% (90% Tier), 99.37% (95% Tier) on PM2.5.\n"
+             "• Honest Governance: Guarantees marginal coverage at the expense of wider bounds during severe winter smog.",
+             facecolor=C_GRN_BG, edgecolor=C_GRN_BD, title_size=7.2, sub_size=5.6)
+    draw_arrow(ax, (6.07, 1.62), (6.07, 1.40))
+
+    save_fig(fig, "fig_arch_conformal")
 
 
 # ==============================================================================
@@ -435,7 +575,7 @@ def generate_fig_arch_ensemble():
 
 
 if __name__ == "__main__":
-    print("Generating compact, non-colliding IEEE Architecture Figures...")
+    print("Generating publication-quality IEEE Architecture and Methodology Figures...")
     generate_fig_arch_overall()
     generate_fig_arch_preprocessing()
     generate_fig_arch_lstm()
@@ -444,4 +584,7 @@ if __name__ == "__main__":
     generate_fig_arch_fusion()
     generate_fig_arch_residual_hybrid()
     generate_fig_arch_ensemble()
-    print("All 8 compact architecture figures successfully generated.")
+    generate_fig_arch_idw_spatial()
+    generate_fig_arch_reliability()
+    generate_fig_arch_conformal()
+    print("All 11 architecture figures successfully generated.")

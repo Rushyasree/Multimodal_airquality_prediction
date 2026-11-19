@@ -1,13 +1,14 @@
 """
 scripts/generate_missing_report_diagrams.py
 
-Generates publication-quality architecture diagrams for:
+Generates publication-quality academic architecture diagrams for:
 - Figure 2.7: IDW Spatial Interpolation Workflow
 - Figure 2.8: Spatial Reliability and Freshness Assessment Workflow
 - Figure 2.9: Conformal Uncertainty Estimation Workflow
+
+Clean white background, high-contrast crisp academic styling, zero overlapping text.
 """
 
-import os
 from pathlib import Path
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -16,135 +17,263 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / "paper/figures"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# Colors
-C_BLUE = "#1E40AF"      # Primary Blue
-C_LIGHT_BLUE = "#DBEAFE"
-C_TEAL = "#0E7490"      # Teal
-C_LIGHT_TEAL = "#CFFAFE"
-C_NAVY = "#0F172A"      # Slate Navy
-C_LIGHT_SLATE = "#F1F5F9"
-C_AMBER = "#D97706"     # Amber
-C_LIGHT_AMBER = "#FEF3C7"
-C_GREEN = "#15803D"     # Emerald Green
-C_LIGHT_GREEN = "#DCFCE7"
-C_RED = "#B91C1C"       # Crimson Red
-C_LIGHT_RED = "#FEE2E2"
+# Standardized publication color palette
+C_NAVY     = "#0f172a"  # Slate-900 (Main text / titles)
+C_SLATE    = "#334155"  # Slate-700 (Body text / equations)
+C_MUTED    = "#64748b"  # Slate-500 (Captions / notes)
+C_LINE     = "#475569"  # Slate-600 (Connectors)
 
-def draw_box(ax, xy, w, h, title, subtitle="", bg=C_LIGHT_BLUE, border=C_BLUE, radius=0.03):
+# Clean academic card tints
+C_BLUE_BG  = "#f0f9ff"  # Sky-50
+C_BLUE_BD  = "#0284c7"  # Sky-600
+C_TEAL_BG  = "#f0fdfa"  # Teal-50
+C_TEAL_BD  = "#0d9488"  # Teal-600
+C_AMBR_BG  = "#fffbeb"  # Amber-50
+C_AMBR_BD  = "#d97706"  # Amber-600
+C_ROSE_BG  = "#fff1f2"  # Rose-50
+C_ROSE_BD  = "#e11d48"  # Rose-600
+C_GRN_BG   = "#f0fdf4"  # Emerald-50
+C_GRN_BD   = "#16a34a"  # Emerald-600
+C_SLATE_BG = "#f8fafc"  # Slate-50
+C_SLATE_BD = "#475569"  # Slate-600
+
+plt.rcParams["font.sans-serif"] = ["DejaVu Sans", "Arial", "Helvetica"]
+plt.rcParams["font.family"] = "sans-serif"
+plt.rcParams["pdf.fonttype"] = 42
+plt.rcParams["ps.fonttype"] = 42
+
+def draw_academic_card(ax, xy, w, h, title, subtitle_lines=None,
+                       bg=C_SLATE_BG, border=C_SLATE_BD, lw=1.2,
+                       title_size=8.8, sub_size=7.2, title_color=None):
+    """Draws a crisp academic container with perfectly budgeted text vertical spacing."""
+    x, y = xy
+    if title_color is None:
+        title_color = border
+
     box = patches.FancyBboxPatch(
-        xy, w, h,
-        boxstyle=f"round,pad={radius},rounding_size=0.02",
-        linewidth=1.5,
+        (x, y), w, h,
+        boxstyle="round,pad=0.015,rounding_size=0.04",
+        linewidth=lw,
         edgecolor=border,
         facecolor=bg
     )
     ax.add_patch(box)
-    cx = xy[0] + w / 2.0
-    cy = xy[1] + h / 2.0
-    if subtitle:
-        ax.text(cx, cy + 0.08, title, ha="center", va="center", fontsize=9.5, fontweight="bold", color=border)
-        ax.text(cx, cy - 0.08, subtitle, ha="center", va="center", fontsize=7.5, color="#334155")
-    else:
-        ax.text(cx, cy, title, ha="center", va="center", fontsize=9.0, fontweight="bold", color=border)
 
-def draw_arrow(ax, p1, p2, label="", color="#475569"):
+    cx = x + w / 2.0
+    if not subtitle_lines:
+        ax.text(cx, y + h / 2.0, title, ha="center", va="center",
+                fontsize=title_size, fontweight="bold", color=title_color)
+        return
+
+    # Calculate vertical spacing
+    n_sub = len(subtitle_lines)
+    y_title = y + h - 0.22
+    ax.text(cx, y_title, title, ha="center", va="center",
+            fontsize=title_size, fontweight="bold", color=title_color)
+
+    if n_sub == 1:
+        ax.text(cx, y + (h - 0.22) / 2.0, subtitle_lines[0], ha="center", va="center",
+                fontsize=sub_size, color=C_SLATE)
+    else:
+        line_spacing = (h - 0.38) / max(1, (n_sub - 1))
+        for i, line in enumerate(subtitle_lines):
+            y_line = y + h - 0.40 - i * line_spacing
+            ax.text(cx, y_line, line, ha="center", va="center",
+                    fontsize=sub_size, color=C_SLATE)
+
+def draw_clean_arrow(ax, p1, p2, label="", label_pos=0.5, label_offset=(0, 0.08), color=C_LINE, lw=1.3):
     ax.annotate(
         "", xy=p2, xytext=p1,
-        arrowprops=dict(arrowstyle="-|>", lw=1.5, color=color, mutation_scale=12)
+        arrowprops=dict(arrowstyle="-|>", lw=lw, color=color, mutation_scale=11)
     )
     if label:
-        mx = (p1[0] + p2[0]) / 2.0
-        my = (p1[1] + p2[1]) / 2.0 + 0.04
-        ax.text(mx, my, label, ha="center", va="bottom", fontsize=7.5, color=color, fontweight="semibold")
+        lx = p1[0] + (p2[0] - p1[0]) * label_pos + label_offset[0]
+        ly = p1[1] + (p2[1] - p1[1]) * label_pos + label_offset[1]
+        ax.text(lx, ly, label, ha="center", va="center", fontsize=7.2,
+                fontweight="semibold", color=color,
+                bbox=dict(boxstyle="round,pad=0.15", facecolor="#ffffff", edgecolor="none", alpha=0.9))
 
+# ==============================================================================
+# 1. FIG 2.7: GEODESIC IDW SPATIAL INTERPOLATION WORKFLOW
+# ==============================================================================
 def generate_idw_workflow():
-    fig, ax = plt.subplots(figsize=(9, 4.5), dpi=300)
-    ax.set_xlim(0, 10)
-    ax.set_ylim(0, 5)
+    fig, ax = plt.subplots(figsize=(7.2, 3.8), dpi=300)
+    ax.set_xlim(0, 7.2)
+    ax.set_ylim(0, 3.8)
     ax.axis("off")
-    ax.set_title("Figure 2.7: Geodesic Inverse Distance Weighting (IDW) Spatial Interpolation Workflow",
-                 fontsize=11, fontweight="bold", color=C_NAVY, pad=12)
 
-    # Stages
-    draw_box(ax, (0.4, 3.4), 2.2, 0.9, "Target Coordinates", "(lat, lon) Query Point\nUrban Bounding Box", bg=C_LIGHT_SLATE, border=C_NAVY)
-    draw_box(ax, (0.4, 1.8), 2.2, 0.9, "Active Sensor Registry", "Catalogued CAAQMS Stations\nPhysical Ground Truth", bg=C_LIGHT_BLUE, border=C_BLUE)
+    # Col 1: Inputs (x = 0.15, w = 1.65)
+    draw_academic_card(ax, (0.15, 2.35), 1.65, 1.10,
+                       "Target Location",
+                       ["Query Point (lat, lon)", "Urban Bounding Box", "Resolution: 1 km Grid"],
+                       bg=C_SLATE_BG, border=C_NAVY)
 
-    draw_arrow(ax, (2.6, 3.85), (3.4, 3.2), "Haversine Distance")
-    draw_arrow(ax, (2.6, 2.25), (3.4, 2.8), "Coordinates (φi, λi)")
+    draw_academic_card(ax, (0.15, 0.65), 1.65, 1.10,
+                       "Active Station Registry",
+                       ["CPCB / OpenAQ v3 Monitors", "Verified Coordinates (φi, λi)", "Real-time Telemetry (zi)"],
+                       bg=C_BLUE_BG, border=C_BLUE_BD)
 
-    draw_box(ax, (3.4, 2.4), 2.4, 1.2, "Geodesic Distance Kernel", "di = 2R · arcsin(√hav(Δφ, Δλ))\nR_earth = 6,371.0 km", bg=C_LIGHT_TEAL, border=C_TEAL)
+    # Col 2: Geodesic Distance Engine (x = 2.30, w = 1.95)
+    draw_academic_card(ax, (2.30, 1.30), 1.95, 1.45,
+                       "Geodesic Distance Engine",
+                       ["Haversine Metric (Spherical Earth)",
+                        "di = 2R · arcsin(√hav(Δφ, Δλ))",
+                        "R_earth = 6,371.0 km",
+                        "Computes all monitor distances di"],
+                       bg=C_TEAL_BG, border=C_TEAL_BD)
 
-    draw_arrow(ax, (5.8, 3.0), (6.6, 3.5), "d_min <= 0.05 km")
-    draw_arrow(ax, (5.8, 3.0), (6.6, 2.5), "N < 3 or d > R_max")
-    draw_arrow(ax, (5.8, 3.0), (6.6, 1.5), "N >= 3 & d <= 45km")
+    draw_clean_arrow(ax, (1.80, 2.85), (2.30, 2.25), label="Target (lat, lon)", label_pos=0.5, label_offset=(0, 0.07))
+    draw_clean_arrow(ax, (1.80, 1.20), (2.30, 1.75), label="Stations (φi, λi)", label_pos=0.5, label_offset=(0, -0.07))
 
-    draw_box(ax, (6.6, 3.2), 3.0, 0.7, "Co-Located Observation", "Exact sensor reading (Ground truth)", bg=C_LIGHT_GREEN, border=C_GREEN)
-    draw_box(ax, (6.6, 2.2), 3.0, 0.7, "Nearest-Station Fallback", "Sparse network safeguard (1-NN)", bg=C_LIGHT_AMBER, border=C_AMBER)
-    draw_box(ax, (6.6, 0.9), 3.0, 1.0, "Vectorized IDW Surface", "wi = (di + ε)^(-2.0)\nẑ = Σ(wi·zi) / Σwi (Clamped >= 0)", bg=C_LIGHT_BLUE, border=C_BLUE)
+    # Col 3: Three Provenance Paths (x = 4.75, w = 2.30)
+    draw_academic_card(ax, (4.75, 2.65), 2.30, 0.90,
+                       "1. Co-Located Observation",
+                       ["Criteria: min(di) <= 0.05 km", "Returns Exact Physical Sensor Reading", "Status: Physical Ground Truth"],
+                       bg=C_GRN_BG, border=C_GRN_BD)
 
-    fig.savefig(OUT_DIR / "fig_arch_idw_spatial.png", dpi=300, bbox_inches="tight")
+    draw_academic_card(ax, (4.75, 1.50), 2.30, 0.90,
+                       "2. Nearest-Station Fallback",
+                       ["Criteria: N < 3 or min(di) > 45 km", "Continuous surface suppressed", "Status: 1-NN Cautionary Fallback"],
+                       bg=C_AMBR_BG, border=C_AMBR_BD)
+
+    draw_academic_card(ax, (4.75, 0.25), 2.30, 1.05,
+                       "3. Vectorized IDW Surface",
+                       ["Criteria: N >= 3 within 45 km",
+                        "Weight: wi = (di + 0.001)^(-2.0)",
+                        "ẑ = Σ(wi · zi) / Σwi",
+                        "Status: Interpolated Continuous Field"],
+                       bg=C_BLUE_BG, border=C_BLUE_BD)
+
+    # Arrows from Geodesic Engine to Paths
+    draw_clean_arrow(ax, (4.25, 2.20), (4.75, 3.00), label="d_min ≤ 50m", label_pos=0.45, label_offset=(0, 0.06))
+    draw_clean_arrow(ax, (4.25, 2.00), (4.75, 1.95), label="N < 3 or d > 45km", label_pos=0.45, label_offset=(0, 0.06))
+    draw_clean_arrow(ax, (4.25, 1.80), (4.75, 0.85), label="N ≥ 3 & d ≤ 45km", label_pos=0.45, label_offset=(0, -0.06))
+
+    out_p = OUT_DIR / "fig_arch_idw_spatial.png"
+    fig.savefig(out_p, dpi=300, bbox_inches="tight")
     plt.close(fig)
-    print("Generated fig_arch_idw_spatial.png")
+    print(f"Generated clean {out_p.name}")
 
+# ==============================================================================
+# 2. FIG 2.8: SPATIAL RELIABILITY, TELEMETRY FRESHNESS & GEOMETRY AUDIT
+# ==============================================================================
 def generate_reliability_workflow():
-    fig, ax = plt.subplots(figsize=(9, 4.5), dpi=300)
-    ax.set_xlim(0, 10)
-    ax.set_ylim(0, 5)
+    fig, ax = plt.subplots(figsize=(7.2, 3.8), dpi=300)
+    ax.set_xlim(0, 7.2)
+    ax.set_ylim(0, 3.8)
     ax.axis("off")
-    ax.set_title("Figure 2.8: Spatial Reliability, Telemetry Freshness & Geometry Audit Workflow",
-                 fontsize=11, fontweight="bold", color=C_NAVY, pad=12)
 
-    draw_box(ax, (0.4, 2.6), 2.2, 1.1, "Incoming Station Telemetry", "OpenAQ v3 / CPCB Stream\nObserved Timestamp t_obs", bg=C_LIGHT_SLATE, border=C_NAVY)
+    # Stage 1: Ingestion Stream (x = 0.15, w = 1.70)
+    draw_academic_card(ax, (0.15, 2.05), 1.70, 1.45,
+                       "Live Telemetry Stream",
+                       ["OpenAQ v3 API / CPCB CAAQMS",
+                        "Hourly Pollutants (PM2.5, PM10)",
+                        "Surface Weather Variables",
+                        "Observed Timestamp (t_obs)",
+                        "Latency: Δt = t_now - t_obs"],
+                       bg=C_SLATE_BG, border=C_NAVY)
 
-    draw_arrow(ax, (2.6, 3.15), (3.4, 3.15), "Latency Δt = t_now - t_obs")
+    # Stage 2: 5-Tier Freshness Filter (x = 2.25, w = 2.10)
+    draw_academic_card(ax, (2.25, 1.85), 2.10, 1.75,
+                       "5-Tier Telemetry Governance",
+                       ["• Fresh (Δt ≤ 2h): Active Model Input",
+                        "• Delayed (2 < Δt ≤ 6h): Advisory Flag",
+                        "• Stale (6 < Δt ≤ 24h): Excluded IDW",
+                        "• Offline (Δt > 24h): Suppressed",
+                        "• Unknown: Missing Timestamp Filter"],
+                       bg=C_AMBR_BG, border=C_AMBR_BD, sub_size=6.8)
 
-    draw_box(ax, (3.4, 2.0), 2.5, 2.3, "5-Tier Freshness Filter",
-             "Fresh (<= 2h): Active\nDelayed (2-6h): Warning\nStale (6-24h): Excluded\nOffline (> 24h): Suppressed\nUnknown: Missing stamp",
-             bg=C_LIGHT_AMBER, border=C_AMBER)
+    draw_clean_arrow(ax, (1.85, 2.75), (2.25, 2.75), label="Raw Packets", label_pos=0.5, label_offset=(0, 0.07))
 
-    draw_arrow(ax, (5.9, 3.15), (6.7, 3.15), "Active Monitors (Fresh/Delayed)")
+    # Stage 3: Spatial Geometry Audit (x = 4.75, w = 2.30)
+    draw_academic_card(ax, (4.75, 1.85), 2.30, 1.75,
+                       "Clark-Evans Geometry Audit",
+                       ["Spatial Clustering Index:",
+                        "R = r̄_obs / r̄_exp",
+                        "r̄_exp = 0.5 / √(Density ρ)",
+                        "• Clustered: R < 0.85 (e.g., Patna 0.38)",
+                        "• Random: 0.85 ≤ R ≤ 1.15",
+                        "• Dispersed: R > 1.15 (e.g., Agra 1.35)"],
+                       bg=C_TEAL_BG, border=C_TEAL_BD, sub_size=6.8)
 
-    draw_box(ax, (6.7, 2.6), 2.9, 1.8, "Spatial Geometry Audit",
-             "Clark-Evans Index:\nR = r̄_obs / r̄_exp\nDensity ρ = N / Area\nClustered (R < 0.85)\nRandom (0.85 <= R <= 1.15)\nDispersed (R > 1.15)",
-             bg=C_LIGHT_TEAL, border=C_TEAL)
+    draw_clean_arrow(ax, (4.35, 2.75), (4.75, 2.75), label="Active Monitors", label_pos=0.5, label_offset=(0, 0.07))
 
-    draw_box(ax, (3.4, 0.4), 6.2, 0.9, "Operational Reliability Tier Assignment",
-             "Tier 1: Calibrated (Delhi) | Tier 2: High | Tier 3: Moderate | Tier 4: Marginal | Tier 5: Suppressed",
-             bg=C_LIGHT_GREEN, border=C_GREEN)
+    # Bottom Tier Summary Bar (x = 0.15 to 7.05, w = 6.90)
+    draw_academic_card(ax, (0.15, 0.20), 6.90, 1.25,
+                       "Operational Urban Reliability Classification (31 Indian Cities)",
+                       ["Tier 1 (Calibrated): Delhi NCR (98 monitors, dense, validated continuous IDW & Conformal bands)",
+                        "Tier 2 (High Reliability): Mumbai, Kolkata, Bengaluru, Hyderabad, Pune, Patna, Ahmedabad (11–57 monitors)",
+                        "Tier 3 (Moderate Reliability): Chennai, Jaipur, Lucknow, Agra, Vijayawada, Amaravati (4–9 monitors)",
+                        "Tier 4 (Marginal Reliability): Kochi, Coimbatore, Kanpur (3 monitors — local nearest-station fallback recommended)",
+                        "Tier 5 (Suppressed Interpolation): Visakhapatnam, Tirupati, Bhubaneswar, Surat, Guntur (≤ 2 monitors — IDW barred)"],
+                       bg=C_GRN_BG, border=C_GRN_BD, sub_size=6.6)
 
-    draw_arrow(ax, (8.15, 2.6), (8.15, 1.3), "Reliability Mapping")
+    draw_clean_arrow(ax, (5.90, 1.85), (5.90, 1.45), label="Governance Mapping", label_pos=0.5, label_offset=(0, 0.06))
 
-    fig.savefig(OUT_DIR / "fig_arch_reliability.png", dpi=300, bbox_inches="tight")
+    out_p = OUT_DIR / "fig_arch_reliability.png"
+    fig.savefig(out_p, dpi=300, bbox_inches="tight")
     plt.close(fig)
-    print("Generated fig_arch_reliability.png")
+    print(f"Generated clean {out_p.name}")
 
+# ==============================================================================
+# 3. FIG 2.9: DISTANCE-SCALED CONFORMAL UNCERTAINTY ESTIMATION WORKFLOW
+# ==============================================================================
 def generate_conformal_workflow():
-    fig, ax = plt.subplots(figsize=(9, 4.5), dpi=300)
-    ax.set_xlim(0, 10)
-    ax.set_ylim(0, 5)
+    fig, ax = plt.subplots(figsize=(7.2, 3.8), dpi=300)
+    ax.set_xlim(0, 7.2)
+    ax.set_ylim(0, 3.8)
     ax.axis("off")
-    ax.set_title("Figure 2.9: Distance-Scaled Conformal Uncertainty Estimation Workflow",
-                 fontsize=11, fontweight="bold", color=C_NAVY, pad=12)
 
-    draw_box(ax, (0.4, 2.5), 2.3, 1.2, "Calibration Dataset", "Held-out spatial samples\nGround Truth yi & Point Est ŷi\nNearest Station Distance di", bg=C_LIGHT_SLATE, border=C_NAVY)
+    # Step 1: Calibration Set (x = 0.15, w = 1.95)
+    draw_academic_card(ax, (0.15, 2.05), 1.95, 1.50,
+                       "1. Calibration Dataset",
+                       ["Held-out Spatial Samples:",
+                        "Ground Truth: yi",
+                        "Point Forecast / Estimate: ŷi",
+                        "Nearest Monitor Distance: di (km)",
+                        "Strict Out-of-Sample Split (n samples)"],
+                       bg=C_SLATE_BG, border=C_NAVY)
 
-    draw_arrow(ax, (2.7, 3.1), (3.5, 3.1), "Residuals")
+    # Step 2: Non-Conformity Scoring (x = 2.45, w = 2.20)
+    draw_academic_card(ax, (2.45, 2.05), 2.20, 1.50,
+                       "2. Distance-Scaled Scoring",
+                       ["Non-Conformity Metric:",
+                        "si = |yi - ŷi| / (1 + γ · di)",
+                        "Scale Factor: γ = 0.05 km⁻¹",
+                        "Normalizes error inflation occurring",
+                        "in sparse geographic blindspots"],
+                       bg=C_TEAL_BG, border=C_TEAL_BD)
 
-    draw_box(ax, (3.5, 2.3), 2.6, 1.6, "Non-Conformity Scoring", "Normalized Score:\nsi = |yi - ŷi| / (1 + γ · di)\nDistance Scaling γ = 0.05 / km", bg=C_LIGHT_TEAL, border=C_TEAL)
+    draw_clean_arrow(ax, (2.10, 2.80), (2.45, 2.80), label="Residuals |yi - ŷi|", label_pos=0.5, label_offset=(0, 0.07))
 
-    draw_arrow(ax, (6.1, 3.1), (6.9, 3.1), "Quantile q̂_(1-α)")
+    # Step 3: Empirical Quantile (x = 4.95, w = 2.10)
+    draw_academic_card(ax, (4.95, 2.05), 2.10, 1.50,
+                       "3. Conformal Quantile",
+                       ["Distribution-Free Calibration:",
+                        "q̂_(1-α) = Quantile_p(S)",
+                        "Index p = ⌈(n + 1)(1 - α)⌉ / n",
+                        "Marginal Finite-Sample Guarantee:",
+                        "P(Y ∈ C(X)) ≥ 1 - α"],
+                       bg=C_BLUE_BG, border=C_BLUE_BD)
 
-    draw_box(ax, (6.9, 2.2), 2.7, 1.8, "Empirical Coverage Bound", "Split Conformal Quantile:\nq̂ = Quantile_((n+1)(1-α)/n)(S)\nGuarantees marginal coverage:\nP(Y ∈ C(X)) >= 1 - α", bg=C_LIGHT_BLUE, border=C_BLUE)
+    draw_clean_arrow(ax, (4.65, 2.80), (4.95, 2.80), label="Score Set S", label_pos=0.5, label_offset=(0, 0.07))
 
-    draw_box(ax, (2.0, 0.5), 6.5, 1.0, "Operational Conformal Interval Output",
-             "C(x) = [ max(0, ŷ - q̂(1 + γ·d_min)), ŷ + q̂(1 + γ·d_min) ]\nDistance-dependent interval expansion communicating spatial uncertainty",
-             bg=C_LIGHT_GREEN, border=C_GREEN)
+    # Step 4: Operational Conformal Intervals (x = 0.15 to 7.05, w = 6.90)
+    draw_academic_card(ax, (0.15, 0.25), 6.90, 1.35,
+                       "4. Operational Conformal Prediction Interval Formulation",
+                       ["Prediction Band: C(x) = [ max(0, ŷ - q̂_(1-α) · (1 + γ · d_min)),  ŷ + q̂_(1-α) · (1 + γ · d_min) ]",
+                        "• At Reporting Monitor (d_min = 0): Interval width is purely driven by residual quantile 2 · q̂_(1-α)",
+                        "• Far From Monitors (d_min > 0): Interval expands proportionally by factor (1 + 0.05 · d_min)",
+                        "• Validated Empirical Coverage: 92.8% (80% Tier), 96.5% (90% Tier), 99.37% (95% Tier) on PM2.5",
+                        "• Honest Disclosure: Guarantees coverage at the cost of wider bounds during severe episodic smog events"],
+                       bg=C_GRN_BG, border=C_GRN_BD, sub_size=6.7)
 
-    draw_arrow(ax, (8.25, 2.2), (8.25, 1.5))
+    draw_clean_arrow(ax, (6.00, 2.05), (6.00, 1.60), label="Calibrated q̂", label_pos=0.5, label_offset=(0, 0.06))
 
-    fig.savefig(OUT_DIR / "fig_arch_conformal.png", dpi=300, bbox_inches="tight")
+    out_p = OUT_DIR / "fig_arch_conformal.png"
+    fig.savefig(out_p, dpi=300, bbox_inches="tight")
     plt.close(fig)
-    print("Generated fig_arch_conformal.png")
+    print(f"Generated clean {out_p.name}")
 
 if __name__ == "__main__":
     generate_idw_workflow()

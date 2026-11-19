@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-11-19T02:29:55.213686</dc:date>
+    <dc:date>2026-11-19T12:05:56.933370</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -40,7 +40,7 @@ Q 16.7976 36.69408 16.7976 38.35728
 L 16.7976 65.85552 
 Q 16.7976 67.51872 18.4716 67.51872 
 z
-" clip-path="url(#p385315ff63)" style="fill: #e0f2fe; stroke: #0284c7; stroke-width: 0.9; stroke-linejoin: miter"/>
+" clip-path="url(#p5acd3985f5)" style="fill: #e0f2fe; stroke: #0284c7; stroke-width: 0.9; stroke-linejoin: miter"/>
    </g>
    <g id="patch_3">
     <path d="M 18.4716 110.76192 
@@ -53,7 +53,7 @@ Q 16.7976 79.93728 16.7976 81.60048
 L 16.7976 109.09872 
 Q 16.7976 110.76192 18.4716 110.76192 
 z
-" clip-path="url(#p385315ff63)" style="fill: #f3e8ff; stroke: #7c3aed; stroke-width: 0.9; stroke-linejoin: miter"/>
+" clip-path="url(#p5acd3985f5)" style="fill: #f3e8ff; stroke: #7c3aed; stroke-width: 0.9; stroke-linejoin: miter"/>
    </g>
    <g id="patch_4">
     <path d="M 18.4716 154.00512 
@@ -66,7 +66,7 @@ Q 16.7976 123.18048 16.7976 124.84368
 L 16.7976 152.34192 
 Q 16.7976 154.00512 18.4716 154.00512 
 z
-" clip-path="url(#p385315ff63)" style="fill: #fef3c7; stroke: #d97706; stroke-width: 0.9; stroke-linejoin: miter"/>
+" clip-path="url(#p5acd3985f5)" style="fill: #fef3c7; stroke: #d97706; stroke-width: 0.9; stroke-linejoin: miter"/>
    </g>
    <g id="patch_5">
     <path d="M 97.7076 67.51872 
@@ -79,7 +79,7 @@ Q 96.0336 36.69408 96.0336 38.35728
 L 96.0336 65.85552 
 Q 96.0336 67.51872 97.7076 67.51872 
 z
-" clip-path="url(#p385315ff63)" style="fill: #ffffff; stroke: #0284c7; stroke-width: 0.9; stroke-linejoin: miter"/>
+" clip-path="url(#p5acd3985f5)" style="fill: #ffffff; stroke: #0284c7; stroke-width: 0.9; stroke-linejoin: miter"/>
    </g>
    <g id="patch_6">
     <path d="M 97.7076 110.76192 
@@ -92,7 +92,7 @@ Q 96.0336 79.93728 96.0336 81.60048
 L 96.0336 109.09872 
 Q 96.0336 110.76192 97.7076 110.76192 
 z
-" clip-path="url(#p385315ff63)" style="fill: #ffffff; stroke: #7c3aed; stroke-width: 0.9; stroke-linejoin: miter"/>
+" clip-path="url(#p5acd3985f5)" style="fill: #ffffff; stroke: #7c3aed; stroke-width: 0.9; stroke-linejoin: miter"/>
    </g>
    <g id="patch_7">
     <path d="M 97.7076 154.00512 
@@ -105,7 +105,7 @@ Q 96.0336 123.18048 96.0336 124.84368
 L 96.0336 152.34192 
 Q 96.0336 154.00512 97.7076 154.00512 
 z
-" clip-path="url(#p385315ff63)" style="fill: #ffffff; stroke: #d97706; stroke-width: 0.9; stroke-linejoin: miter"/>
+" clip-path="url(#p5acd3985f5)" style="fill: #ffffff; stroke: #d97706; stroke-width: 0.9; stroke-linejoin: miter"/>
    </g>
    <g id="patch_8">
     <path d="M 185.3136 67.51872 
@@ -118,7 +118,7 @@ Q 183.6396 36.69408 183.6396 38.35728
 L 183.6396 65.85552 
 Q 183.6396 67.51872 185.3136 67.51872 
 z
-" clip-path="url(#p385315ff63)" style="fill: #e0f2fe; stroke: #0284c7; stroke-width: 0.9; stroke-linejoin: miter"/>
+" clip-path="url(#p5acd3985f5)" style="fill: #e0f2fe; stroke: #0284c7; stroke-width: 0.9; stroke-linejoin: miter"/>
    </g>
    <g id="patch_9">
     <path d="M 185.3136 154.00512 
@@ -131,7 +131,7 @@ Q 183.6396 79.93728 183.6396 81.60048
 L 183.6396 152.34192 
 Q 183.6396 154.00512 185.3136 154.00512 
 z
-" clip-path="url(#p385315ff63)" style="fill: #ffffff; stroke: #0f172a; stroke-width: 1.1; stroke-linejoin: miter"/>
+" clip-path="url(#p5acd3985f5)" style="fill: #ffffff; stroke: #0f172a; stroke-width: 1.1; stroke-linejoin: miter"/>
    </g>
    <g id="patch_10">
     <path d="M 274.5936 110.76192 
@@ -144,7 +144,7 @@ Q 272.9196 79.93728 272.9196 81.60048
 L 272.9196 109.09872 
 Q 272.9196 110.76192 274.5936 110.76192 
 z
-" clip-path="url(#p385315ff63)" style="fill: #fef3c7; stroke: #d97706; stroke-width: 0.9; stroke-linejoin: miter"/>
+" clip-path="url(#p5acd3985f5)" style="fill: #fef3c7; stroke: #d97706; stroke-width: 0.9; stroke-linejoin: miter"/>
    </g>
    <g id="patch_11">
     <path d="M 274.5936 154.00512 
@@ -157,7 +157,7 @@ Q 272.9196 123.18048 272.9196 124.84368
 L 272.9196 152.34192 
 Q 272.9196 154.00512 274.5936 154.00512 
 z
-" clip-path="url(#p385315ff63)" style="fill: #ffe4e6; stroke: #e11d48; stroke-width: 0.9; stroke-linejoin: miter"/>
+" clip-path="url(#p5acd3985f5)" style="fill: #ffe4e6; stroke: #e11d48; stroke-width: 0.9; stroke-linejoin: miter"/>
    </g>
    <g id="patch_12">
     <path d="M 351.5976 146.24352 
@@ -170,7 +170,7 @@ Q 349.9236 103.22208 349.9236 104.88528
 L 349.9236 144.58032 
 Q 349.9236 146.24352 351.5976 146.24352 
 z
-" clip-path="url(#p385315ff63)" style="fill: #ffe4e6; stroke: #e11d48; stroke-width: 0.9; stroke-linejoin: miter"/>
+" clip-path="url(#p5acd3985f5)" style="fill: #ffe4e6; stroke: #e11d48; stroke-width: 0.9; stroke-linejoin: miter"/>
    </g>
    <g id="patch_13">
     <path d="M 338.7636 67.51872 
@@ -183,7 +183,7 @@ Q 337.0896 36.69408 337.0896 38.35728
 L 337.0896 65.85552 
 Q 337.0896 67.51872 338.7636 67.51872 
 z
-" clip-path="url(#p385315ff63)" style="fill: #dcfce7; stroke: #16a34a; stroke-width: 0.9; stroke-linejoin: miter"/>
+" clip-path="url(#p5acd3985f5)" style="fill: #dcfce7; stroke: #16a34a; stroke-width: 0.9; stroke-linejoin: miter"/>
    </g>
    <g id="patch_14">
     <path d="M 18.4716 185.05152 
@@ -196,7 +196,7 @@ Q 16.7976 161.98848 16.7976 163.65168
 L 16.7976 183.38832 
 Q 16.7976 185.05152 18.4716 185.05152 
 z
-" clip-path="url(#p385315ff63)" style="fill: #f8fafc; stroke: #64748b; stroke-width: 0.8; stroke-linejoin: miter"/>
+" clip-path="url(#p5acd3985f5)" style="fill: #f8fafc; stroke: #64748b; stroke-width: 0.8; stroke-linejoin: miter"/>
    </g>
    <g id="text_1">
     <!-- VayuDrishti: Residual Multimodal Hybrid Forecasting Architecture -->
@@ -4109,7 +4109,7 @@ z
   </g>
  </g>
  <defs>
-  <clipPath id="p385315ff63">
+  <clipPath id="p5acd3985f5">
    <rect x="7.2" y="7.2" width="399.528" height="182.952"/>
   </clipPath>
  </defs>
