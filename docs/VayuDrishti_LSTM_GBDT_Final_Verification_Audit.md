@@ -5,7 +5,7 @@
 **Institution:** VIT-AP University, School of Computer Science and Engineering (SCOPE)  
 **Evaluation Scope:** Final B.Tech Capstone Technical Audit & Integration Verification  
 **Repository:** `https://github.com/Rushyasree/Multimodal_airquality_prediction.git`  
-**Latest Commits:** `9275885` (Feature implementation) & `660208a` (Architecture reconciliation)  
+**Latest Commits:** `9275885` (Feature implementation), `660208a` (Architecture reconciliation), & `c681a1f` (Checkpoint tracking & cloud deployment hardening)  
 **Date of Audit:** November 19, 2026  
 **Status:** **100% VERIFIED & VALIDATED**
 
@@ -211,6 +211,7 @@ In `src/services/sensor_forecast_service.py` and `model_comparison_service.py`:
    - Commits:
      - `9275885`: `feat: implement primary LSTM + GBDT combined hybrid forecasting pipeline and UI integration`
      - `660208a`: `fix: reconcile LSTM architecture label to 2-Layer Stacked Unidirectional LSTM across docs and services`
+     - `c681a1f`: `fix: commit adapted checkpoints and add defensive handling to prevent Model Comparison demo crash on Streamlit Cloud`
 2. **Automated Test Suite Execution:**
    - `tests/test_lstm_gbdt_hybrid.py`: **9/9 PASS** in 8.8s.
    - `tests/test_standalone_gbdt_inference.py`: **13/13 PASS** in 2.2s.
