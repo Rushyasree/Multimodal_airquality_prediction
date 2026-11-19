@@ -1,0 +1,40 @@
+{
+  "collector_version": "v1.0-longitudinal",
+  "trial_phase": "Phase 10: Longitudinal Live Monitoring",
+  "created_at_utc": "2026-11-05T10:41:39.693962+00:00",
+  "last_run_start_utc": null,
+  "last_run_end_utc": null,
+  "total_runs": 0,
+  "total_observations_ingested": 6207,
+  "total_predictions_generated": 420,
+  "total_targets_matched": 418,
+  "unmatched_predictions_count": 2,
+  "api_outages_logged": [],
+  "station_telemetry_status": {
+    "AP005": {
+      "raw_observation_count": 1081,
+      "hourly_bins_count": 148,
+      "predictions_count": 33,
+      "evaluations_count": 33
+    },
+    "AP001": {
+      "raw_observation_count": 1633,
+      "hourly_bins_count": 225,
+      "predictions_count": 149,
+      "evaluations_count": 149
+    },
+    "DL008": {
+      "raw_observation_count": 1741,
+      "hourly_bins_count": 235,
+      "predictions_count": 107,
+      "evaluations_count": 105
+    },
+    "DL002": {
+      "raw_observation_count": 1752,
+      "hourly_bins_count": 236,
+      "predictions_count": 131,
+      "evaluations_count": 131
+    }
+  },
+  "updated_at_utc": "2026-11-05T10:41:44.106352+00:00"
+}

@@ -1,0 +1,146 @@
+{
+  "PM2.5: Adapted Gated vs Persistence": {
+    "observed_mean_diff": -0.3277,
+    "method_a_subsample": {
+      "ci_95": [
+        -0.7128,
+        -0.0151
+      ],
+      "p_value": 0.042
+    },
+    "method_b_weighted_cluster": {
+      "ci_95": [
+        -0.4283,
+        -0.227
+      ],
+      "p_value": 0.0
+    },
+    "method_c_macro_station": {
+      "ci_95": [
+        -0.4125,
+        -0.2053
+      ],
+      "p_value": 0.0
+    }
+  },
+  "PM10:  Adapted Gated vs Persistence": {
+    "observed_mean_diff": -1.016,
+    "method_a_subsample": {
+      "ci_95": [
+        -1.8656,
+        -0.1912
+      ],
+      "p_value": 0.014
+    },
+    "method_b_weighted_cluster": {
+      "ci_95": [
+        -1.2861,
+        -0.7664
+      ],
+      "p_value": 0.0
+    },
+    "method_c_macro_station": {
+      "ci_95": [
+        -1.2197,
+        -0.7046
+      ],
+      "p_value": 0.0
+    }
+  },
+  "PM2.5: Fine-Tuned LSTM vs Frozen LSTM": {
+    "observed_mean_diff": -1.2859,
+    "method_a_subsample": {
+      "ci_95": [
+        -1.9119,
+        -0.8908
+      ],
+      "p_value": 0.0
+    },
+    "method_b_weighted_cluster": {
+      "ci_95": [
+        -1.598,
+        -1.0024
+      ],
+      "p_value": 0.0
+    },
+    "method_c_macro_station": {
+      "ci_95": [
+        -1.7061,
+        -1.0433
+      ],
+      "p_value": 0.0
+    }
+  },
+  "PM10:  Fine-Tuned LSTM vs Frozen LSTM": {
+    "observed_mean_diff": -1.7848,
+    "method_a_subsample": {
+      "ci_95": [
+        -2.7868,
+        -1.0248
+      ],
+      "p_value": 0.0
+    },
+    "method_b_weighted_cluster": {
+      "ci_95": [
+        -2.4321,
+        -1.2407
+      ],
+      "p_value": 0.0
+    },
+    "method_c_macro_station": {
+      "ci_95": [
+        -2.454,
+        -1.2894
+      ],
+      "p_value": 0.0
+    }
+  },
+  "PM2.5: Fine-Tuned LSTM vs Persistence": {
+    "observed_mean_diff": -0.1465,
+    "method_a_subsample": {
+      "ci_95": [
+        -0.4674,
+        0.2299
+      ],
+      "p_value": 0.534
+    },
+    "method_b_weighted_cluster": {
+      "ci_95": [
+        -0.2549,
+        -0.0274
+      ],
+      "p_value": 0.014
+    },
+    "method_c_macro_station": {
+      "ci_95": [
+        -0.2419,
+        -0.0197
+      ],
+      "p_value": 0.026
+    }
+  },
+  "PM10:  Fine-Tuned LSTM vs Persistence": {
+    "observed_mean_diff": -0.6794,
+    "method_a_subsample": {
+      "ci_95": [
+        -1.5167,
+        0.1951
+      ],
+      "p_value": 0.124
+    },
+    "method_b_weighted_cluster": {
+      "ci_95": [
+        -0.9753,
+        -0.4032
+      ],
+      "p_value": 0.0
+    },
+    "method_c_macro_station": {
+      "ci_95": [
+        -0.9052,
+        -0.3422
+      ],
+      "p_value": 0.0
+    }
+  }
+}

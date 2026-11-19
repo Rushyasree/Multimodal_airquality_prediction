@@ -1,0 +1,67 @@
+{
+  "historical_test_sequences": 404431,
+  "historical_temporal_range": [
+    "2019-09-04 20:00:00",
+    "2020-07-01 00:00:00"
+  ],
+  "actual_historical_metrics": {
+    "1-Hour Persistence": {
+      "pm25": {
+        "MAE": 10.6783,
+        "RMSE": 19.8072,
+        "R2": 0.9423
+      },
+      "pm10": {
+        "MAE": 19.7384,
+        "RMSE": 36.2374,
+        "R2": 0.9115
+      }
+    },
+    "Pretrained LSTM": {
+      "pm25": {
+        "MAE": 10.5719,
+        "RMSE": 18.5789,
+        "R2": 0.9492
+      },
+      "pm10": {
+        "MAE": 18.8643,
+        "RMSE": 32.2027,
+        "R2": 0.9301
+      }
+    },
+    "Static Ensemble (0.90/0.80)": {
+      "pm25": {
+        "MAE": 10.395,
+        "RMSE": 18.5498,
+        "R2": 0.9494
+      },
+      "pm10": {
+        "MAE": 18.2809,
+        "RMSE": 31.9708,
+        "R2": 0.9311
+      }
+    },
+    "Severity-Gated Ensemble": {
+      "pm25": {
+        "MAE": 10.3508,
+        "RMSE": 18.3792,
+        "R2": 0.9503,
+        "Bias": 1.2907
+      },
+      "pm10": {
+        "MAE": 18.1369,
+        "RMSE": 31.6385,
+        "R2": 0.9325,
+        "Bias": 2.366
+      }
+    }
+  },
+  "erroneous_recent_report_table_values": {
+    "note": "Section 4.1 in RECENT_BENCHMARK_REPORT.md incorrectly transcribed historical test metrics as: PM2.5 MAE=11.23, RMSE=23.36; PM10 MAE=21.05, RMSE=41.09.",
+    "corrected_pm25_mae": 10.395,
+    "corrected_pm25_rmse": 18.5498,
+    "corrected_pm10_mae": 18.2809,
+    "corrected_pm10_rmse": 31.9708
+  },
+  "explanation": "The earlier report draft had preliminary rounded/uncalibrated values placed in Section 4.1. Recomputing from the exact saved metrics and predictions confirms that on the canonical 404,431 historical test sequences: Static Ensemble PM2.5 MAE is 10.3950 (not 11.23) and RMSE is 18.5498 (not 23.36); PM10 MAE is 18.2809 (not 21.05) and RMSE is 31.9708 (not 41.09). Severity-Gated Ensemble achieves PM2.5 MAE 10.3508 and PM10 MAE 18.1369. Thus, historical models beat 1-hour persistence on both pollutants on the historical test split, but faced a 0.74 ug/m3 PM2.5 gap when transferred zero-shot to 2024 data without dynamic weather."
+}

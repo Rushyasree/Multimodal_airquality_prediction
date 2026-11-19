@@ -1,0 +1,111 @@
+{
+  "timestamp_utc": "2026-11-05T11:27:22.583036+00:00",
+  "files_audited": {
+    "observations_csv": "E:\\Documents\\multimodal_air_quality_vscode_starter\\experiments\\recent_data_audit\\live_trial_observations.csv",
+    "predictions_csv": "E:\\Documents\\multimodal_air_quality_vscode_starter\\experiments\\recent_data_audit\\live_trial_predictions.csv",
+    "evaluation_csv": "E:\\Documents\\multimodal_air_quality_vscode_starter\\experiments\\recent_data_audit\\live_trial_evaluation.csv",
+    "state_json": "E:\\Documents\\multimodal_air_quality_vscode_starter\\experiments\\recent_data_audit\\collector_state.json"
+  },
+  "checks": {
+    "check_1_forecast_id_uniqueness": {
+      "status": "PASS",
+      "predictions_total": 420,
+      "predictions_unique_ids": 420,
+      "evaluations_total": 418,
+      "evaluations_unique_forecast_ids": 418,
+      "evaluations_unique_match_ids": 418
+    },
+    "check_2_duplicate_observations": {
+      "status": "PASS",
+      "total_observations": 6207,
+      "unique_observation_tuples": 6207,
+      "duplicate_tuples_count": 0
+    },
+    "check_3_chronological_consistency": {
+      "status": "PASS",
+      "obs_chronology_issues": [],
+      "pred_chronology_issues": []
+    },
+    "check_4_utc_validation": {
+      "status": "PASS",
+      "non_utc_obs_count": 0,
+      "non_utc_pred_issue_count": 0,
+      "non_utc_pred_target_count": 0,
+      "non_utc_eval_target_count": 0
+    },
+    "check_5_forecast_horizon": {
+      "status": "PASS",
+      "expected_lead_hours": 1.0,
+      "min_lead_hours": 1.0,
+      "max_lead_hours": 1.0,
+      "bad_lead_count": 0
+    },
+    "check_6_target_matching_causality": {
+      "status": "PASS",
+      "violations_count": 0
+    },
+    "check_7_unmatched_prediction_accounting": {
+      "status": "PASS",
+      "unmatched_count": 2,
+      "unmatched_forecasts": [
+        {
+          "forecast_id": "fc_DL008_2026-10-30T00:00:00Z",
+          "station_id": "DL008",
+          "issue_time_utc": "2026-10-30T00:00:00Z",
+          "target_time_utc": "2026-10-30T01:00:00Z",
+          "model_name": "adapted_gbdt_only",
+          "pred_pm25": 15.21,
+          "pred_pm10": 25.86,
+          "persistence_pm25": 0.05,
+          "persistence_pm10": 15.8,
+          "status": "forecast_generated"
+        },
+        {
+          "forecast_id": "fc_DL008_2026-11-01T11:00:00Z",
+          "station_id": "DL008",
+          "issue_time_utc": "2026-11-01T11:00:00Z",
+          "target_time_utc": "2026-11-01T12:00:00Z",
+          "model_name": "adapted_gbdt_only",
+          "pred_pm25": 30.65,
+          "pred_pm10": 205.79,
+          "persistence_pm25": 0.05,
+          "persistence_pm10": 212.26,
+          "status": "forecast_generated"
+        }
+      ],
+      "zero_imputed_evaluations_count": 0,
+      "notes": "Exactly 2 unmatched predictions on DL008 (DTU, New Delhi) due to recorded ground sensor outage during target hours. No synthetic or zero imputation occurred."
+    },
+    "check_8_model_provenance": {
+      "status": "PASS",
+      "checkpoints": {
+        "PM2.5": {
+          "path": "E:\\Documents\\multimodal_air_quality_vscode_starter\\experiments\\recent_data_audit\\checkpoints\\adapted_gbdt_pm25.joblib",
+          "expected_sha256": "982dbdfbf61db4ba937a289860e8297bb482f3b79060af2c173f83476ad2225c",
+          "actual_sha256": "982dbdfbf61db4ba937a289860e8297bb482f3b79060af2c173f83476ad2225c",
+          "matches": true
+        },
+        "PM10": {
+          "path": "E:\\Documents\\multimodal_air_quality_vscode_starter\\experiments\\recent_data_audit\\checkpoints\\adapted_gbdt_pm10.joblib",
+          "expected_sha256": "e951a12b7e2195cae81eb20511ea635c2466d5e42208420382b09ed1a15743aa",
+          "actual_sha256": "e951a12b7e2195cae81eb20511ea635c2466d5e42208420382b09ed1a15743aa",
+          "matches": true
+        }
+      }
+    },
+    "check_9_phase8_preservation": {
+      "status": "PASS",
+      "phase8_sample_count": 16,
+      "first_n_eval_records_analyzed": 16,
+      "recalculated_gbdt_pm25_mae": 7.6225,
+      "expected_gbdt_pm25_mae": 7.62,
+      "recalculated_gbdt_pm10_mae": 16.6731,
+      "expected_gbdt_pm10_mae": 16.67,
+      "recalculated_pers_pm25_mae": 12.0919,
+      "expected_pers_pm25_mae": 12.09,
+      "recalculated_pers_pm10_mae": 24.7906,
+      "expected_pers_pm10_mae": 24.79
+    }
+  },
+  "all_checks_passed": true
+}

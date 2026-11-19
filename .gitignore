@@ -29,7 +29,7 @@ data/processed/recent_air_quality_cleaned.csv
 experiments/**/checkpoints/best_fusion_model.pt
 experiments/**/checkpoints/best_image_model.pt
 experiments/**/checkpoints/best_unified_hybrid_model.pt
-experiments/recent_data_audit/
+experiments/recent_data_audit/*.csv
 experiments/multimodal_fusion/validation_v2/checkpoints/
 
 # Predictions & outputs

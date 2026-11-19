@@ -1,0 +1,145 @@
+{
+  "trial_phase": "Phase 8: Real Live Shadow Trial \u2014 Standalone GBDT",
+  "trial_timestamp_utc": "2026-11-05T04:38:30.986391+00:00",
+  "trial_window": "Recent 72-Hour Continuous Telemetry (OpenAQ API v3)",
+  "total_observations_ingested": 1505,
+  "total_matched_pairs": 16,
+  "overall": {
+    "gbdt": {
+      "pm25": {
+        "mae": 7.62,
+        "rmse": 11.96,
+        "mean_bias": 6.63
+      },
+      "pm10": {
+        "mae": 16.67,
+        "rmse": 29.59,
+        "mean_bias": 12.5
+      }
+    },
+    "persistence": {
+      "pm25": {
+        "mae": 12.09,
+        "rmse": 18.55,
+        "mean_bias": 6.28
+      },
+      "pm10": {
+        "mae": 24.79,
+        "rmse": 38.83,
+        "mean_bias": 10.67
+      }
+    },
+    "comparison": {
+      "pm25_mae_improvement_pct": 36.96,
+      "pm10_mae_improvement_pct": 32.74,
+      "gbdt_wins_pm25": 9,
+      "pers_wins_pm25": 7,
+      "gbdt_wins_pm10": 11,
+      "pers_wins_pm10": 5
+    }
+  },
+  "per_station": {
+    "AP001": {
+      "matched_count": 4,
+      "gbdt_pm25_mae": 3.78,
+      "gbdt_pm25_rmse": 3.95,
+      "gbdt_pm25_bias": 3.78,
+      "pers_pm25_mae": 0.85,
+      "pers_pm25_rmse": 0.94,
+      "gbdt_pm10_mae": 10.15,
+      "gbdt_pm10_rmse": 10.22,
+      "gbdt_pm10_bias": 10.15,
+      "pers_pm10_mae": 0.69,
+      "pers_pm10_rmse": 0.83
+    },
+    "AP005": {
+      "matched_count": 4,
+      "gbdt_pm25_mae": 4.11,
+      "gbdt_pm25_rmse": 4.87,
+      "gbdt_pm25_bias": 1.96,
+      "pers_pm25_mae": 4.81,
+      "pers_pm25_rmse": 5.16,
+      "gbdt_pm10_mae": 9.37,
+      "gbdt_pm10_rmse": 14.19,
+      "gbdt_pm10_bias": 7.33,
+      "pers_pm10_mae": 12.69,
+      "pers_pm10_rmse": 20.07
+    },
+    "DL002": {
+      "matched_count": 4,
+      "gbdt_pm25_mae": 11.13,
+      "gbdt_pm25_rmse": 18.27,
+      "gbdt_pm25_bias": 9.31,
+      "pers_pm25_mae": 20.75,
+      "pers_pm25_rmse": 24.82,
+      "gbdt_pm10_mae": 33.85,
+      "gbdt_pm10_rmse": 53.97,
+      "gbdt_pm10_bias": 28.21,
+      "pers_pm10_mae": 53.94,
+      "pers_pm10_rmse": 66.24
+    },
+    "DL008": {
+      "matched_count": 4,
+      "gbdt_pm25_mae": 11.46,
+      "gbdt_pm25_rmse": 14.12,
+      "gbdt_pm25_bias": 11.46,
+      "pers_pm25_mae": 21.95,
+      "pers_pm25_rmse": 27.07,
+      "gbdt_pm10_mae": 13.33,
+      "gbdt_pm10_rmse": 16.82,
+      "gbdt_pm10_bias": 4.33,
+      "pers_pm10_mae": 31.85,
+      "pers_pm10_rmse": 35.2
+    }
+  },
+  "station_summaries": {
+    "AP005": {
+      "fetch_status": "success",
+      "counts": {
+        "PM2.5": 191,
+        "PM10": 191,
+        "rejected": 0,
+        "duplicate": 0
+      },
+      "hourly_bins": 52,
+      "forecasts_generated": 4,
+      "targets_matched": 4
+    },
+    "AP001": {
+      "fetch_status": "success",
+      "counts": {
+        "PM2.5": 184,
+        "PM10": 184,
+        "rejected": 0,
+        "duplicate": 0
+      },
+      "hourly_bins": 53,
+      "forecasts_generated": 4,
+      "targets_matched": 4
+    },
+    "DL008": {
+      "fetch_status": "success",
+      "counts": {
+        "PM2.5": 187,
+        "PM10": 190,
+        "rejected": 0,
+        "duplicate": 0
+      },
+      "hourly_bins": 52,
+      "forecasts_generated": 4,
+      "targets_matched": 4
+    },
+    "DL002": {
+      "fetch_status": "success",
+      "counts": {
+        "PM2.5": 188,
+        "PM10": 190,
+        "rejected": 0,
+        "duplicate": 0
+      },
+      "hourly_bins": 52,
+      "forecasts_generated": 4,
+      "targets_matched": 4
+    }
+  }
+}

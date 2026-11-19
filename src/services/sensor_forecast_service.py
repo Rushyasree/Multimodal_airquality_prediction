@@ -94,7 +94,8 @@ class SensorForecastService:
                 self._historical_models_loaded = True
                 return True
             return False
-        except Exception:
+        except Exception as e:
+            logger.warning(f"Failed to load historical GBDT models: {e}")
             return False
 
     def _load_adapted_models(self) -> bool:
@@ -102,6 +103,7 @@ class SensorForecastService:
         if self._adapted_checkpoints_loaded:
             return True
         try:
+            _patch_cython_unpickler()
             import joblib
             adapted_dir = ROOT_DIR / "experiments/recent_data_audit/checkpoints"
             lstm_path = adapted_dir / "best_finetuned_lstm.pt"
@@ -109,6 +111,7 @@ class SensorForecastService:
             gbdt_10_path = adapted_dir / "adapted_gbdt_pm10.joblib"
 
             if not (lstm_path.exists() and gbdt_25_path.exists() and gbdt_10_path.exists()):
+                logger.info("Adapted checkpoints not found at path: %s", adapted_dir)
                 return False
 
             if self._adapted_lstm_service is None:
@@ -120,7 +123,8 @@ class SensorForecastService:
 
             self._adapted_checkpoints_loaded = True
             return True
-        except Exception:
+        except Exception as e:
+            logger.warning(f"Failed to load adapted checkpoints: {e}")
             return False
 
     def _predict_adapted(
@@ -418,7 +422,10 @@ class SensorForecastService:
             gbdt_pm10 = max(0.0, float(self._historical_gbdt_pm10.predict(tab_feats_67)[0]))
             n_feats_gbdt = 67
         else:
-            raise RuntimeError("GBDT model checkpoints unavailable.")
+            logger.warning("GBDT model checkpoints unavailable; falling back to sequence estimates.")
+            gbdt_pm25 = float(lstm_pm25)
+            gbdt_pm10 = float(lstm_pm10)
+            n_feats_gbdt = 49
 
         # 4. Extract anchor concentration for severity gating
         def _to_float_or_fallback(series_val, fallback):

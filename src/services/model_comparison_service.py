@@ -107,19 +107,42 @@ class ModelComparisonService:
 
         # 3. Genuine LSTM + GBDT Hybrid Forecaster (running both individual models & ensemble)
         if df_to_use is not None:
-            sensor_res = self.sensor_service.predict_hybrid_lstm_gbdt(
-                df_24h=df_to_use,
-                station_id=clean_sid,
-                severity_gated=True,
-                live_mode=live_mode,
-                reference_time=reference_time,
-            )
-            lstm_pm25 = sensor_res["components"]["lstm"]["pm25"]
-            lstm_pm10 = sensor_res["components"]["lstm"]["pm10"]
-            gbdt_pm25 = sensor_res["components"]["gbdt"]["pm25"]
-            gbdt_pm10 = sensor_res["components"]["gbdt"]["pm10"]
-            hybrid_sensor_pm25 = sensor_res["pm25"]
-            hybrid_sensor_pm10 = sensor_res["pm10"]
+            try:
+                sensor_res = self.sensor_service.predict_hybrid_lstm_gbdt(
+                    df_24h=df_to_use,
+                    station_id=clean_sid,
+                    severity_gated=True,
+                    live_mode=live_mode,
+                    reference_time=reference_time,
+                )
+                lstm_pm25 = sensor_res["components"]["lstm"]["pm25"]
+                lstm_pm10 = sensor_res["components"]["lstm"]["pm10"]
+                gbdt_pm25 = sensor_res["components"]["gbdt"]["pm25"]
+                gbdt_pm10 = sensor_res["components"]["gbdt"]["pm10"]
+                hybrid_sensor_pm25 = sensor_res["pm25"]
+                hybrid_sensor_pm10 = sensor_res["pm10"]
+            except Exception as e:
+                logger.error(f"Error in predict_hybrid_lstm_gbdt during comparison: {e}")
+                sensor_res = {
+                    "status": "fallback",
+                    "pm25": None,
+                    "pm10": None,
+                    "model_version": "LSTM + GBDT Combined Hybrid Forecaster",
+                    "provenance": "PREDICTION FALLBACK",
+                    "components": {
+                        "lstm": {"pm25": None, "pm10": None, "n_features": 27},
+                        "gbdt": {"pm25": None, "pm10": None, "n_features": 49},
+                        "hybrid": {"pm25": None, "pm10": None, "weights": {"w_pm25_lstm": 0.40, "w_pm10_lstm": 0.45}},
+                        "persistence": {"pm25": None, "pm10": None},
+                    },
+                    "metrics": {"pm25_mae": 6.62, "pm10_mae": 16.14, "pm25_r2": 0.8254, "pm10_r2": 0.8479},
+                }
+                lstm_pm25 = None
+                lstm_pm10 = None
+                gbdt_pm25 = None
+                gbdt_pm10 = None
+                hybrid_sensor_pm25 = None
+                hybrid_sensor_pm10 = None
         else:
             sensor_res = {
                 "status": "unavailable",

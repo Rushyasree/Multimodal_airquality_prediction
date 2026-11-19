@@ -1,0 +1,916 @@
+{
+  "metadata": {
+    "evaluation_period": "2024-01-01 to 2024-12-31",
+    "test_sequences": 506848,
+    "test_stations": 84,
+    "actual_pm25_mean": 71.83,
+    "actual_pm10_mean": 153.58,
+    "actual_pm25_p50": 47.0,
+    "actual_pm10_p50": 117.0,
+    "actual_pm25_max": 942.44,
+    "actual_pm10_max": 1000.0
+  },
+  "overall": {
+    "1-Hour Persistence": {
+      "pm25": {
+        "MAE": 10.0871,
+        "RMSE": 20.4227,
+        "R2": 0.9249,
+        "Mean_Bias": -0.0848,
+        "Underpred_Rate_Pct": 48.66,
+        "N": 506848
+      },
+      "pm10": {
+        "MAE": 21.0751,
+        "RMSE": 40.9881,
+        "R2": 0.8908,
+        "Mean_Bias": -0.1038,
+        "Underpred_Rate_Pct": 48.8,
+        "N": 506848
+      }
+    },
+    "Pretrained LSTM": {
+      "pm25": {
+        "MAE": 11.0791,
+        "RMSE": 20.3238,
+        "R2": 0.9256,
+        "Mean_Bias": 0.9244,
+        "Underpred_Rate_Pct": 36.24,
+        "N": 506848
+      },
+      "pm10": {
+        "MAE": 21.5542,
+        "RMSE": 39.2108,
+        "R2": 0.9001,
+        "Mean_Bias": -1.2617,
+        "Underpred_Rate_Pct": 41.39,
+        "N": 506848
+      }
+    },
+    "Standalone GBDT": {
+      "pm25": {
+        "MAE": 11.6885,
+        "RMSE": 27.2501,
+        "R2": 0.8663,
+        "Mean_Bias": -3.7599,
+        "Underpred_Rate_Pct": 49.05,
+        "N": 506848
+      },
+      "pm10": {
+        "MAE": 21.1823,
+        "RMSE": 42.0653,
+        "R2": 0.885,
+        "Mean_Bias": -4.7087,
+        "Underpred_Rate_Pct": 48.52,
+        "N": 506848
+      }
+    },
+    "Static Ensemble (0.90/0.80)": {
+      "pm25": {
+        "MAE": 10.831,
+        "RMSE": 20.1945,
+        "R2": 0.9266,
+        "Mean_Bias": 0.456,
+        "Underpred_Rate_Pct": 37.12,
+        "N": 506848
+      },
+      "pm10": {
+        "MAE": 20.8672,
+        "RMSE": 38.5893,
+        "R2": 0.9032,
+        "Mean_Bias": -1.9511,
+        "Underpred_Rate_Pct": 42.32,
+        "N": 506848
+      }
+    },
+    "Severity-Gated Ensemble": {
+      "pm25": {
+        "MAE": 10.8387,
+        "RMSE": 20.1337,
+        "R2": 0.927,
+        "Mean_Bias": 0.6649,
+        "Underpred_Rate_Pct": 36.92,
+        "N": 506848
+      },
+      "pm10": {
+        "MAE": 20.8979,
+        "RMSE": 38.6749,
+        "R2": 0.9028,
+        "Mean_Bias": -1.7213,
+        "Underpred_Rate_Pct": 42.13,
+        "N": 506848
+      }
+    }
+  },
+  "pm25_tiers": {
+    "Good (0-30)": {
+      "count": 155195,
+      "pct": 30.62,
+      "1-Hour Persistence": {
+        "MAE": 3.7375,
+        "RMSE": 7.4396,
+        "R2": -0.051,
+        "Mean_Bias": 1.2237,
+        "Underpred_Rate_Pct": 42.31,
+        "N": 155195
+      },
+      "Pretrained LSTM": {
+        "MAE": 6.3718,
+        "RMSE": 9.0012,
+        "R2": -0.5385,
+        "Mean_Bias": 5.7623,
+        "Underpred_Rate_Pct": 13.1,
+        "N": 155195
+      },
+      "Standalone GBDT": {
+        "MAE": 4.1259,
+        "RMSE": 7.3619,
+        "R2": -0.0291,
+        "Mean_Bias": 2.739,
+        "Underpred_Rate_Pct": 28.01,
+        "N": 155195
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "MAE": 6.0961,
+        "RMSE": 8.7292,
+        "R2": -0.4469,
+        "Mean_Bias": 5.46,
+        "Underpred_Rate_Pct": 13.72,
+        "N": 155195
+      },
+      "Severity-Gated Ensemble": {
+        "MAE": 6.0954,
+        "RMSE": 8.7191,
+        "R2": -0.4436,
+        "Mean_Bias": 5.4593,
+        "Underpred_Rate_Pct": 13.72,
+        "N": 155195
+      }
+    },
+    "Satisfactory (30-60)": {
+      "count": 152446,
+      "pct": 30.08,
+      "1-Hour Persistence": {
+        "MAE": 6.645,
+        "RMSE": 11.4512,
+        "R2": -0.826,
+        "Mean_Bias": 0.7923,
+        "Underpred_Rate_Pct": 49.39,
+        "N": 152446
+      },
+      "Pretrained LSTM": {
+        "MAE": 7.0074,
+        "RMSE": 10.3646,
+        "R2": -0.4959,
+        "Mean_Bias": 3.6094,
+        "Underpred_Rate_Pct": 34.77,
+        "N": 152446
+      },
+      "Standalone GBDT": {
+        "MAE": 5.9339,
+        "RMSE": 10.2199,
+        "R2": -0.4544,
+        "Mean_Bias": 1.0716,
+        "Underpred_Rate_Pct": 48.06,
+        "N": 152446
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "MAE": 6.8103,
+        "RMSE": 10.1838,
+        "R2": -0.4441,
+        "Mean_Bias": 3.3556,
+        "Underpred_Rate_Pct": 35.62,
+        "N": 152446
+      },
+      "Severity-Gated Ensemble": {
+        "MAE": 6.808,
+        "RMSE": 10.1384,
+        "R2": -0.4313,
+        "Mean_Bias": 3.3534,
+        "Underpred_Rate_Pct": 35.62,
+        "N": 152446
+      }
+    },
+    "Moderate (60-90)": {
+      "count": 76827,
+      "pct": 15.16,
+      "1-Hour Persistence": {
+        "MAE": 10.202,
+        "RMSE": 16.5611,
+        "R2": -2.8021,
+        "Mean_Bias": 0.2154,
+        "Underpred_Rate_Pct": 51.92,
+        "N": 76827
+      },
+      "Pretrained LSTM": {
+        "MAE": 9.8535,
+        "RMSE": 14.2197,
+        "R2": -1.803,
+        "Mean_Bias": 1.4894,
+        "Underpred_Rate_Pct": 47.48,
+        "N": 76827
+      },
+      "Standalone GBDT": {
+        "MAE": 8.7935,
+        "RMSE": 14.1173,
+        "R2": -1.7628,
+        "Mean_Bias": -1.293,
+        "Underpred_Rate_Pct": 59.4,
+        "N": 76827
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "MAE": 9.6068,
+        "RMSE": 13.9736,
+        "R2": -1.7068,
+        "Mean_Bias": 1.2112,
+        "Underpred_Rate_Pct": 48.11,
+        "N": 76827
+      },
+      "Severity-Gated Ensemble": {
+        "MAE": 9.6046,
+        "RMSE": 13.9527,
+        "R2": -1.6987,
+        "Mean_Bias": 1.2089,
+        "Underpred_Rate_Pct": 48.12,
+        "N": 76827
+      }
+    },
+    "Poor (90-120)": {
+      "count": 39637,
+      "pct": 7.82,
+      "1-Hour Persistence": {
+        "MAE": 14.3604,
+        "RMSE": 21.7884,
+        "R2": -5.3655,
+        "Mean_Bias": -0.2572,
+        "Underpred_Rate_Pct": 52.46,
+        "N": 39637
+      },
+      "Pretrained LSTM": {
+        "MAE": 13.1174,
+        "RMSE": 18.0525,
+        "R2": -3.3698,
+        "Mean_Bias": -1.0817,
+        "Underpred_Rate_Pct": 52.72,
+        "N": 39637
+      },
+      "Standalone GBDT": {
+        "MAE": 13.7106,
+        "RMSE": 19.7545,
+        "R2": -4.2326,
+        "Mean_Bias": -3.2213,
+        "Underpred_Rate_Pct": 63.04,
+        "N": 39637
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "MAE": 12.9303,
+        "RMSE": 17.9006,
+        "R2": -3.2966,
+        "Mean_Bias": -1.2957,
+        "Underpred_Rate_Pct": 53.5,
+        "N": 39637
+      },
+      "Severity-Gated Ensemble": {
+        "MAE": 12.9235,
+        "RMSE": 17.8688,
+        "R2": -3.2813,
+        "Mean_Bias": -1.3025,
+        "Underpred_Rate_Pct": 53.5,
+        "N": 39637
+      }
+    },
+    "Very Poor (120-250)": {
+      "count": 63484,
+      "pct": 12.53,
+      "1-Hour Persistence": {
+        "MAE": 21.6802,
+        "RMSE": 32.3135,
+        "R2": 0.2071,
+        "Mean_Bias": -1.5455,
+        "Underpred_Rate_Pct": 53.1,
+        "N": 63484
+      },
+      "Pretrained LSTM": {
+        "MAE": 21.2283,
+        "RMSE": 29.4855,
+        "R2": 0.3398,
+        "Mean_Bias": -8.1542,
+        "Underpred_Rate_Pct": 63.58,
+        "N": 63484
+      },
+      "Standalone GBDT": {
+        "MAE": 22.5009,
+        "RMSE": 31.9197,
+        "R2": 0.2263,
+        "Mean_Bias": -10.345,
+        "Underpred_Rate_Pct": 68.27,
+        "N": 63484
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "MAE": 20.7992,
+        "RMSE": 28.9592,
+        "R2": 0.3631,
+        "Mean_Bias": -8.3733,
+        "Underpred_Rate_Pct": 64.14,
+        "N": 63484
+      },
+      "Severity-Gated Ensemble": {
+        "MAE": 20.8939,
+        "RMSE": 29.1327,
+        "R2": 0.3555,
+        "Mean_Bias": -8.2944,
+        "Underpred_Rate_Pct": 64.08,
+        "N": 63484
+      }
+    },
+    "Severe (>250)": {
+      "count": 19259,
+      "pct": 3.8,
+      "1-Hour Persistence": {
+        "MAE": 41.0316,
+        "RMSE": 63.0843,
+        "R2": 0.485,
+        "Mean_Bias": -13.5986,
+        "Underpred_Rate_Pct": 58.47,
+        "N": 19259
+      },
+      "Pretrained LSTM": {
+        "MAE": 48.4823,
+        "RMSE": 70.8817,
+        "R2": 0.3498,
+        "Mean_Bias": -27.5135,
+        "Underpred_Rate_Pct": 65.31,
+        "N": 19259
+      },
+      "Standalone GBDT": {
+        "MAE": 89.9275,
+        "RMSE": 115.422,
+        "R2": -0.7241,
+        "Mean_Bias": -83.6165,
+        "Underpred_Rate_Pct": 92.97,
+        "N": 19259
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "MAE": 48.5173,
+        "RMSE": 71.3788,
+        "R2": 0.3407,
+        "Mean_Bias": -33.1238,
+        "Underpred_Rate_Pct": 70.88,
+        "N": 19259
+      },
+      "Severity-Gated Ensemble": {
+        "MAE": 48.4556,
+        "RMSE": 70.7853,
+        "R2": 0.3516,
+        "Mean_Bias": -27.8389,
+        "Underpred_Rate_Pct": 65.75,
+        "N": 19259
+      }
+    }
+  },
+  "pm10_tiers": {
+    "Good (0-50)": {
+      "count": 78325,
+      "pct": 15.45,
+      "1-Hour Persistence": {
+        "MAE": 6.4556,
+        "RMSE": 14.111,
+        "R2": -0.7129,
+        "Mean_Bias": 2.5375,
+        "Underpred_Rate_Pct": 42.38,
+        "N": 78325
+      },
+      "Pretrained LSTM": {
+        "MAE": 10.8541,
+        "RMSE": 16.062,
+        "R2": -1.2193,
+        "Mean_Bias": 10.1698,
+        "Underpred_Rate_Pct": 10.16,
+        "N": 78325
+      },
+      "Standalone GBDT": {
+        "MAE": 7.4316,
+        "RMSE": 13.7702,
+        "R2": -0.6312,
+        "Mean_Bias": 5.7384,
+        "Underpred_Rate_Pct": 23.18,
+        "N": 78325
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "MAE": 10.0503,
+        "RMSE": 15.3852,
+        "R2": -1.0362,
+        "Mean_Bias": 9.2835,
+        "Underpred_Rate_Pct": 11.37,
+        "N": 78325
+      },
+      "Severity-Gated Ensemble": {
+        "MAE": 10.0482,
+        "RMSE": 15.3383,
+        "R2": -1.0238,
+        "Mean_Bias": 9.2814,
+        "Underpred_Rate_Pct": 11.37,
+        "N": 78325
+      }
+    },
+    "Satisfactory (50-100)": {
+      "count": 136774,
+      "pct": 26.99,
+      "1-Hour Persistence": {
+        "MAE": 9.969,
+        "RMSE": 18.877,
+        "R2": -0.7301,
+        "Mean_Bias": 2.1013,
+        "Underpred_Rate_Pct": 47.43,
+        "N": 136774
+      },
+      "Pretrained LSTM": {
+        "MAE": 11.3358,
+        "RMSE": 17.8067,
+        "R2": -0.5395,
+        "Mean_Bias": 6.8328,
+        "Underpred_Rate_Pct": 31.19,
+        "N": 136774
+      },
+      "Standalone GBDT": {
+        "MAE": 9.5596,
+        "RMSE": 16.809,
+        "R2": -0.3718,
+        "Mean_Bias": 4.1501,
+        "Underpred_Rate_Pct": 38.74,
+        "N": 136774
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "MAE": 10.7943,
+        "RMSE": 17.3307,
+        "R2": -0.4583,
+        "Mean_Bias": 6.2962,
+        "Underpred_Rate_Pct": 31.82,
+        "N": 136774
+      },
+      "Severity-Gated Ensemble": {
+        "MAE": 10.7889,
+        "RMSE": 17.2347,
+        "R2": -0.4422,
+        "Mean_Bias": 6.2908,
+        "Underpred_Rate_Pct": 31.82,
+        "N": 136774
+      }
+    },
+    "Moderate (100-250)": {
+      "count": 204456,
+      "pct": 40.34,
+      "1-Hour Persistence": {
+        "MAE": 20.9894,
+        "RMSE": 34.0717,
+        "R2": 0.3159,
+        "Mean_Bias": 2.051,
+        "Underpred_Rate_Pct": 49.56,
+        "N": 204456
+      },
+      "Pretrained LSTM": {
+        "MAE": 19.0755,
+        "RMSE": 27.9152,
+        "R2": 0.5408,
+        "Mean_Bias": 1.912,
+        "Underpred_Rate_Pct": 48.15,
+        "N": 204456
+      },
+      "Standalone GBDT": {
+        "MAE": 18.0175,
+        "RMSE": 28.8547,
+        "R2": 0.5094,
+        "Mean_Bias": -0.2556,
+        "Underpred_Rate_Pct": 53.91,
+        "N": 204456
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "MAE": 18.4683,
+        "RMSE": 27.5189,
+        "R2": 0.5537,
+        "Mean_Bias": 1.4785,
+        "Underpred_Rate_Pct": 48.86,
+        "N": 204456
+      },
+      "Severity-Gated Ensemble": {
+        "MAE": 18.4425,
+        "RMSE": 27.3278,
+        "R2": 0.5599,
+        "Mean_Bias": 1.4522,
+        "Underpred_Rate_Pct": 48.86,
+        "N": 204456
+      }
+    },
+    "Poor (250-350)": {
+      "count": 47618,
+      "pct": 9.39,
+      "1-Hour Persistence": {
+        "MAE": 39.3725,
+        "RMSE": 57.0159,
+        "R2": -3.0058,
+        "Mean_Bias": -1.2251,
+        "Underpred_Rate_Pct": 51.91,
+        "N": 47618
+      },
+      "Pretrained LSTM": {
+        "MAE": 34.9656,
+        "RMSE": 47.1456,
+        "R2": -1.7389,
+        "Mean_Bias": -14.4,
+        "Underpred_Rate_Pct": 65.82,
+        "N": 47618
+      },
+      "Standalone GBDT": {
+        "MAE": 35.7716,
+        "RMSE": 50.4023,
+        "R2": -2.1304,
+        "Mean_Bias": -13.9315,
+        "Underpred_Rate_Pct": 67.37,
+        "N": 47618
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "MAE": 34.0755,
+        "RMSE": 46.4206,
+        "R2": -1.6554,
+        "Mean_Bias": -14.3063,
+        "Underpred_Rate_Pct": 66.42,
+        "N": 47618
+      },
+      "Severity-Gated Ensemble": {
+        "MAE": 34.0927,
+        "RMSE": 46.3129,
+        "R2": -1.6431,
+        "Mean_Bias": -14.301,
+        "Underpred_Rate_Pct": 66.32,
+        "N": 47618
+      }
+    },
+    "Very Poor (350-430)": {
+      "count": 19198,
+      "pct": 3.79,
+      "1-Hour Persistence": {
+        "MAE": 51.3136,
+        "RMSE": 72.1039,
+        "R2": -8.8678,
+        "Mean_Bias": -8.0773,
+        "Underpred_Rate_Pct": 54.92,
+        "N": 19198
+      },
+      "Pretrained LSTM": {
+        "MAE": 51.786,
+        "RMSE": 66.9854,
+        "R2": -7.5165,
+        "Mean_Bias": -30.0415,
+        "Underpred_Rate_Pct": 71.61,
+        "N": 19198
+      },
+      "Standalone GBDT": {
+        "MAE": 58.4117,
+        "RMSE": 72.9458,
+        "R2": -9.0995,
+        "Mean_Bias": -34.7981,
+        "Underpred_Rate_Pct": 78.93,
+        "N": 19198
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "MAE": 50.7028,
+        "RMSE": 65.7074,
+        "R2": -7.1946,
+        "Mean_Bias": -30.9929,
+        "Underpred_Rate_Pct": 73.59,
+        "N": 19198
+      },
+      "Severity-Gated Ensemble": {
+        "MAE": 51.0107,
+        "RMSE": 66.0969,
+        "R2": -7.2921,
+        "Mean_Bias": -30.3171,
+        "Underpred_Rate_Pct": 72.64,
+        "N": 19198
+      }
+    },
+    "Severe (>430)": {
+      "count": 20477,
+      "pct": 4.04,
+      "1-Hour Persistence": {
+        "MAE": 81.1331,
+        "RMSE": 120.073,
+        "R2": -0.1827,
+        "Mean_Bias": -36.3672,
+        "Underpred_Rate_Pct": 62.03,
+        "N": 20477
+      },
+      "Pretrained LSTM": {
+        "MAE": 95.9529,
+        "RMSE": 133.3981,
+        "R2": -0.4598,
+        "Mean_Bias": -73.2073,
+        "Underpred_Rate_Pct": 76.46,
+        "N": 20477
+      },
+      "Standalone GBDT": {
+        "MAE": 114.1816,
+        "RMSE": 148.2449,
+        "R2": -0.8028,
+        "Mean_Bias": -98.6459,
+        "Underpred_Rate_Pct": 84.66,
+        "N": 20477
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "MAE": 94.7871,
+        "RMSE": 131.6339,
+        "R2": -0.4214,
+        "Mean_Bias": -78.295,
+        "Underpred_Rate_Pct": 80.14,
+        "N": 20477
+      },
+      "Severity-Gated Ensemble": {
+        "MAE": 95.52,
+        "RMSE": 132.6595,
+        "R2": -0.4437,
+        "Mean_Bias": -72.9466,
+        "Underpred_Rate_Pct": 76.63,
+        "N": 20477
+      }
+    }
+  },
+  "monthly": {
+    "2024-01": {
+      "count": 44664,
+      "1-Hour Persistence": {
+        "pm25_mae": 14.54,
+        "pm10_mae": 24.63
+      },
+      "Pretrained LSTM": {
+        "pm25_mae": 17.71,
+        "pm10_mae": 28.11
+      },
+      "Standalone GBDT": {
+        "pm25_mae": 21.76,
+        "pm10_mae": 29.45
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "pm25_mae": 17.45,
+        "pm10_mae": 27.31
+      },
+      "Severity-Gated Ensemble": {
+        "pm25_mae": 17.43,
+        "pm10_mae": 27.24
+      }
+    },
+    "2024-02": {
+      "count": 44013,
+      "1-Hour Persistence": {
+        "pm25_mae": 10.69,
+        "pm10_mae": 22.01
+      },
+      "Pretrained LSTM": {
+        "pm25_mae": 11.45,
+        "pm10_mae": 22.12
+      },
+      "Standalone GBDT": {
+        "pm25_mae": 10.12,
+        "pm10_mae": 20.25
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "pm25_mae": 11.08,
+        "pm10_mae": 21.18
+      },
+      "Severity-Gated Ensemble": {
+        "pm25_mae": 11.1,
+        "pm10_mae": 21.23
+      }
+    },
+    "2024-03": {
+      "count": 46784,
+      "1-Hour Persistence": {
+        "pm25_mae": 9.86,
+        "pm10_mae": 20.6
+      },
+      "Pretrained LSTM": {
+        "pm25_mae": 10.63,
+        "pm10_mae": 20.49
+      },
+      "Standalone GBDT": {
+        "pm25_mae": 9.13,
+        "pm10_mae": 18.66
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "pm25_mae": 10.35,
+        "pm10_mae": 19.73
+      },
+      "Severity-Gated Ensemble": {
+        "pm25_mae": 10.35,
+        "pm10_mae": 19.76
+      }
+    },
+    "2024-04": {
+      "count": 44933,
+      "1-Hour Persistence": {
+        "pm25_mae": 10.55,
+        "pm10_mae": 25.78
+      },
+      "Pretrained LSTM": {
+        "pm25_mae": 11.34,
+        "pm10_mae": 25.67
+      },
+      "Standalone GBDT": {
+        "pm25_mae": 9.9,
+        "pm10_mae": 23.77
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "pm25_mae": 11.06,
+        "pm10_mae": 24.75
+      },
+      "Severity-Gated Ensemble": {
+        "pm25_mae": 11.07,
+        "pm10_mae": 24.86
+      }
+    },
+    "2024-05": {
+      "count": 44071,
+      "1-Hour Persistence": {
+        "pm25_mae": 10.8,
+        "pm10_mae": 25.33
+      },
+      "Pretrained LSTM": {
+        "pm25_mae": 11.74,
+        "pm10_mae": 25.29
+      },
+      "Standalone GBDT": {
+        "pm25_mae": 10.52,
+        "pm10_mae": 24.11
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "pm25_mae": 11.47,
+        "pm10_mae": 24.42
+      },
+      "Severity-Gated Ensemble": {
+        "pm25_mae": 11.49,
+        "pm10_mae": 24.58
+      }
+    },
+    "2024-06": {
+      "count": 37111,
+      "1-Hour Persistence": {
+        "pm25_mae": 7.79,
+        "pm10_mae": 22.44
+      },
+      "Pretrained LSTM": {
+        "pm25_mae": 9.09,
+        "pm10_mae": 22.57
+      },
+      "Standalone GBDT": {
+        "pm25_mae": 7.77,
+        "pm10_mae": 21.78
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "pm25_mae": 8.86,
+        "pm10_mae": 22.04
+      },
+      "Severity-Gated Ensemble": {
+        "pm25_mae": 8.86,
+        "pm10_mae": 22.0
+      }
+    },
+    "2024-07": {
+      "count": 38614,
+      "1-Hour Persistence": {
+        "pm25_mae": 5.81,
+        "pm10_mae": 12.64
+      },
+      "Pretrained LSTM": {
+        "pm25_mae": 7.08,
+        "pm10_mae": 14.12
+      },
+      "Standalone GBDT": {
+        "pm25_mae": 5.88,
+        "pm10_mae": 12.48
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "pm25_mae": 6.9,
+        "pm10_mae": 13.62
+      },
+      "Severity-Gated Ensemble": {
+        "pm25_mae": 6.89,
+        "pm10_mae": 13.61
+      }
+    },
+    "2024-08": {
+      "count": 38556,
+      "1-Hour Persistence": {
+        "pm25_mae": 4.86,
+        "pm10_mae": 10.08
+      },
+      "Pretrained LSTM": {
+        "pm25_mae": 6.0,
+        "pm10_mae": 11.5
+      },
+      "Standalone GBDT": {
+        "pm25_mae": 4.89,
+        "pm10_mae": 10.03
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "pm25_mae": 5.84,
+        "pm10_mae": 11.06
+      },
+      "Severity-Gated Ensemble": {
+        "pm25_mae": 5.84,
+        "pm10_mae": 11.06
+      }
+    },
+    "2024-09": {
+      "count": 37136,
+      "1-Hour Persistence": {
+        "pm25_mae": 5.42,
+        "pm10_mae": 12.38
+      },
+      "Pretrained LSTM": {
+        "pm25_mae": 6.25,
+        "pm10_mae": 13.13
+      },
+      "Standalone GBDT": {
+        "pm25_mae": 5.48,
+        "pm10_mae": 12.31
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "pm25_mae": 6.12,
+        "pm10_mae": 12.82
+      },
+      "Severity-Gated Ensemble": {
+        "pm25_mae": 6.12,
+        "pm10_mae": 12.82
+      }
+    },
+    "2024-10": {
+      "count": 42044,
+      "1-Hour Persistence": {
+        "pm25_mae": 9.75,
+        "pm10_mae": 21.12
+      },
+      "Pretrained LSTM": {
+        "pm25_mae": 10.18,
+        "pm10_mae": 20.59
+      },
+      "Standalone GBDT": {
+        "pm25_mae": 9.82,
+        "pm10_mae": 20.22
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "pm25_mae": 9.98,
+        "pm10_mae": 20.06
+      },
+      "Severity-Gated Ensemble": {
+        "pm25_mae": 9.99,
+        "pm10_mae": 20.11
+      }
+    },
+    "2024-11": {
+      "count": 43498,
+      "1-Hour Persistence": {
+        "pm25_mae": 14.97,
+        "pm10_mae": 27.46
+      },
+      "Pretrained LSTM": {
+        "pm25_mae": 15.14,
+        "pm10_mae": 26.97
+      },
+      "Standalone GBDT": {
+        "pm25_mae": 23.32,
+        "pm10_mae": 31.49
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "pm25_mae": 14.97,
+        "pm10_mae": 26.39
+      },
+      "Severity-Gated Ensemble": {
+        "pm25_mae": 14.91,
+        "pm10_mae": 26.3
+      }
+    },
+    "2024-12": {
+      "count": 45424,
+      "1-Hour Persistence": {
+        "pm25_mae": 13.61,
+        "pm10_mae": 24.74
+      },
+      "Pretrained LSTM": {
+        "pm25_mae": 13.98,
+        "pm10_mae": 24.58
+      },
+      "Standalone GBDT": {
+        "pm25_mae": 18.42,
+        "pm10_mae": 25.83
+      },
+      "Static Ensemble (0.90/0.80)": {
+        "pm25_mae": 13.59,
+        "pm10_mae": 23.69
+      },
+      "Severity-Gated Ensemble": {
+        "pm25_mae": 13.69,
+        "pm10_mae": 23.82
+      }
+    }
+  },
+  "station_summary": {}
+}
