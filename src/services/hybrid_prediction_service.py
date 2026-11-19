@@ -35,7 +35,13 @@ ROOT_DIR = Path(__file__).resolve().parents[2]
 class HybridPredictionService:
     """Production service for VayuDrishti Optimized Residual Multimodal Hybrid Forecasting."""
 
-    def __init__(self, checkpoint_path: Optional[str] = None):
+    def __init__(
+        self,
+        checkpoint_path: Optional[str] = None,
+        lstm_service: Optional[LSTMForecasterService] = None,
+        image_estimator_service: Optional[ImageEstimatorService] = None,
+        live_builder: Optional[LiveSequenceBuilder] = None,
+    ):
         self.device = torch.device("cpu")
         self.model_version = "VayuDrishti Optimized Residual Hybrid v2.0"
 
@@ -45,10 +51,10 @@ class HybridPredictionService:
         
         self.checkpoint_path = Path(checkpoint_path or (opt_ckpt if opt_ckpt.exists() else hist_ckpt))
 
-        # Initialize sensor forecaster service for preprocessing sequence
-        self.lstm_service = LSTMForecasterService()
-        self.image_estimator_service = ImageEstimatorService()
-        self.live_builder = LiveSequenceBuilder()
+        # Reuse injected services to prevent duplicate model checkpoints in RAM
+        self.lstm_service = lstm_service or LSTMForecasterService()
+        self.image_estimator_service = image_estimator_service or ImageEstimatorService()
+        self.live_builder = live_builder or LiveSequenceBuilder()
 
         # Initialize Optimized Residual Hybrid Architecture
         lstm_ckpt = str(ROOT_DIR / "models/lstm_baseline/best_lstm_model.pt")

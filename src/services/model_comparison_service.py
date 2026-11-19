@@ -35,11 +35,18 @@ ROOT_DIR = Path(__file__).resolve().parents[2]
 class ModelComparisonService:
     """Service generating side-by-side comparative views across all individual and hybrid methods."""
 
-    def __init__(self, live_builder: Optional[LiveSequenceBuilder] = None):
-        self.live_service = LiveAirQualityService()
-        self.sensor_service = SensorForecastService()
-        self.image_service = ImageEstimationService()
-        self.hybrid_service = HybridPredictionService()
+    def __init__(
+        self,
+        live_builder: Optional[LiveSequenceBuilder] = None,
+        live_service: Optional[LiveAirQualityService] = None,
+        sensor_service: Optional[SensorForecastService] = None,
+        image_service: Optional[ImageEstimationService] = None,
+        hybrid_service: Optional[HybridPredictionService] = None,
+    ):
+        self.live_service = live_service or LiveAirQualityService()
+        self.sensor_service = sensor_service or SensorForecastService()
+        self.image_service = image_service or ImageEstimationService()
+        self.hybrid_service = hybrid_service or HybridPredictionService()
         self.live_builder = live_builder or get_live_sequence_builder()
 
     def compare_all(

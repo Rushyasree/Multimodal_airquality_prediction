@@ -19,8 +19,8 @@ ROOT_DIR = Path(__file__).resolve().parents[2]
 class ImageEstimationService:
     """Service providing visual PM2.5 estimation from outdoor camera photos."""
 
-    def __init__(self):
-        self.underlying_service = ImageEstimatorService()
+    def __init__(self, underlying_service: Optional[ImageEstimatorService] = None):
+        self.underlying_service = underlying_service or ImageEstimatorService()
         self.model_version = "ResNet-50 PM25Vision Baseline v1.0"
         self._load_metrics()
 

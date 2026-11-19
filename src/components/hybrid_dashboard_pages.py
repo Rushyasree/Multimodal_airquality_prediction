@@ -39,6 +39,32 @@ def render_html(html_str: str):
     st.markdown(html_str, unsafe_allow_html=True)
 
 
+# --- Cached Service Singletons for Low-Memory Streamlit Execution ---
+@st.cache_resource(show_spinner=False)
+def get_sensor_forecast_service() -> SensorForecastService:
+    return SensorForecastService()
+
+
+@st.cache_resource(show_spinner=False)
+def get_image_estimation_service() -> ImageEstimationService:
+    return ImageEstimationService()
+
+
+@st.cache_resource(show_spinner=False)
+def get_hybrid_prediction_service() -> HybridPredictionService:
+    img_srv = get_image_estimation_service()
+    return HybridPredictionService(image_estimator_service=img_srv.underlying_service)
+
+
+@st.cache_resource(show_spinner=False)
+def get_model_comparison_service() -> ModelComparisonService:
+    return ModelComparisonService(
+        sensor_service=get_sensor_forecast_service(),
+        image_service=get_image_estimation_service(),
+        hybrid_service=get_hybrid_prediction_service(),
+    )
+
+
 # --- Page: Overview ---
 def render_overview_dual_mode_card(station_id: str = 'AP001', city: str = 'Amaravati'):
     return
@@ -47,8 +73,8 @@ def render_overview_dual_mode_card(station_id: str = 'AP001', city: str = 'Amara
 # --- Page: Unified Hybrid Forecast ---
 def render_unified_hybrid_page():
     """Renders the dedicated Mode B Unified Multimodal Hybrid Forecasting interface."""
-    hybrid_srv = HybridPredictionService()
-    image_srv = ImageEstimationService()
+    hybrid_srv = get_hybrid_prediction_service()
+    image_srv = get_image_estimation_service()
 
     render_html(
         """
@@ -372,7 +398,7 @@ def render_unified_hybrid_page():
 # --- Page: Model Comparison ---
 def render_side_by_side_comparison_page():
     """Renders the comprehensive side-by-side comparison page matching Section 4 of user requirements."""
-    comp_srv = ModelComparisonService()
+    comp_srv = get_model_comparison_service()
 
     render_html(
         """
@@ -887,7 +913,7 @@ def render_individual_methods_page():
                 st.info("ℹ️ Telemetry sequence is unavailable for the selected configuration.")
                 return
 
-            lstm_service = SensorForecastService()
+            lstm_service = get_sensor_forecast_service()
             fc_res = lstm_service.predict_next_hour(df_24h=fc_data, station_id=stn_id, model_mode="hybrid")
 
             pm25_pred = fc_res["predicted_PM25"]
@@ -1104,7 +1130,7 @@ def render_individual_methods_page():
             "🔬 **Experimental Visual Estimator Disclosure:** The ResNet-50 computer vision model is an experimental optical heuristic ($R^2 \approx 0.15$), NOT an independently certified physical monitor. In operational forecasting, it serves solely as an auxiliary residual modifier over ground sensors, with automatic fallback when camera feeds are unavailable."
         )
 
-        img_service = ImageEstimationService()
+        img_service = get_image_estimation_service()
         sample_imgs = img_service.get_sample_images()
 
         img_col1, img_col2 = st.columns([1.2, 1.8], gap="medium")
