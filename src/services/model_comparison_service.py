@@ -11,11 +11,14 @@ Compares:
 6. Persistence Baseline (Reference Inertia Baseline yt+1 = yt)
 """
 
+import logging
 from typing import Dict, Any, Optional, Union
 from pathlib import Path
 from datetime import datetime
 import pandas as pd
 from PIL import Image
+
+logger = logging.getLogger(__name__)
 
 from src.services.live_air_quality_service import LiveAirQualityService
 from src.services.sensor_forecast_service import SensorForecastService
