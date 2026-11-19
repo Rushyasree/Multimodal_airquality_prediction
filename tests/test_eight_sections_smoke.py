@@ -134,10 +134,11 @@ def test_section_7_model_performance():
     hybrid_m = ROOT_DIR / "experiments/unified_hybrid/metrics.json"
     assert hybrid_m.exists(), "Unified hybrid metrics missing"
 
-    fig_cm25 = ROOT_DIR / "paper/figures/confusion_matrix_pm25.png"
-    fig_cm10 = ROOT_DIR / "paper/figures/confusion_matrix_pm10.png"
-    fig_act = ROOT_DIR / "paper/figures/actual_vs_predicted.png"
-    fig_ts = ROOT_DIR / "paper/figures/prediction_timeseries.png"
+    fig_dir = ROOT_DIR / "assets/figures" if (ROOT_DIR / "assets/figures").exists() else ROOT_DIR / "paper/figures"
+    fig_cm25 = fig_dir / "confusion_matrix_pm25.png"
+    fig_cm10 = fig_dir / "confusion_matrix_pm10.png"
+    fig_act = fig_dir / "actual_vs_predicted.png"
+    fig_ts = fig_dir / "prediction_timeseries.png"
     assert fig_cm25.exists() and fig_cm10.exists(), "Confusion matrix figures missing"
     assert fig_act.exists() and fig_ts.exists(), "Regression/timeseries figures missing"
     print("  [PASS] Section 7 Model Performance evaluation figures and metrics verified.")

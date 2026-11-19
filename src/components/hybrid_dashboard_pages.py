@@ -143,7 +143,7 @@ def render_unified_hybrid_page():
                         st.image(
                             selected_image,
                             caption=f"Capture Date: {sample_obj.get('capture_date', 'N/A')} | Daylight Camera (Calendar-Date Precision Only • Asynchronous Optical Prior)",
-                            use_container_width=True,
+                            width="stretch",
                         )
                     else:
                         st.info("ℹ️ Curated image asset is unavailable on disk. Falling back to sensor telemetry mode.")
@@ -159,7 +159,7 @@ def render_unified_hybrid_page():
             if uploaded:
                 try:
                     selected_image = Image.open(uploaded)
-                    st.image(selected_image, caption="Uploaded Outdoor Image (Calendar-Date Optical Prior • Asynchronous)", use_container_width=True)
+                    st.image(selected_image, caption="Uploaded Outdoor Image (Calendar-Date Optical Prior • Asynchronous)", width="stretch")
                 except Exception as img_err:
                     st.warning(f"Unable to read uploaded photo: {img_err}. Running in sensor-only mode.")
                     selected_image = None
@@ -168,7 +168,7 @@ def render_unified_hybrid_page():
             st.info("ℹ️ Camera input is unselected/masked. The model will run in verified sensor-telemetry fallback mode.")
             selected_image = None
 
-        run_hybrid = st.button("🚀 Run Unified Hybrid Prediction", type="primary", use_container_width=True, key="run_hybrid_btn")
+        run_hybrid = st.button("🚀 Run Unified Hybrid Prediction", type="primary", width="stretch", key="run_hybrid_btn")
 
     with col_view:
         st.markdown("### 🎯 Unified Model Prediction")
@@ -388,7 +388,7 @@ def render_unified_hybrid_page():
                 xaxis=dict(showgrid=True, gridcolor="rgba(31, 41, 61, 0.7)", title=dict(text="PM2.5 Concentration (µg/m³)", font=dict(color="#94A3B8", size=11))),
                 yaxis=dict(showgrid=False),
             )
-            st.plotly_chart(fig_hybrid, use_container_width=True, config={"displayModeBar": False})
+            st.plotly_chart(fig_hybrid, width="stretch", config={"displayModeBar": False})
         else:
             st.info("ℹ️ Quantitative forecast comparison chart is unavailable when numeric sensor prediction cannot be computed.")
 
@@ -494,10 +494,10 @@ def render_side_by_side_comparison_page():
         "Below is the exact decomposition of individual model contributions and the final combined prediction alongside reference baselines:"
     )
     if "hybrid_breakdown_table" in res and not res["hybrid_breakdown_table"].empty:
-        st.dataframe(res["hybrid_breakdown_table"], use_container_width=True, hide_index=True)
+        st.dataframe(res["hybrid_breakdown_table"], width="stretch", hide_index=True)
 
     st.markdown("### 📋 Comprehensive Side-by-Side Methodology Comparison Table")
-    st.dataframe(df_comp, use_container_width=True, hide_index=True)
+    st.dataframe(df_comp, width="stretch", hide_index=True)
 
     # Plotly Grouped Bar Chart Comparison
     st.markdown("### 📊 Concentration Comparison Across Methods (PM2.5 and PM10)")
@@ -573,7 +573,7 @@ def render_side_by_side_comparison_page():
         margin=dict(l=40, r=40, t=60, b=40),
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     # Optional collapsed technical notes
     with st.expander("Technical Model Notes", expanded=False):
@@ -652,10 +652,10 @@ def render_station_map_page():
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         )
 
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
         st.markdown("### 📋 Verified Monitoring Stations Directory")
-        st.dataframe(df_coords[["StationId", "StationName", "City", "State", "Latitude", "Longitude", "Status"]], use_container_width=True, hide_index=True)
+        st.dataframe(df_coords[["StationId", "StationName", "City", "State", "Latitude", "Longitude", "Status"]], width="stretch", hide_index=True)
 
 
 # --- Page: System Health ---
@@ -732,7 +732,7 @@ def render_data_sources_system_health_page():
                 "PM10 Present": "✓ Yes" if sdata["has_pm10"] else "✗ Missing",
                 "Forecast Eligible": "✓ Ready" if sdata["forecast_ready"] else "✗ Unavailable",
             })
-        st.dataframe(pd.DataFrame(st_rows), use_container_width=True, hide_index=True)
+        st.dataframe(pd.DataFrame(st_rows), width="stretch", hide_index=True)
     else:
         st.info("ℹ️ Station health monitoring activates upon first telemetry query.")
 
@@ -778,7 +778,7 @@ def render_data_sources_system_health_page():
                     "PM2.5 Pred": f"{r.forecast_output.get('pm25')} µg/m³" if r.forecast_output.get("pm25") is not None else "N/A",
                     "PM10 Pred": f"{r.forecast_output.get('pm10')} µg/m³" if r.forecast_output.get("pm10") is not None else "N/A",
                 })
-            st.dataframe(pd.DataFrame(audit_table), use_container_width=True, hide_index=True)
+            st.dataframe(pd.DataFrame(audit_table), width="stretch", hide_index=True)
 
     st.markdown("### 🔒 Security & Credential Protection")
     st.success("✓ Zero secrets or internal credentials are exposed to dashboard clients. All upstream API tokens and internal exception traces are strictly redacted in backend logs.")
@@ -992,7 +992,7 @@ def render_individual_methods_page():
             st.markdown("#### 📋 Model Comparison: Individual vs. Combined Hybrid Forecast")
             comp_table_data = fc_res.get("comparison_table", [])
             if comp_table_data:
-                st.dataframe(pd.DataFrame(comp_table_data), use_container_width=True, hide_index=True)
+                st.dataframe(pd.DataFrame(comp_table_data), width="stretch", hide_index=True)
 
             fig_f = go.Figure()
             fig_f.add_trace(go.Scatter(
@@ -1071,11 +1071,11 @@ def render_individual_methods_page():
                 xaxis=dict(showgrid=True, gridcolor="rgba(27, 46, 69, 0.6)", title=dict(text="Observation & Forecast Timestamp (Asia/Kolkata)", font=dict(color="#94A3B8"))),
                 yaxis=dict(showgrid=True, gridcolor="rgba(27, 46, 69, 0.6)", title=dict(text="Concentration (µg/m³)", font=dict(color="#94A3B8"))),
             )
-            st.plotly_chart(fig_f, use_container_width=True)
+            st.plotly_chart(fig_f, width="stretch")
 
             with st.expander("🔬 Sequence Antecedent & Meteorological Features (24h Window)"):
                 display_fc_table = prepare_forecast_display_table(fc_data)
-                st.dataframe(display_fc_table, use_container_width=True, hide_index=True)
+                st.dataframe(display_fc_table, width="stretch", hide_index=True)
         except Exception as e:
             st.error(f"Error executing LSTM + GBDT hybrid forecast: {e}")
 
@@ -1150,7 +1150,7 @@ def render_individual_methods_page():
                     if sel_idx is not None and isinstance(sel_idx, int) and 0 <= sel_idx < len(sample_imgs):
                         chosen_img_path = sample_imgs[sel_idx].get("image_path")
                         if chosen_img_path and Path(chosen_img_path).exists():
-                            st.image(chosen_img_path, caption=s_titles[sel_idx], use_container_width=True)
+                            st.image(chosen_img_path, caption=s_titles[sel_idx], width="stretch")
                 else:
                     st.info("ℹ️ Curated outdoor sample photos are unavailable in the current environment. Upload a photo below.")
             else:
@@ -1161,7 +1161,7 @@ def render_individual_methods_page():
                     with open(save_p, "wb") as f_out:
                         f_out.write(uploaded_file.getbuffer())
                     chosen_img_path = str(save_p)
-                    st.image(chosen_img_path, caption=uploaded_file.name, use_container_width=True)
+                    st.image(chosen_img_path, caption=uploaded_file.name, width="stretch")
 
         with img_col2:
             if chosen_img_path and Path(chosen_img_path).exists():
@@ -1223,7 +1223,7 @@ def render_individual_methods_page():
             yaxis=dict(showgrid=True, gridcolor="rgba(27, 46, 69, 0.6)", title="MAE (µg/m³) - Lower is Better"),
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(color="#F8FAFC")),
         )
-        st.plotly_chart(fig_comp, use_container_width=True)
+        st.plotly_chart(fig_comp, width="stretch")
         st.caption("LSTM reduces PM10 MAE by 4.43% relative to strong persistence on 404,431 test sequences.")
 
 
@@ -1270,34 +1270,35 @@ def render_model_performance_page():
     )
 
     p_col1, p_col2 = st.columns(2)
+    fig_dir = ROOT_DIR / "assets" / "figures" if (ROOT_DIR / "assets" / "figures").exists() else ROOT_DIR / "paper" / "figures"
     with p_col1:
         st.markdown("**PM2.5 Confusion Matrix (404,431 Samples)**")
-        cm_pm25_path = ROOT_DIR / "paper" / "figures" / "confusion_matrix_pm25.png"
+        cm_pm25_path = fig_dir / "confusion_matrix_pm25.png"
         if cm_pm25_path.exists():
-            st.image(str(cm_pm25_path), use_container_width=True)
+            st.image(str(cm_pm25_path), width="stretch")
     with p_col2:
         st.markdown("**PM10 Confusion Matrix (404,431 Samples)**")
-        cm_pm10_path = ROOT_DIR / "paper" / "figures" / "confusion_matrix_pm10.png"
+        cm_pm10_path = fig_dir / "confusion_matrix_pm10.png"
         if cm_pm10_path.exists():
-            st.image(str(cm_pm10_path), use_container_width=True)
+            st.image(str(cm_pm10_path), width="stretch")
 
     class_csv = ROOT_DIR / "reports" / "classification_per_class_metrics.csv"
     if class_csv.exists():
         with st.expander("📋 Detailed Per-Class Precision, Recall, and F1-Scores"):
-            st.dataframe(pd.read_csv(class_csv), use_container_width=True)
+            st.dataframe(pd.read_csv(class_csv), width="stretch")
 
     st.markdown("### 📈 Section 2: Numerical Regression & Residual Timeseries")
     r_col1, r_col2 = st.columns(2)
     with r_col1:
         st.markdown("**Actual vs Predicted Hexbin Density**")
-        act_pred_path = ROOT_DIR / "paper" / "figures" / "actual_vs_predicted.png"
+        act_pred_path = fig_dir / "actual_vs_predicted.png"
         if act_pred_path.exists():
-            st.image(str(act_pred_path), use_container_width=True)
+            st.image(str(act_pred_path), width="stretch")
     with r_col2:
         st.markdown("**Prediction Timeseries & Error Dynamics**")
-        timeseries_path = ROOT_DIR / "paper" / "figures" / "prediction_timeseries.png"
+        timeseries_path = fig_dir / "prediction_timeseries.png"
         if timeseries_path.exists():
-            st.image(str(timeseries_path), use_container_width=True)
+            st.image(str(timeseries_path), width="stretch")
 
     st.markdown("### 🔬 Section 3: Multimodal Fusion Benchmark on Matched Dataset")
     st.markdown(
@@ -1306,7 +1307,7 @@ def render_model_performance_page():
 
     comp_csv_path = ROOT_DIR / "experiments" / "unified_hybrid" / "accuracy_optimization" / "baseline_comparison.csv"
     if comp_csv_path.exists():
-        st.dataframe(pd.read_csv(comp_csv_path), use_container_width=True)
+        st.dataframe(pd.read_csv(comp_csv_path), width="stretch")
     else:
         fusion_benchmark_data = [
             {"Model Architecture": "1-Hour Persistence Baseline", "PM2.5 MAE (ug/m3)": "9.04", "PM2.5 RMSE (ug/m3)": "14.65", "PM2.5 R2": "+0.9668", "PM10 MAE (ug/m3)": "9.39", "PM10 R2": "+0.9818", "Modality": "Lagged Telemetry"},
@@ -1327,9 +1328,9 @@ def render_model_performance_page():
         st.markdown("#### 🔬 Optimization Diagnostic Plots")
         f_col1, f_col2 = st.columns(2)
         with f_col1:
-            st.image(str(opt_fig1), caption="Actual vs Predicted Comparison (Test N=97)", use_container_width=True)
+            st.image(str(opt_fig1), caption="Actual vs Predicted Comparison (Test N=97)", width="stretch")
         with f_col2:
-            st.image(str(opt_fig2), caption="Residual Error Distribution Comparison", use_container_width=True)
+            st.image(str(opt_fig2), caption="Residual Error Distribution Comparison", width="stretch")
 
     render_html("""
     <div style="background: #1A2234; border-left: 3px solid #38BDF8; padding: 1.1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.85rem; color: #94A3B8; line-height: 1.6;">
@@ -1352,12 +1353,12 @@ def render_model_performance_page():
     bench_csv = v2_dir / "baseline_comparison.csv"
     if bench_csv.exists():
         st.markdown("#### 📋 Full Historical Benchmark Comparison (N = 404,431 Test Sequences)")
-        st.dataframe(pd.read_csv(bench_csv), use_container_width=True)
+        st.dataframe(pd.read_csv(bench_csv), width="stretch")
 
     tier_csv = v2_dir / "tier_breakdown_pm25.csv"
     if tier_csv.exists():
         st.markdown("#### 🎯 Performance by CPCB National Air Quality Index (NAQI) Tier")
-        st.dataframe(pd.read_csv(tier_csv), use_container_width=True)
+        st.dataframe(pd.read_csv(tier_csv), width="stretch")
 
     v2_fig1 = v2_dir / "figures" / "actual_vs_predicted_benchmark.png"
     v2_fig2 = v2_dir / "figures" / "residual_distribution_benchmark.png"
@@ -1368,17 +1369,17 @@ def render_model_performance_page():
         st.markdown("#### 📊 Benchmark Regression & Error Distribution (404,431 Sequences)")
         c_a, c_b = st.columns(2)
         with c_a:
-            st.image(str(v2_fig1), caption="Ensemble Actual vs Predicted Hexbin Density (N=404,431)", use_container_width=True)
+            st.image(str(v2_fig1), caption="Ensemble Actual vs Predicted Hexbin Density (N=404,431)", width="stretch")
         with c_b:
-            st.image(str(v2_fig2), caption="PM2.5 & PM10 Residual Error Distribution", use_container_width=True)
+            st.image(str(v2_fig2), caption="PM2.5 & PM10 Residual Error Distribution", width="stretch")
 
     if v2_fig3.exists() and v2_fig4.exists():
         st.markdown("#### 🔍 Tier Breakdown & Extreme Event Underprediction Bias")
         c_c, c_d = st.columns(2)
         with c_c:
-            st.image(str(v2_fig3), caption="PM2.5 MAE by Pollution Tier", use_container_width=True)
+            st.image(str(v2_fig3), caption="PM2.5 MAE by Pollution Tier", width="stretch")
         with c_d:
-            st.image(str(v2_fig4), caption="Systematic Underprediction Bias in Severe Pollution", use_container_width=True)
+            st.image(str(v2_fig4), caption="Systematic Underprediction Bias in Severe Pollution", width="stretch")
 
     render_html("""
     <div style="background: #1A2234; border-left: 3px solid #00E676; padding: 1.1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.85rem; color: #94A3B8; line-height: 1.6;">

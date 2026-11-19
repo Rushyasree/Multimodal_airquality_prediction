@@ -52,7 +52,7 @@ def render_geolocation_button(
     """
     if not ENABLE_CUSTOM_COMPONENT or _component_func is None:
         btn_text = "📍 Location Active" if is_detected else button_label
-        if st.button(btn_text, key=f"{key}_fallback", use_container_width=True):
+        if st.button(btn_text, key=f"{key}_fallback", width="stretch"):
             st.info("ℹ️ Automatic browser geolocation is temporarily unavailable. Please select your location using the city search bar or sidebar.")
         return None
 

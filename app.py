@@ -1493,7 +1493,7 @@ with st.sidebar:
                 """
             )
         else:
-            if st.button(f"{p_icon}  {p_title}", key=f"nav_btn_{p_id}", use_container_width=True):
+            if st.button(f"{p_icon}  {p_title}", key=f"nav_btn_{p_id}", width="stretch"):
                 st.session_state["nav_tab"] = p_id
                 st.session_state["_synced_nav"] = p_id
                 st.rerun()
@@ -1983,7 +1983,7 @@ if st.session_state["nav_tab"] in ("Home", "Overview"):
             """
         )
         fig_trend = get_cached_home_aqi_trend_chart(target_station_id, aqi_num)
-        st.plotly_chart(fig_trend, use_container_width=True, config={"displayModeBar": False})
+        st.plotly_chart(fig_trend, width="stretch", config={"displayModeBar": False})
         render_html("</div>")
 
     render_html("<div style='margin-bottom: 1.15rem;'></div>")
@@ -2165,7 +2165,7 @@ if st.session_state["nav_tab"] in ("Home", "Overview"):
                 on_change=on_nearby_station_change,
             )
 
-        if st.button("🔄 Refresh Atmospheric Data", key="refresh_stn_btn_home", use_container_width=True, type="primary"):
+        if st.button("🔄 Refresh Atmospheric Data", key="refresh_stn_btn_home", width="stretch", type="primary"):
             st.session_state["force_live_refresh"] = True
             st.rerun()
 
@@ -2216,7 +2216,7 @@ elif st.session_state["nav_tab"] in ("Live Data", "Live Air Quality"):
 
     with c_ld2:
         st.markdown("<div style='height: 28px;'></div>", unsafe_allow_html=True)
-        if st.button("🔄 Refresh Real-Time Station Telemetry", key="btn_refresh_live_data", use_container_width=True, type="primary"):
+        if st.button("🔄 Refresh Real-Time Station Telemetry", key="btn_refresh_live_data", width="stretch", type="primary"):
             st.session_state["force_live_refresh"] = True
             st.rerun()
 
@@ -2392,7 +2392,7 @@ elif st.session_state["nav_tab"] in ("Live Data", "Live Air Quality"):
 
     import pandas as pd
     df_polls = pd.DataFrame(poll_records)
-    st.dataframe(df_polls, use_container_width=True, hide_index=True)
+    st.dataframe(df_polls, width="stretch", hide_index=True)
 
     # Nearby Stations Switcher
     if isinstance(nearby_stations, list) and len(nearby_stations) > 1:
@@ -2414,7 +2414,7 @@ elif st.session_state["nav_tab"] in ("Live Data", "Live Air Quality"):
                 "Station ID": str(s.get("station_id") or "N/A"),
             })
         if stn_rows:
-            st.dataframe(pd.DataFrame(stn_rows), use_container_width=True, hide_index=True)
+            st.dataframe(pd.DataFrame(stn_rows), width="stretch", hide_index=True)
 
     # Footer
     render_html(

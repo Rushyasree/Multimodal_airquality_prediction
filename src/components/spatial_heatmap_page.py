@@ -524,7 +524,7 @@ def render_spatial_heatmap_page():
             height=450,
             **map_kwargs,
         )
-        st.plotly_chart(fig_sparse, use_container_width=True)
+        st.plotly_chart(fig_sparse, width="stretch")
 
     # -------------------------------------------------------------------------
     # CASE B: SUFFICIENT COVERAGE (>= 3 Monitors) — 2D IDW INTERPOLATION
@@ -673,7 +673,7 @@ def render_spatial_heatmap_page():
             ),
             **map_kwargs,
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     # -------------------------------------------------------------------------
     # Phase 16: Live Station Coverage & Spatial Reliability Audit Panel
@@ -768,7 +768,7 @@ def render_spatial_heatmap_page():
                     "Dist to Center (km)", "PM2.5", "PM10",
                     "Freshness", "24h Sequence"
                 ]
-                st.dataframe(st_df, use_container_width=True, hide_index=True)
+                st.dataframe(st_df, width="stretch", hide_index=True)
 
     # 3. Arbitrary Location Estimation Section
     st.markdown(
@@ -835,7 +835,7 @@ def render_spatial_heatmap_page():
     with col_btn:
         st.write("")
         st.write("")
-        st.button("🔍 Compute Forecast", use_container_width=True)
+        st.button("🔍 Compute Forecast", width="stretch")
 
     # Check bounds
     is_outside_bbox = (
